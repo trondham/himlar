@@ -48,6 +48,9 @@ mod 'ipcalc', :ref => '1.2.2',                   :git => github + 'inkblot/puppe
 mod 'tinyproxy', :ref => 'bc56e3ecc2',           :git => github + 'earsdown/puppet-tinyproxy'
 
 #
+mod 'kelda', :ref => 'master',                   :git => github + 'norcams/puppet-kelda'
+
+#
 # profile::application::etcd
 #
 mod 'etcd', :ref => 'c26961fe94',                :git => github + 'norcams/puppet-etcd'
