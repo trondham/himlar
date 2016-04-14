@@ -1,9 +1,7 @@
 ---
 network::interfaces_hash:
   'em1':
-    ipaddress: '172.18.0.100'
-    netmask:   '255.255.248.0'
-    defroute:  'no'
+    bridge:    "br1"
     onboot:    "yes"
   'em2':
     ipaddress: '172.18.8.100'
@@ -21,6 +19,11 @@ network::interfaces_hash:
     onboot:    "yes"
     mtu:       "1500"
     type:      'Bridge'
+  'br1':
+    ipaddress: '172.18.0.100'
+    netmask:   '255.255.248.0'
+    defroute:  'no'
+    onboot:    "yes"
   'dummy0':
     ipaddress: '158.39.77.1'
     netmask:   '255.255.255.0'
@@ -29,3 +32,10 @@ network::interfaces_hash:
     ipaddress: '172.19.0.1'
     netmask:   '255.255.255.0'
     defroute:  'no'
+
+named_interfaces::config:
+  mgmt:
+    - br0
+  transport:
+    - br1
+    - em2
