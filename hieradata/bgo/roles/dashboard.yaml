@@ -1,5 +1,4 @@
 ---
-# Manage upload #FIXME
 profile::base::common::manage_lvm: true
 profile::base::lvm::physical_volume:
   '/dev/vdb':
@@ -13,4 +12,4 @@ profile::base::lvm::logical_volume:
   'lv_upload':
     volume_group: 'vg_upload'
     fs_type:      "xfs"
-    mountpath:    "/tmp"
+    mountpath:    "/image-upload"
