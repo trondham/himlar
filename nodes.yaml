@@ -53,7 +53,7 @@ nodesets:
   full:
     - role:   "db"
     - role:   "dashboard"
-    - role:   "designate"
+    - role:   "dns"
     - role:   "master"
       memory: 3096
     - role:   "compute"
