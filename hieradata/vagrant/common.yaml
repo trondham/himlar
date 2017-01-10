@@ -97,6 +97,7 @@ profile::network::services::dns_records:
     "network.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.86"
     "compute.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.86"
     "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.86"
+    "designate.api.%{hiera('domain_public')}":            "%{hiera('netcfg_public_netpart')}.200"
 
 #
 ## Secret data which for other environments are stored ooutside of this data tree
@@ -117,6 +118,7 @@ cinder_api_password:                                'cinder_pass'
 glance_api_password:                                'glance_pass'
 neutron_api_password:                               'neutron_pass'
 nova_api_password:                                  'nova_pass'
+designate_api_password:                             'designate_pass'
 
 # rabbitmq
 rabbitmq::default_pass:                             'guest'
@@ -156,6 +158,10 @@ nova::db::mysql::password:                          'nova_pass'
 nova::db::mysql_api::password:                      'nova_api_pass'
 nova::api::neutron_metadata_proxy_shared_secret:    'a_secret'
 nova::rabbit_password:                              'nova_quest'
+
+# designate.yaml
+designate::db::mysql::password:                     'designate_pass'
+designate::rabbit_password:                         'guest'
 
 # sensu.yaml
 sensu::rabbit_password:                             'sensu_guest'

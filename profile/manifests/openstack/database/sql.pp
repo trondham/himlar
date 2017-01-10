@@ -6,6 +6,7 @@ class profile::openstack::database::sql (
   $heat_enabled     = false,
   $trove_enabled    = false,
   $cinder_enabled   = false,
+  $designate_enabled = true,
   $database         = 'mariadb',
 ) {
 
@@ -42,6 +43,10 @@ class profile::openstack::database::sql (
 
   if $trove_enabled {
     include ::trove::db::mysql
+  }
+
+  if $designate_enabled {
+    include ::designate::db::mysql
   }
 
 }

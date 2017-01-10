@@ -7,6 +7,7 @@ class profile::openstack::identity (
   $nova_enabled       = true,
   $swift_enabled      = true,
   $trove_enabled      = true,
+  $designate_enabled  = true,
   $roles_extra        = [],
   $manage_firewall    = true,
   $firewall_extras    = {},
@@ -70,6 +71,10 @@ class profile::openstack::identity (
 
   if $trove_enabled {
     include ::trove::keystone::auth
+  }
+
+  if $designate_enabled {
+    include ::designate::keystone::auth
   }
 
   unless empty($roles_extra) {

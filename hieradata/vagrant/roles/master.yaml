@@ -9,7 +9,8 @@ include:
     - profile::openstack::compute::consoleproxy
     - profile::application::sslcert
     - profile::messaging::rabbitmq
-
+    - profile::openstack::designate
+    
 profile::messaging::rabbitmq::manage_rsyslog: true
 
 calico::compute_manage_bird_config:   false
@@ -64,6 +65,8 @@ profile::messaging::rabbitmq::users:
     password: "%{hiera('cinder::rabbit_password')}"
   neutron:
     password: "%{hiera('neutron::rabbit_password')}"
+  designate:
+    password: "%{hiera('designate::rabbit_password')}"
 #  glance:
 #    password: "%{hiera('glance::rabbit_password')}"
 
@@ -71,6 +74,7 @@ profile::messaging::rabbitmq::vhosts:
   nova: {}
   cinder: {}
   neutron: {}
+  designate: {}
 #  glance: {}
 
 profile::messaging::rabbitmq::user_permissions:
@@ -83,6 +87,10 @@ profile::messaging::rabbitmq::user_permissions:
     write_permission:     '.*'
     read_permission:      '.*'
   'neutron@neutron':
+    configure_permission: '.*'
+    write_permission:     '.*'
+    read_permission:      '.*'
+  'designate@designate':
     configure_permission: '.*'
     write_permission:     '.*'
     read_permission:      '.*'
