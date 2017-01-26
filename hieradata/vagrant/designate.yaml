@@ -4,21 +4,18 @@ designate::db::mysql::allowed_hosts:
   - 'localhost'
   - '%'
 
-# Turn on verbose
-designate::verbose: true
-
 # Logging via syslog
 designate::use_syslog: true
 
 #---------------------------------------------------------------------
 # RabbitMQ
 #---------------------------------------------------------------------
-designate::rabbit_userid:       "designate"
-designate::rabbit_virtual_host: "designate"
-designate::rabbit_hosts:
-  - "%{hiera('service__address__rabbitmq_01')}:5672"
-  - "%{hiera('service__address__rabbitmq_02')}:5672"
-  - "%{hiera('service__address__rabbitmq_03')}:5672"
+#designate::rabbit_userid:       "designate"
+#designate::rabbit_virtual_host: "designate"
+#designate::rabbit_hosts:
+#  - "%{hiera('service__address__rabbitmq_01')}:5672"
+#  - "%{hiera('service__address__rabbitmq_02')}:5672"
+#  - "%{hiera('service__address__rabbitmq_03')}:5672"
 
 
 #---------------------------------------------------------------------
@@ -80,8 +77,8 @@ designate::pool_manager::pool_id: '794ccc2c-d751-44fe-b57f-8894c9f5c842'
 #---------------------------------------------------------------------
 #designate::pool_manager_cache::sqlalchemy::connection: "mysql://designate:%{hiera('designate::db::mysql::password')}@%{hiera('service__address__mysql')}/designate_pool_manager"
 #designate::pool_manager_cache::sqlalchemy::max_retries: "-1"
-designate::pool_manager_cache::memcache::memcached_servers:
-  - "127.0.0.1"
+#designate::pool_manager_cache::memcache::memcached_servers:
+#  - "127.0.0.1"
 
 
 #---------------------------------------------------------------------
@@ -95,12 +92,12 @@ designate::mdns::host: "%{hiera('service__address__bind9')}"
 #---------------------------------------------------------------------
 # Sink
 #---------------------------------------------------------------------
-designate::sink::package_ensure: 'present'
-designate::sink::enabled: true
-designate::sink::service_ensure: 'running'
-designate::sink::enabled_notification_handlers:
-  - "nova_fixed"
-  - "neutron_floatingip"
+#designate::sink::package_ensure: 'present'
+#designate::sink::enabled: true
+#designate::sink::service_ensure: 'running'
+#designate::sink::enabled_notification_handlers:
+#  - "nova_fixed"
+#  - "neutron_floatingip"
 
 #---------------------------------------------------------------------
 # Bind9 backend
