@@ -21,6 +21,9 @@ include:
 neutron::use_syslog:    true
 neutron::log_facility:  'LOG_LOCAL5'
 
+# Manage default availability zone
+profile::openstack::compute::manage_az:            true
+
 profile::base::network::manage_httpproxy: true
 profile::network::yum_proxy::yum_proxy:   "http://%{hiera('mgmt__address__proxy')}:8888"
 
@@ -29,7 +32,8 @@ puppet::cron_cmd: "if [ -e /root/proxy.sh ] ; then source /root/proxy.sh ; fi ; 
   /usr/bin/env puppet agent --config %{puppet::dir}/puppet.conf --onetime --no-daemonize"
 
 profile::openstack::compute::migration::enable_nova_account: true
-
+# Set .ssh dir for nova to 0755 to enable sensu checks
+profile::openstack::compute::migration::chmod_ssh_dir:       true
 # Enable intance migration via ssh
 profile::firewall::pre::ssh_settings:
   source: "0.0.0.0/0" #FIXME (limit source)
@@ -57,19 +61,45 @@ profile::monitoring::sensu::agent::plugins:
     type:         package
     pkg_version:  '1.0.0'
 
+profile::monitoring::sensu::agent::plugin_gems:
+  sensu-plugins-himlar:
+    ensure:   '0.1.0'
+    provider: 'sensu_gem'
+    source:   'http://download.iaas.uio.no/uh-iaas/gem'
+
 # metadata api check
 profile::monitoring::sensu::agent::checks:
   'metadata-api':
     command:      "check-http.rb -u http://127.0.0.1:8775"
-    interval:     30
+    interval:     60
     subscribers:  ['checks']
+  'nova-ssh-key':
+    command:      "sudo /opt/sensu/embedded/bin/check-file-exists.rb -f /var/lib/nova/.ssh/id_rsa"
+    interval:     60
+    subscribers:  ['checks']
+  'metrics-disk':
+    type:         'metric'
+    command:      'metrics-disk-usage.rb --scheme disk.%{::hostname} -f -B G'
+    interval:     60
+    subscribers:  ['metrics']
+    handlers:     ['graphite_tcp']
+
+sudo::configs:
+  sensu_tty:
+    priority:   20
+    content:    'Defaults:sensu !requiretty'
+  sensu:
+    priority:   25
+    content:    'sensu ALL = (root) NOPASSWD: /opt/sensu/embedded/bin/check-file-exists.rb -f /var/lib/nova/.ssh/id_rsa'
+
 
 profile::openstack::compute::hypervisor::fix_snapshot_loc: true # FIXME - Should probably be removed for newton release
 
 calico::compute: true
 etcd::mode: 'proxy'
 
-calico::compute::bird_template: 'profile/bird/bird.conf.erb'
+calico::compute::bird_template:  'profile/bird/bird.conf.erb'
+calico::compute::bird6_template: 'profile/bird/bird6.conf.erb'
 
 named_interfaces::config:
   mgmt:

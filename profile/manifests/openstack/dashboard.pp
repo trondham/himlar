@@ -1,7 +1,6 @@
 # Dashboard
 class profile::openstack::dashboard(
   $manage_dashboard   = false,
-  $manage_ssl_cert    = false,
   $ports              = [80, 443],
   $manage_firewall    = false,
   $allow_from_network = undef,
@@ -23,11 +22,8 @@ class profile::openstack::dashboard(
     }
   }
 
-  if $manage_ssl_cert {
-    include profile::application::sslcert
-    Class['Profile::Application::Sslcert'] ~>
-    Service[$::horizon::params::http_service]
-  }
+  $policies = hiera_hash('profile::openstack::dashboard::policies')
+  create_resources('openstacklib::policy::base', $policies)
 
   if $manage_firewall {
     $hiera_allow_from_network = hiera_array('allow_from_network', undef)

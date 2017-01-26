@@ -18,8 +18,8 @@ mod 'resolv_conf', :ref => 'v3.0.3',             :git => github + 'saz/puppet-re
 mod 'lvm', :ref => '689d42a16c',                 :git => github + 'puppetlabs/puppetlabs-lvm'
 mod 'firewall', :ref => '1.5.0',                 :git => github + 'puppetlabs/puppetlabs-firewall'
 mod 'kmod', :ref => '2.1.0',                     :git => github + 'camptocamp/puppet-kmod'
-mod 'named_interfaces', :ref => '0.2.0',         :git => github + 'norcams/puppet-named_interfaces'
-mod 'network', :ref => 'cdf248d7c9',             :git => github + 'norcams/puppet-network'
+mod 'named_interfaces', :ref => '4e457dec37',    :git => github + 'norcams/puppet-named_interfaces'
+mod 'network', :ref => '10e6e1f140',             :git => github + 'norcams/puppet-network'
 mod 'ipmi', :ref => 'c4309504fd',                :git => github + 'norcams/puppet-ipmi'
 mod 'lldp', :ref => '06523de010',                :git => github + 'norcams/puppet-lldp'
 mod 'apt', :ref => '2.2.2',                      :git => github + 'puppetlabs/puppetlabs-apt'
@@ -32,7 +32,7 @@ mod 'googleauthenticator', :ref => 'norcams-0.1.1', :git => github + 'norcams/pu
 #
 # profile::network::leaf
 #
-mod 'quagga', :ref => 'dcd65e9877',              :git => github + 'norcams/puppet-quagga'
+mod 'quagga', :ref => '4f7cac717c',              :git => github + 'norcams/puppet-quagga'
 
 #
 # profile::network::
@@ -51,9 +51,9 @@ mod 'ipcalc', :ref => '1.2.2',                   :git => github + 'inkblot/puppe
 mod 'etcd', :ref => 'c26961fe94',                :git => github + 'norcams/puppet-etcd'
 
 #
-# profile::application::sslcert
+# profile::application::openssl
 #
-mod 'openssl', :ref => '1.5.0',                  :git => github + 'camptocamp/puppet-openssl'
+mod 'openssl', :ref => '1.9.0',                  :git => github + 'camptocamp/puppet-openssl'
 
 #
 # profile::application::consul
@@ -89,10 +89,9 @@ mod 'eyaml', :ref => 'v0.3.0',                   :git => github + 'ghoneycutt/pu
 mod 'bind', :ref => 'keyfile_resource_record',   :git => github + 'norcams/puppet-bind'
 
 #
-# foreman_bootstrap
+# bootstrap
 #
-mod 'foreman_bootstrap', :ref => '0.1.6',        :git => github + 'norcams/puppet-foreman_bootstrap'
-mod 'himlar_bootstrap', :ref => 'master',        :git => github + 'norcams/puppet-himlar_bootstrap'
+mod 'himlar_bootstrap', :ref => '1.0.0',         :git => github + 'norcams/puppet-himlar_bootstrap'
 
 #
 # profile::logging
@@ -102,6 +101,7 @@ mod 'logstash', :ref => '0.5.1',                  :git => github + 'elastic/pupp
 mod 'datacat', :ref => '9d2cd07b8777',            :git => github + 'richardc/puppet-datacat'
 mod 'elasticsearch', :ref => '0.10.3',            :git => github + 'elastic/puppet-elasticsearch'
 mod 'file_concat', :ref => '813132b5d77',         :git => github + 'electrical/puppet-lib-file_concat'
+mod 'logrotate', :ref => 'v1.4.0',                :git => github + 'yo61/puppet-logrotate'
 
 #
 # profile::monitoring
