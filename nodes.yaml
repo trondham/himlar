@@ -55,6 +55,8 @@ nodesets:
       memory:     2048
       cpus:       2
       location:   "vagrant"
+    - role:       "dns"
+      location:   "vagrant"
   full:
     - role:       "db"
     - role:       "mq"
