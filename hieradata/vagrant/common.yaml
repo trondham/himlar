@@ -34,6 +34,7 @@ service__address__rabbitmq_01:    "mq01.%{hiera('domain_trp')}"
 service__address__rabbitmq_02:    "mq01.%{hiera('domain_trp')}"
 service__address__rabbitmq_03:    "mq01.%{hiera('domain_trp')}"
 service__address__cinder_ip:      "%{hiera('netcfg_trp_netpart')}.86"
+service__address__designate_api:  "designate.%{hiera('domain_trp')}"
 
 #
 # Default interfaces
@@ -73,6 +74,7 @@ profile::network::services::dns_records:
     "network.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.86"
     "compute.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.86"
     "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.86"
+    "designate.api.%{hiera('domain_public')}":            "%{hiera('netcfg_public_netpart')}.100"
     # trp
     "mq01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.86"
     "image.%{hiera('domain_trp')}":                         "%{hiera('netcfg_trp_netpart')}.86"
@@ -82,6 +84,7 @@ profile::network::services::dns_records:
     "compute.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.86"
     "network.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.86"
     "identity.%{hiera('domain_trp')}":                      "%{hiera('netcfg_trp_netpart')}.86"
+    "designate.%{hiera('domain_trp')}":                     "%{hiera('netcfg_trp_netpart')}.100"
 
 #
 #  - Add vagrant user to wheel and users group
