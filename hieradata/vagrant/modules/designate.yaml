@@ -10,12 +10,12 @@ designate::use_syslog: true
 #---------------------------------------------------------------------
 # RabbitMQ
 #---------------------------------------------------------------------
-#designate::rabbit_userid:       "designate"
-#designate::rabbit_virtual_host: "designate"
-#designate::rabbit_hosts:
-#  - "%{hiera('service__address__rabbitmq_01')}:5672"
-#  - "%{hiera('service__address__rabbitmq_02')}:5672"
-#  - "%{hiera('service__address__rabbitmq_03')}:5672"
+designate::rabbit_userid:       "designate"
+designate::rabbit_virtual_host: "designate"
+designate::rabbit_hosts:
+  - "%{hiera('service__address__rabbitmq_01')}:5672"
+  - "%{hiera('service__address__rabbitmq_02')}:5672"
+  - "%{hiera('service__address__rabbitmq_03')}:5672"
 
 
 #---------------------------------------------------------------------
@@ -92,9 +92,9 @@ designate::mdns::host: "%{hiera('service__address__bind9')}"
 #---------------------------------------------------------------------
 # Sink
 #---------------------------------------------------------------------
-#designate::sink::package_ensure: 'present'
-#designate::sink::enabled: true
-#designate::sink::service_ensure: 'running'
+designate::sink::package_ensure: 'present'
+designate::sink::enabled: true
+designate::sink::service_ensure: 'running'
 #designate::sink::enabled_notification_handlers:
 #  - "nova_fixed"
 #  - "neutron_floatingip"
