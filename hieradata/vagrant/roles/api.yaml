@@ -67,6 +67,8 @@ profile::messaging::rabbitmq::users:
     password: "%{hiera('cinder::rabbit_password')}"
   neutron:
     password: "%{hiera('neutron::rabbit_password')}"
+  designate:
+    password: "%{hiera('designate::rabbit_password')}"
 
 profile::messaging::rabbitmq::vhosts:
   nova: {}
@@ -83,6 +85,10 @@ profile::messaging::rabbitmq::user_permissions:
     write_permission:     '.*'
     read_permission:      '.*'
   'neutron@neutron':
+    configure_permission: '.*'
+    write_permission:     '.*'
+    read_permission:      '.*'
+  'designate@designate':
     configure_permission: '.*'
     write_permission:     '.*'
     read_permission:      '.*'
