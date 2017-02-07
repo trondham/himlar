@@ -87,7 +87,7 @@ designate::pool_manager_cache::sqlalchemy::max_retries: "-1"
 designate::mdns::package_ensure: 'present'
 designate::mdns::enabled: true
 designate::mdns::service_ensure: 'running'
-designate::mdns::host: "%{hiera('service__address__bind9')}"
+designate::mdns::host: '0.0.0.0'
 
 #---------------------------------------------------------------------
 # Sink
