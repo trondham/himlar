@@ -74,6 +74,7 @@ profile::messaging::rabbitmq::vhosts:
   nova: {}
   cinder: {}
   neutron: {}
+  designate: {}
 
 profile::messaging::rabbitmq::user_permissions:
   'nova@nova':
