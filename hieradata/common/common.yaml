@@ -136,6 +136,9 @@ endpoint__image__public:          "https://image.api.%{hiera('domain_public')}:9
 endpoint__network__admin:         "http://network.%{hiera('domain_trp')}:9696"
 endpoint__network__internal:      "http://network.%{hiera('domain_trp')}:9696"
 endpoint__network__public:        "https://network.api.%{hiera('domain_public')}:9696"
+endpoint__designate__admin:       "http://designate.%{hiera('domain_trp')}:9001"
+endpoint__designate__internal:    "http://designate.%{hiera('domain_trp')}:9001"
+endpoint__designate__public:      "http://designate.api.%{hiera('domain_public')}:9001"
 
 #
 # DNS (merge of this and location)

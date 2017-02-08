@@ -11,7 +11,7 @@ class profile::openstack::designate (
     include ::designate::db
     include ::designate::api
     include ::designate::central
-#    include ::designate::pool_manager
+    include ::designate::pool_manager
 #    include ::designate::pool_manager_cache::memcache
     include ::designate::mdns
     include ::designate::sink

@@ -21,8 +21,11 @@ designate::rabbit_hosts:
 #---------------------------------------------------------------------
 # Authentication
 #---------------------------------------------------------------------
-designate::keystone::auth::password: "%{hiera('designate_api_password')}"
-designate::keystone::auth::region:   "%{location}"
+designate::keystone::auth::password:     "%{hiera('designate_api_password')}"
+designate::keystone::auth::region:       "%{location}"
+designate::keystone::auth::public_url:   "%{hiera('endpoint__designate__public')}"
+designate::keystone::auth::internal_url: "%{hiera('endpoint__designate__internal')}"
+designate::keystone::auth::admin_url:    "%{hiera('endpoint__designate__admin')}"
 
 #---------------------------------------------------------------------
 # Central
@@ -43,7 +46,7 @@ designate::api::package_ensure:    'present'
 designate::api::enabled:           true
 designate::api::service_ensure:    'running'
 designate::api::auth_strategy:     'keystone'
-designate::api::keystone_host:     "%{hiera('service__address__keystone')}"
+designate::api::keystone_host:     "identity.%{hiera('domain_trp')}"
 designate::api::keystone_port:     '35357'
 designate::api::keystone_protocol: 'http'
 designate::api::keystone_tenant:   'services'
