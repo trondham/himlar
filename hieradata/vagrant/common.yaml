@@ -35,6 +35,9 @@ service__address__rabbitmq_02:    "mq01.%{hiera('domain_trp')}"
 service__address__rabbitmq_03:    "mq01.%{hiera('domain_trp')}"
 service__address__cinder_ip:      "%{hiera('netcfg_trp_netpart')}.86"
 service__address__designate_api:  "designate.%{hiera('domain_trp')}"
+service__address__dns_master:     "%{hiera('netcfg_trp_netpart')}.110"
+service__address__dns_slave01:    "%{hiera('netcfg_trp_netpart')}.111"
+service__address__dns_slave02:    "%{hiera('netcfg_trp_netpart')}.112"
 
 #
 # Default interfaces
@@ -75,6 +78,9 @@ profile::network::services::dns_records:
     "compute.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.86"
     "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.86"
     "designate.api.%{hiera('domain_public')}":            "%{hiera('netcfg_public_netpart')}.100"
+    "dns-master.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.110"
+    "dns-slave01.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.111"
+    "dns-slave02.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.112"
     # trp
     "mq01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.86"
     "image.%{hiera('domain_trp')}":                         "%{hiera('netcfg_trp_netpart')}.86"
@@ -85,6 +91,9 @@ profile::network::services::dns_records:
     "network.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.86"
     "identity.%{hiera('domain_trp')}":                      "%{hiera('netcfg_trp_netpart')}.86"
     "designate.%{hiera('domain_trp')}":                     "%{hiera('netcfg_trp_netpart')}.100"
+    "dns-master.%{hiera('domain_trp')}":                    "%{hiera('netcfg_trp_netpart')}.110"
+    "dns-slave01.%{hiera('domain_trp')}":                   "%{hiera('netcfg_trp_netpart')}.111"
+    "dns-slave02.%{hiera('domain_trp')}":                   "%{hiera('netcfg_trp_netpart')}.112"
 
 #
 #  - Add vagrant user to wheel and users group

@@ -1,0 +1,2 @@
+---
+profile::openstack::designate::run_rndc_confgen: true

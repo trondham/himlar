@@ -5,7 +5,6 @@ include:
     - profile::logging::rsyslog::client
 
 profile::openstack::designate::manage_designate: true
-profile::openstack::designate::manage_designate_bind: true
 
 # 1. We want /usr/bin/openstack (not sure if it's strictly needed)
 # 2. designate-manage requires python2-oslo-reports and python2-suds
@@ -35,7 +34,8 @@ profile::base::yumrepo::repo_hash:
 profile::openstack::designate::my_pools:
   '794ccc2c-d751-44fe-b57f-8894c9f5c842':
     nameservers:
-      - '072b6384-c7d0-4685-8e89-39093ff4bf5f'
+      - '00000000-0000-0000-0000-000000000001'
+      - '00000000-0000-0000-0000-000000000002'
     targets:
       - 'b81c1479-c6df-4f75-b793-96d0b2a3de51'
 
@@ -43,46 +43,19 @@ profile::openstack::designate::my_pools:
 # Nameservers
 #---------------------------------------------------------------------
 profile::openstack::designate::my_nameservers:
-  '072b6384-c7d0-4685-8e89-39093ff4bf5f':
+  '00000000-0000-0000-0000-000000000001':
     port: 53
-    host: '127.0.0.1'
+    host: "%{hiera('service__address__dns01')}"
+  '00000000-0000-0000-0000-000000000002':
+    port: 53
+    host: "%{hiera('service__address__dns02')}"
 
 #---------------------------------------------------------------------
 # Pool targets
 #---------------------------------------------------------------------
 profile::openstack::designate::my_targets:
   'b81c1479-c6df-4f75-b793-96d0b2a3de51':
-    options: 'rndc_host: 127.0.0.1, rndc_port: 953, rndc_config_file: /etc/rndc.conf, rndc_key_file: /etc/rndc.key, port: 53, host: 127.0.0.1'
+    options: "rndc_host: %{hiera('service__address__designate_api')}, rndc_port: 953, rndc_config_file: /etc/rndc.conf, rndc_key_file: /etc/rndc.key, port: 53, host: %{hiera('service__address__designate_api')}"
     masters:
-      - '127.0.0.1:5354'
+      - "%{hiera('service__address__designate_api')}:5354"
     type: 'bind9'
-
-
-# named huskeliste
-#sed -i -e "s/listen-on port.*/listen-on port 53 { 127.0.0.1; 172.31.16.23; };/" /etc/named.conf
-#sed -i '/^options.*/i \
-#include "/etc/rndc.key"; \
-#controls { \
-#        inet 127.0.0.1 allow { localhost; } keys { "rndc-key"; }; \
-#};' /etc/named.conf
-#sed -i '/allow-query.*/d' /etc/named.conf
-#sed -i '/recursion.*/d' /etc/named.conf
-#sed -i '/^options.*/a \
-#        allow-new-zones yes; \
-#        allow-query { any; }; \
-#        recursion no;' /etc/named.conf
-#cat << EOF > /etc/rndc.conf
-#include "/etc/rndc.key";
-#options {
-#        default-key "rndc-key";
-#        default-server 127.0.0.1;
-#        default-port 953;
-#};
-#EOF
-#
-#setsebool -P named_write_master_zones on
-#chmod g+w /var/named
-#chown named:named /etc/rndc.conf
-#chown named:named /etc/rndc.key
-#chmod 600 /etc/rndc.key
-#

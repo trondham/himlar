@@ -3,19 +3,21 @@
   description: Default Bind9 Pool
   attributes: {}
   nameservers:
-    - host: 127.0.0.1
+    - host: <%= @dns_slave01 %>
+      port: 53
+    - host: <%= @dns_slave02 %>
       port: 53
   targets:
     - type: bind9
       description: Bind9 Server
       masters:
-        - host: 127.0.0.1
+        - host: <%= @mdns_server %>
           port: 5354
       options:
-        rndc_host: 127.0.0.1
+        rndc_host: <%= @dns_master %>
         rndc_port: 953
         rndc_config_file: /etc/rndc.conf
         rndc_key_file: /etc/rndc.key
         port: 53
-        host: 127.0.0.1
+        host: <%= @dns_master %>
   also_notifies: []

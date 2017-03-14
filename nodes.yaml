@@ -44,7 +44,7 @@ defaults:
 nodesets:
   default:
     - role:       "api"
-      memory:     3096
+      memory:     4096
       cpus:       2
       location:   "vagrant"
     - role:       "dashboard"
@@ -55,7 +55,15 @@ nodesets:
       memory:     2048
       cpus:       2
       location:   "vagrant"
-    - role:       "dns"
+    - role:       "name"
+      location:   "vagrant"
+    - role:       "dns-master"
+      location:   "vagrant"
+    - role:       "dns-slave"
+      hostid:     "01"
+      location:   "vagrant"
+    - role:       "dns-slave"
+      hostid:     "02"
       location:   "vagrant"
   full:
     - role:       "db"

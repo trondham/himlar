@@ -105,4 +105,4 @@ designate::sink::enabled_notification_handlers:
 #---------------------------------------------------------------------
 # Bind9 backend
 #---------------------------------------------------------------------
-designate::backend::bind9::rndc_host: "%{hiera('service__address__bind9')}"
+designate::backend::bind9::rndc_host: "%{hiera('service__address__dns_master')}"
