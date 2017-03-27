@@ -3,18 +3,21 @@
 include "/etc/rndc.key";
 
 controls  {
-        inet 127.0.0.1 port 953 allow { 127.0.0.1; } keys { "rndc-key"; };
+    inet 127.0.0.1 port 953 allow { 127.0.0.1; } keys { "rndc-key"; };
+    inet <%= @my_transport_addr %> port 953 allow { <%= @mdns_transport_addr %>; } keys { "rndc-key"; };
 };
 
 options  {
-        allow-new-zones yes; 
-        allow-query { any; }; 
-        recursion no;
-       directory "/var/named";
-       dnssec-enable yes;
-       dnssec-validation yes;
-       empty-zones-enable yes;
-       listen-on-v6 { any; };
+    allow-new-zones yes; 
+    allow-query { any; }; 
+    recursion no;
+    directory "/var/named";
+    dnssec-enable yes;
+    dnssec-validation yes;
+    empty-zones-enable yes;
+    listen-on-v6 { any; };
 };
+
+include "/etc/named.vagrant.zone.conf";
 
 include "/etc/named.rfc1912.zones";

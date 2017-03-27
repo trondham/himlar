@@ -100,9 +100,8 @@ designate::sink::enabled: true
 designate::sink::service_ensure: 'running'
 designate::sink::enabled_notification_handlers:
   - "nova_fixed"
-  - "neutron_floatingip"
 
 #---------------------------------------------------------------------
 # Bind9 backend
 #---------------------------------------------------------------------
-designate::backend::bind9::rndc_host: "%{hiera('service__address__dns_master')}"
+designate::backend::bind9::rndc_host: "%{hiera('service__address__ns_01')}"

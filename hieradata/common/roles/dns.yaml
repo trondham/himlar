@@ -1,2 +1,10 @@
 ---
 profile::openstack::designate::run_rndc_confgen: true
+
+profile::dns::ns::my_transport_addr:   '172.31.16.110'
+profile::dns::ns::mdns_transport_addr: '172.31.16.100'
+profile::dns::ns::ns1_transport_addr:  '172.31.16.110'
+profile::dns::ns::ns2_transport_addr:  '172.31.16.111'
+profile::dns::ns::ns1_public_addr:     '172.31.24.110'
+profile::dns::ns::ns2_public_addr:     '172.31.24.111'
+

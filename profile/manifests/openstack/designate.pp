@@ -4,10 +4,11 @@ class profile::openstack::designate (
   $my_nameservers = {},
   $my_pools = {},
   $my_targets = {},
-  $dns_master = {},
-  $dns_slave01 = {},
-  $dns_slave02 = {},
-  $mdns_server = {},
+  $mdns_transport_addr = {},
+  $ns1_transport_addr = {},
+  $ns2_transport_addr = {},
+  $ns1_public_addr = {},
+  $ns2_public_addr = {},
 )
 {
   include ::designate
@@ -39,6 +40,25 @@ class profile::openstack::designate (
     exec { 'fix_designate_pools':
       command     => '/usr/bin/designate-manage pool update --file /etc/designate/zone_config.yaml',
       refreshonly => true,
+    }
+
+    package { 'bind':
+      ensure => installed,
+    }
+    file { '/etc/rndc.conf':
+      content      => template("${module_name}/openstack/designate/rndc.conf.erb"),
+      mode         => '0640',
+      owner        => 'named',
+      group        => 'named',
+      require      => Package['bind'],
+    }
+    file { '/etc/rndc.key':
+      source  => "puppet:///modules/${module_name}/openstack/designate/rndc.key",
+      ensure  => file,
+      mode    => '0600',
+      owner   => 'named',
+      group   => 'named',
+      require => Package['bind'],
     }
 
   }

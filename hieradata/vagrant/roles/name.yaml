@@ -37,7 +37,8 @@ profile::openstack::designate::my_pools:
       - '00000000-0000-0000-0000-000000000001'
       - '00000000-0000-0000-0000-000000000002'
     targets:
-      - 'b81c1479-c6df-4f75-b793-96d0b2a3de51'
+      - '10000000-0000-0000-0000-000000000001'
+      - '10000000-0000-0000-0000-000000000002'
 
 #---------------------------------------------------------------------
 # Nameservers
@@ -45,17 +46,22 @@ profile::openstack::designate::my_pools:
 profile::openstack::designate::my_nameservers:
   '00000000-0000-0000-0000-000000000001':
     port: 53
-    host: "%{hiera('service__address__dns01')}"
+    host: "%{hiera('service__address__ns_01')}"
   '00000000-0000-0000-0000-000000000002':
     port: 53
-    host: "%{hiera('service__address__dns02')}"
+    host: "%{hiera('service__address__ns_02')}"
 
 #---------------------------------------------------------------------
 # Pool targets
 #---------------------------------------------------------------------
 profile::openstack::designate::my_targets:
-  'b81c1479-c6df-4f75-b793-96d0b2a3de51':
-    options: "rndc_host: %{hiera('service__address__designate_api')}, rndc_port: 953, rndc_config_file: /etc/rndc.conf, rndc_key_file: /etc/rndc.key, port: 53, host: %{hiera('service__address__designate_api')}"
+  '10000000-0000-0000-0000-000000000001':
+    options: "rndc_host: %{hiera('service__address__ns_01')}, rndc_port: 953, rndc_config_file: /etc/rndc.conf, rndc_key_file: /etc/rndc.key, port: 53, host: %{hiera('service__address__ns_01')}"
+    masters:
+      - "%{hiera('service__address__designate_api')}:5354"
+    type: 'bind9'
+  '10000000-0000-0000-0000-000000000002':
+    options: "rndc_host: %{hiera('service__address__ns_02')}, rndc_port: 953, rndc_config_file: /etc/rndc.conf, rndc_key_file: /etc/rndc.key, port: 53, host: %{hiera('service__address__ns_02')}"
     masters:
       - "%{hiera('service__address__designate_api')}:5354"
     type: 'bind9'

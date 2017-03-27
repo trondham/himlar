@@ -1,0 +1,18 @@
+$ORIGIN vagrant.iaas.intern.
+$TTL    3600
+@	IN	SOA	ns-01.vagrant.iaas.intern.    root.vagrant.iaas.intern. (
+                     2017032201         ; Serial
+                           3600         ; Refresh
+                           1800         ; Retry
+                         604800         ; Expire
+                          43200 )       ; Negative Cache TTL
+
+        IN      NS      ns-01.vagrant.iaas.intern.
+        IN      NS      ns-02.vagrant.iaas.intern.
+
+
+ns-01	  	  IN	  A		<%= @ns1_public_addr %>
+ns-02	  	  IN	  A		<%= @ns2_public_addr %>
+
+dns-master	  IN      CNAME		ns-01.vagrant.intern.iaas.
+dns-slave	  IN      CNAME		ns-02.vagrant.intern.iaas.

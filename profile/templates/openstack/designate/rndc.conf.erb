@@ -1,0 +1,11 @@
+include "/etc/rndc.key";
+options {
+        default-key "rndc-key";
+        default-server <%= @ns1_transport_addr %>;
+        default-port 953;
+};
+
+server ns-02 {
+        key       "rndc-key";
+        addresses { <%= @ns2_transport_addr %> port 953; };
+};

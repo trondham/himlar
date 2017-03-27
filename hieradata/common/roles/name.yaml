@@ -8,7 +8,8 @@ profile::openstack::openrc::password:     "%{hiera('designate_api_password')}"
 profile::openstack::openrc::username:     'designate'
 profile::openstack::openrc::project_name: 'services'
 
-profile::openstack::designate::dns_master:  "%{hiera('service__address__dns_master')}"
-profile::openstack::designate::dns_slave01: "%{hiera('service__address__dns_slave01')}"
-profile::openstack::designate::dns_slave02: "%{hiera('service__address__dns_slave02')}"
-profile::openstack::designate::mdns_server: "%{hiera('service__address__designate_api')}"
+profile::openstack::designate::mdns_transport_addr: "%{hiera('service__address__mdns')}"
+profile::openstack::designate::ns1_transport_addr:  "%{hiera('service__address__ns_01')}"
+profile::openstack::designate::ns2_transport_addr:  "%{hiera('service__address__ns_02')}"
+profile::openstack::designate::ns1_public_addr:     "%{hiera('public__address__ns_01')}"
+profile::openstack::designate::ns2_public_addr:     "%{hiera('public__address__ns_02')}"
