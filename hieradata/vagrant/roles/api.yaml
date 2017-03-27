@@ -95,6 +95,10 @@ profile::messaging::rabbitmq::user_permissions:
     configure_permission: '.*'
     write_permission:     '.*'
     read_permission:      '.*'
+  'designate@nova':
+    configure_permission: '.*'
+    write_permission:     '.*'
+    read_permission:      '.*'
 
 #
 # ROLE: IDENTITY
