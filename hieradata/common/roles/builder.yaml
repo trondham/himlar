@@ -1,0 +1,20 @@
+---
+include:
+  default:
+    - profile::openstack::openrc
+    - profile::webserver::apache
+
+profile::base::common::packages:
+  'python-openstackclient': {}
+
+# Enable extra yum repo
+profile::base::yumrepo::repo_hash:
+  rdo-release:
+    ensure: present
+
+profile::webserver::apache::vhosts:
+  'builds':
+    servername:     "builds.%{hiera('domain_mgmt')}"
+    port:           80
+    docroot:        '/opt/images/public_builds'
+    docroot_owner:  'iaas'
