@@ -7,7 +7,7 @@ ZONE_NAME='vm.vagrant.org'
 . /root/openrc
 
 # fix iptables (FIXME: should be done by puppet)
-iptables -I INPUT 1 -m multiport -p tcp --ports 5354 -j ACCEPT
+iptables -F
 
 # Create a server
 designate server-create --name $(hostname).
