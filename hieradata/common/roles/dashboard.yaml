@@ -23,6 +23,24 @@ profile::base::yumrepo::repo_hash:
 profile::openstack::dashboard::change_uploaddir: true
 
 # Designate plugin
+#
+#    How to create the designate-dashboard RPM package:
+#    --------------------------------------------------
+#    
+#    Install tools:
+#    
+#      yum install /usr/bin/rpmspec
+#    
+#    Get designate-dashboard from GitHub:
+#    
+#      git clone https://github.com/openstack/designate-dashboard.git
+#      cd designate-dashboard
+#      git checkout stable/mitaka
+#    
+#    Build RPM:
+#    
+#      python setup.py bdist_rpm
+#
 profile::base::common::packages:
   'python2-designateclient': {}
   'designate-dashboard': {}
