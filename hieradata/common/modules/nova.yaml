@@ -10,6 +10,13 @@ nova::os_region_name:              "%{location}"
 nova::use_syslog:           true
 nova::log_facility:         'LOG_LOCAL0'
 
+# for designate
+nova::notify_on_state_change:               'vm_and_task_state'
+nova::compute::instance_usage_audit:        true
+nova::compute::instance_usage_audit_period: 'hour'
+nova::notification_driver:                  'messagingv2'
+nova::notification_topics:                  'notifications'
+
 # rabbit mq (for rabbit_password see secrets)
 nova::rabbit_userid:        'nova'
 nova::rabbit_virtual_host:  'nova'
