@@ -11,7 +11,8 @@ class profile::openstack::dashboard(
   $site_branding        = 'UH-IaaS',
   $change_uploaddir     = false,
   $custom_uploaddir     = '/image-upload',
-  $enable_pwd_retrieval = false
+  $enable_pwd_retrieval = false,
+  $enable_designate     = false,
 ) {
 
   if $manage_dashboard {
@@ -52,6 +53,20 @@ class profile::openstack::dashboard(
     file { $custom_uploaddir:
       ensure => 'directory',
       owner  => 'apache',
+    }
+  }
+
+  # Designate plugin
+  if $enable_designate {
+    file { '/usr/share/openstack-dashboard/openstack_dashboard/local/enabled/_1720_project_dns_panel.py':
+      ensure => present,
+      source => 'file:///usr/lib/python2.7/site-packages/designatedashboard/enabled/_1720_project_dns_panel.py',
+      notify => Service['httpd']
+    }
+    file { '/usr/share/openstack-dashboard/openstack_dashboard/local/enabled/_1710_project_dns_panel_group.py':
+      ensure => present,
+      source => 'file:///usr/lib/python2.7/site-packages/designatedashboard/enabled/_1710_project_dns_panel_group.py',
+      notify => Service['httpd']
     }
   }
 }

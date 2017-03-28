@@ -22,6 +22,11 @@ profile::base::yumrepo::repo_hash:
 # Change default image upload dir from horizon
 profile::openstack::dashboard::change_uploaddir: true
 
+# Designate plugin
+profile::base::common::packages:
+  'python2-designateclient': {}
+  'designate-dashboard': {}
+
 # Sensu
 profile::monitoring::sensu::agent::plugins:
   sensu-plugins-apache:
