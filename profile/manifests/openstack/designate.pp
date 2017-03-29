@@ -17,6 +17,7 @@ class profile::openstack::designate (
   include ::designate::pool_manager
   include ::designate::mdns
   include ::designate::sink
+  include ::designate::config
 
   class { selinux:
     mode => 'enforcing',
