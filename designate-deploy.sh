@@ -9,6 +9,9 @@ ZONE_NAME='vm.vagrant.org'
 # fix iptables (FIXME: should be done by puppet)
 iptables -F
 
+# update pool config (FIXME: should be done by puppet)
+designate-manage pool update --file /etc/designate/zone_config.yaml
+
 # Create a server
 designate server-create --name $(hostname).
 
