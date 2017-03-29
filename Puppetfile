@@ -24,6 +24,7 @@ mod 'network', :ref => '10e6e1f140',             :git => github + 'norcams/puppe
 mod 'ipmi', :ref => 'c4309504fd',                :git => github + 'norcams/puppet-ipmi'
 mod 'lldp', :ref => '06523de010',                :git => github + 'norcams/puppet-lldp'
 mod 'apt', :ref => '2.2.2',                      :git => github + 'puppetlabs/puppetlabs-apt'
+mod 'selinux', :ref => 'v0.8.0',                 :git => github + 'voxpupuli/puppet-selinux'
 #
 # FreeBSD spesific
 #

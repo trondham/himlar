@@ -20,6 +20,14 @@ class profile::openstack::designate (
     include ::designate::mdns
     include ::designate::sink
 
+    class { selinux:
+      mode => 'enforcing',
+      type => 'targeted',
+    }
+    package { 'openstack-selinux':
+      ensure => installed,
+    }
+
     if $my_nameservers {
        create_resources('designate::pool_nameserver', $my_nameservers)
     }

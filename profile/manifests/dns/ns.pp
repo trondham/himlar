@@ -10,6 +10,15 @@ class profile::dns::ns (
   $firewall_extras = {}
 )
 {
+  class { selinux:
+    mode => 'enforcing',
+    type => 'targeted',
+  }
+  selinux::boolean { 'named_write_master_zones':
+    ensure     => 'on',
+    persistent => true,
+  }
+  
   package { 'bind':
     ensure => installed,
   }
@@ -60,10 +69,6 @@ class profile::dns::ns (
     validate_cmd => '/usr/sbin/named-checkconf %',
     require      => Package['bind'],
   }
-  exec { '/usr/sbin/setsebool -P named_write_master_zones on':
-    unless  => "/usr/sbin/getsebool named_write_master_zones | /usr/bin/egrep -q 'on$'",
-    require => Package['bind'],
-  }
   file { '/etc/rndc.key':
     source  => "puppet:///modules/${module_name}/dns/bind/rndc.key",
     ensure  => file,
@@ -82,8 +87,7 @@ class profile::dns::ns (
                    File['/var/named'],
                    File['/var/named/vagrant.iaas.intern.zone'],
                    File['/etc/named.vagrant.zone.conf'],
-                   File['/etc/named.conf'],
-                   Exec['/usr/sbin/setsebool -P named_write_master_zones on'] ],
+                   File['/etc/named.conf'] ],
     }
   }
   else {
@@ -94,8 +98,7 @@ class profile::dns::ns (
                    File['/etc/rndc.conf'],
                    File['/var/named'],
                    File['/etc/named.vagrant.zone.conf'],
-                   File['/etc/named.conf'],
-                   Exec['/usr/sbin/setsebool -P named_write_master_zones on'] ],
+                   File['/etc/named.conf'] ],
     }
   }
 
@@ -114,6 +117,5 @@ class profile::dns::ns (
       extras => $firewall_extras
     }
   }
-
 }
 
