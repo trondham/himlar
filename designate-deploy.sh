@@ -6,9 +6,6 @@ ZONE_NAME='vm.vagrant.org'
 
 . /root/openrc
 
-# fix iptables (FIXME: should be done by puppet)
-iptables -F
-
 # update pool config (FIXME: should be done by puppet)
 designate-manage pool update --file /etc/designate/zone_config.yaml
 

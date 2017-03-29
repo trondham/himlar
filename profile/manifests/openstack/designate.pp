@@ -8,6 +8,7 @@ class profile::openstack::designate (
   $ns2_transport_addr = {},
   $ns1_public_addr = {},
   $ns2_public_addr = {},
+  $manage_firewall = false,
 )
 {
   include ::designate
@@ -66,5 +67,16 @@ class profile::openstack::designate (
     owner   => 'named',
     group   => 'named',
     require => Package['bind'],
+  }
+
+  if $manage_firewall {
+    profile::firewall::rule { '001 designate incoming':
+      port   => 9001,
+      proto  => 'tcp'
+    }
+    profile::firewall::rule { '002 designate mdns incoming':
+      port   => 5354,
+      proto  => 'tcp'
+    }
   }
 }

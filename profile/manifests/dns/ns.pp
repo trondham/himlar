@@ -103,19 +103,18 @@ class profile::dns::ns (
   }
 
   if $manage_firewall {
-    profile::firewall::rule { '001 dns accept tcp':
+    profile::firewall::rule { '001 dns incoming tcp':
       port   => 53,
       proto  => 'tcp'
     }
-    profile::firewall::rule { '002 dns accept udp':
+    profile::firewall::rule { '002 dns incoming udp':
       port   => 53,
       proto  => 'udp'
     }
-    profile::firewall::rule { '003 dns rndc accept tcp':
+    profile::firewall::rule { '003 rndc incoming - bind only':
       port   => 953,
       proto  => 'tcp',
       extras => $firewall_extras
     }
   }
 }
-

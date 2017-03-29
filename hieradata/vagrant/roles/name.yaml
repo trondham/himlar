@@ -4,6 +4,9 @@ include:
     - profile::openstack::designate
     - profile::logging::rsyslog::client
 
+# Add iptables rules
+profile::openstack::designate::manage_firewall: true
+
 # 1. We want /usr/bin/openstack (not sure if it's strictly needed)
 # 2. designate-manage requires python2-oslo-reports and python2-suds
 # 3. pool-manager requires python-tooz
