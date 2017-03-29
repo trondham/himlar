@@ -18,6 +18,9 @@ class profile::openstack::designate (
   include ::designate::mdns
   include ::designate::sink
 
+  # do things in proper order
+  Class['::designate'] -> Class['profile::openstack::designate']
+  
   class { selinux:
     mode => 'enforcing',
     type => 'targeted',
