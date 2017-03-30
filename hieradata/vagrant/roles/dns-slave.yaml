@@ -1,7 +1,0 @@
----
-include:
-  default:
-    - profile::dns::ns_slave
-    - profile::logging::rsyslog::client
-
-profile::openstack::designate::run_rndc_confgen: false

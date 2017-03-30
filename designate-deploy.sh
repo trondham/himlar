@@ -2,7 +2,7 @@
 #
 # run as root!
 
-ZONE_NAME='vm.vagrant.org'
+ZONE_NAME='vagrant.uh-iaas.no'
 
 . /root/openrc
 
@@ -10,8 +10,15 @@ ZONE_NAME='vm.vagrant.org'
 designate-manage pool update --file /etc/designate/zone_config.yaml
 
 # Tenant ID to own all managed resources - like auto-created records etc.
-OPENSTACK_TENANT_ID=$(openstack project show openstack -c id -f value)
+OPENSTACK_TENANT_ID=$(openstack project show services -c id -f value)
 openstack-config --set /etc/designate/designate.conf service:central managed_resource_tenant_id $OPENSTACK_TENANT_ID
+
+# Restart services
+systemctl restart designate-api
+systemctl restart designate-central
+systemctl restart designate-mdns
+systemctl restart designate-pool-manager
+systemctl restart designate-sink
 
 # Create a server
 designate server-create --name $(hostname).
