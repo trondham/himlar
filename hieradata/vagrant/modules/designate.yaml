@@ -35,8 +35,7 @@ designate::central::enabled:                    true
 designate::central::service_ensure:             'running'
 designate::central::backend_driver:             'bind9'
 designate::central::managed_resource_email:     'iaas-core@usit.uio.no'
-# the tenant "openstack" should own all managed resources(?)
-designate::central::managed_resource_tenant_id: '0399756087f34ed8878c5efae74b78ce'
+designate::central::managed_resource_tenant_id: 'openstack'
 designate::central::min_ttl:                    '300'
 
 #---------------------------------------------------------------------
