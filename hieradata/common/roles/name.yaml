@@ -1,6 +1,7 @@
 ---
 include:
   default:
+    - profile::openstack::designate
     - profile::logging::rsyslog::client
     - profile::openstack::openrc
 

@@ -104,6 +104,10 @@ public__address__dashboard:       "dashboard.%{hiera('domain_frontend')}"
 public__address__access:          "access.%{hiera('domain_frontend')}"
 public__address__console:         "console.%{hiera('domain_public')}"
 
+# DNS servers
+public__address__ns_01:           "%{hiera('netcfg_public_netpart')}.116"
+public__address__ns_02:           "%{hiera('netcfg_public_netpart')}.117"
+
 #
 # Services (internal non openstack services)
 #
@@ -115,6 +119,15 @@ service__address__rabbitmq_02:    "mq01.%{hiera('domain_trp')}"
 service__address__rabbitmq_03:    "mq01.%{hiera('domain_trp')}"
 service__address__cinder_ip:      "%{hiera('netcfg_trp_netpart')}.46"
 service__address__consoleproxy:
+service__address__ns_01:          "%{hiera('netcfg_trp_netpart')}.116"
+service__address__ns_02:          "%{hiera('netcfg_trp_netpart')}.117"
+
+#
+# Services (internal openstack services)
+#
+service__address__designate_api:  "designate.%{hiera('domain_trp')}"
+service__address__mdns:           "%{hiera('netcfg_trp_netpart')}.115"
+
 #
 # Management (proxy and logger must be IP)
 #
@@ -124,6 +137,8 @@ mgmt__address__monitor:           "monitor.%{hiera('domain_mgmt')}"
 mgmt__address__foreman:           "%{::location}-admin-01.%{hiera('domain_mgmt')}"
 mgmt__address__repo:              "repo.%{hiera('domain_mgmt')}"
 mgmt__address__mq_01:             "%{hiera('netcfg_mgmt_netpart')}.31"
+mgmt__address__ns_01:             "%{hiera('netcfg_mgmt_netpart')}.116"
+mgmt__address__ns_02:             "%{hiera('netcfg_mgmt_netpart')}.117"
 
 #
 # Endpoints (including protocole)
@@ -145,7 +160,7 @@ endpoint__network__internal:      "http://network.%{hiera('domain_trp')}:9696"
 endpoint__network__public:        "https://network.api.%{hiera('domain_public')}:9696"
 endpoint__designate__admin:       "http://designate.%{hiera('domain_trp')}:9001"
 endpoint__designate__internal:    "http://designate.%{hiera('domain_trp')}:9001"
-endpoint__designate__public:      "http://designate.api.%{hiera('domain_public')}:9001"
+endpoint__designate__public:      "https://designate.api.%{hiera('domain_public')}:9001"
 
 #
 # DNS (merge of this and location)
@@ -191,6 +206,9 @@ profile::network::services::dns_records:
     "%{::location}-compute-05.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.112"
     "%{::location}-compute-06.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.113"
     "%{::location}-controller-04.%{hiera('domain_mgmt')}":  "%{hiera('netcfg_mgmt_netpart')}.114"
+    "%{::location}-name-01.%{hiera('domain_mgmt')}":        "%{hiera('netcfg_mgmt_netpart')}.115"
+    "%{::location}-ns-01.%{hiera('domain_mgmt')}":          "%{hiera('netcfg_mgmt_netpart')}.116"
+    "%{::location}-ns-02.%{hiera('domain_mgmt')}":          "%{hiera('netcfg_mgmt_netpart')}.117"
     # mgmt
     "foreman.%{hiera('domain_mgmt')}":                      "%{hiera('netcfg_mgmt_netpart')}.11"
     "puppet.%{hiera('domain_mgmt')}":                       "%{hiera('netcfg_mgmt_netpart')}.11"
@@ -208,6 +226,10 @@ profile::network::services::dns_records:
     "compute.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.66"
     "network.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.71"
     "identity.%{hiera('domain_trp')}":                      "%{hiera('netcfg_trp_netpart')}.81"
+    "name.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.115"
+    "ns01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.116"
+    "ns02.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.117"
+    
 
 #
 # Network configuration data

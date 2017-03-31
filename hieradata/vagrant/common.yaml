@@ -34,14 +34,11 @@ service__address__rabbitmq_01:    "mq01.%{hiera('domain_trp')}"
 service__address__rabbitmq_02:    "mq01.%{hiera('domain_trp')}"
 service__address__rabbitmq_03:    "mq01.%{hiera('domain_trp')}"
 service__address__cinder_ip:      "%{hiera('netcfg_trp_netpart')}.86"
-service__address__designate_api:  "designate.%{hiera('domain_trp')}"
-service__address__mdns:           "%{hiera('netcfg_trp_netpart')}.100"
-service__address__ns_01:          "%{hiera('netcfg_trp_netpart')}.110"
-service__address__ns_02:          "%{hiera('netcfg_trp_netpart')}.111"
 
-# DNS servers
-public__address__ns_01:           "%{hiera('netcfg_public_netpart')}.110"
-public__address__ns_02:           "%{hiera('netcfg_public_netpart')}.111"
+#
+# Endpoints (including protocole)
+#
+endpoint__designate__public:      "http://designate.api.%{hiera('domain_public')}:9001"
 
 #
 # Default interfaces
@@ -81,9 +78,9 @@ profile::network::services::dns_records:
     "network.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.86"
     "compute.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.86"
     "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.86"
-    "designate.api.%{hiera('domain_public')}":            "%{hiera('netcfg_public_netpart')}.100"
-    "ns1.%{hiera('domain_public')}":                      "%{hiera('netcfg_public_netpart')}.110"
-    "ns2.%{hiera('domain_public')}":                      "%{hiera('netcfg_public_netpart')}.111"
+    "designate.api.%{hiera('domain_public')}":            "%{hiera('netcfg_public_netpart')}.115"
+    "ns01.%{hiera('domain_public')}":                     "%{hiera('netcfg_public_netpart')}.116"
+    "ns02.%{hiera('domain_public')}":                     "%{hiera('netcfg_public_netpart')}.117"
     # trp
     "mq01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.86"
     "image.%{hiera('domain_trp')}":                         "%{hiera('netcfg_trp_netpart')}.86"
@@ -93,9 +90,9 @@ profile::network::services::dns_records:
     "compute.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.86"
     "network.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.86"
     "identity.%{hiera('domain_trp')}":                      "%{hiera('netcfg_trp_netpart')}.86"
-    "designate.%{hiera('domain_trp')}":                     "%{hiera('netcfg_trp_netpart')}.100"
-    "ns1.%{hiera('domain_trp')}":                           "%{hiera('netcfg_trp_netpart')}.110"
-    "ns2.%{hiera('domain_trp')}":                           "%{hiera('netcfg_trp_netpart')}.111"
+    "designate.%{hiera('domain_trp')}":                     "%{hiera('netcfg_trp_netpart')}.115"
+    "ns01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.116"
+    "ns02.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.117"
 
 #
 #  - Add vagrant user to wheel and users group

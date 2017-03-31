@@ -76,7 +76,6 @@ profile::messaging::rabbitmq::vhosts:
   nova: {}
   cinder: {}
   neutron: {}
-  designate: {}
 
 profile::messaging::rabbitmq::user_permissions:
   'nova@nova':
@@ -88,10 +87,6 @@ profile::messaging::rabbitmq::user_permissions:
     write_permission:     '.*'
     read_permission:      '.*'
   'neutron@neutron':
-    configure_permission: '.*'
-    write_permission:     '.*'
-    read_permission:      '.*'
-  'designate@designate':
     configure_permission: '.*'
     write_permission:     '.*'
     read_permission:      '.*'
