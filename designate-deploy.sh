@@ -19,13 +19,6 @@ designate-manage pool update --file /etc/designate/pools.yaml
 OPENSTACK_TENANT_ID=$(openstack project show openstack -c id -f value)
 openstack-config --set /etc/designate/designate.conf service:central managed_resource_tenant_id $OPENSTACK_TENANT_ID
 
-# Restart services
-systemctl restart designate-api
-systemctl restart designate-central
-systemctl restart designate-mdns
-systemctl restart designate-pool-manager
-systemctl restart designate-sink
-
 # Create a server
 designate server-create --name $(hostname).
 
