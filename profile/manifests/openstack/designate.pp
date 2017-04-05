@@ -38,15 +38,15 @@ class profile::openstack::designate (
     create_resources('designate::pool_target', $my_targets)
   }
 
-  file { '/etc/designate/zone_config.yaml':
-    content      => template("${module_name}/openstack/designate/zone_config.yaml.erb"),
+  file { '/etc/designate/pools.yaml':
+    content      => template("${module_name}/openstack/designate/pools.yaml.erb"),
     mode         => '0644',
     owner        => 'root',
     group        => 'root',
     notify       => Exec['fix_designate_pools'],
   } ->
   exec { 'fix_designate_pools':
-    command     => '/usr/bin/designate-manage pool update --file /etc/designate/zone_config.yaml',
+    command     => '/usr/bin/designate-manage pool update --file /etc/designate/pools.yaml',
     refreshonly => true,
   }
 
