@@ -21,6 +21,8 @@ include:
 neutron::use_syslog:    true
 neutron::log_facility:  'LOG_LOCAL5'
 
+profile::openstack::compute::hypervisor::manage_resume_guests_state:  true
+
 # Manage default availability zone
 profile::openstack::compute::manage_az:            true
 
@@ -44,8 +46,6 @@ profile::base::common::manage_lvm: true
 profile::openstack::openrc::password:     "%{hiera('nova_api_password')}"
 profile::openstack::openrc::username:     'nova'
 profile::openstack::openrc::project_name: 'services'
-
-dnsmasq::package_ensure: '2.72_calico1.0.0-1.el7'
 
 profile::openstack::network::plugin: calico
 

@@ -25,7 +25,7 @@ class profile::openstack::dashboard(
   }
 
   $policies = hiera_hash('profile::openstack::dashboard::policies')
-  create_resources('openstacklib::policy::base', $policies)
+  create_resources('openstacklib::policy::base', $policies, { require => Class['horizon']})
 
   if $manage_firewall {
     $hiera_allow_from_network = hiera_array('allow_from_network', undef)
@@ -35,7 +35,7 @@ class profile::openstack::dashboard(
       default => $allow_from_network
     }
     profile::firewall::rule { '235 public openstack-dashboard accept tcp':
-      port   => $ports,
+      dport  => $ports,
       source => $source,
       extras => $firewall_extras,
     }

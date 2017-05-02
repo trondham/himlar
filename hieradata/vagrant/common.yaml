@@ -186,6 +186,9 @@ nova::rabbit_password:                              'nova_quest'
 designate::db::mysql::password:                     'designate_pass'
 designate::rabbit_password:                         'guest'
 
+# imagebuilder
+profile::openstack::resource::imagebuilder::password: 'imagebuilder_pass'
+
 # sensu.yaml
 sensu::rabbit_password:                             'sensu_guest'
 sensu_api_password:                                 'sensu'

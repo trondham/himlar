@@ -186,6 +186,7 @@ profile::network::services::dns_records:
     "%{::location}-console-01.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.61"
     "%{::location}-novactrl-01.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_netpart')}.66"
     "%{::location}-network-01.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.71"
+    "%{::location}-network-02.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.72"
     "%{::location}-identity-01.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_netpart')}.81"
     "%{::location}-api-01.%{hiera('domain_mgmt')}":         "%{hiera('netcfg_mgmt_netpart')}.86"
     "%{::location}-cephmon-01.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.91"
@@ -384,7 +385,7 @@ networks:
         lease: 43200
   local1:
     domain:
-      mgmt: mgmt.local.iaas.intern
+      mgmt: mgmt.local1.iaas.intern
     subnet:
       mgmt: 172.31.4.0/24
     dhcp:
@@ -401,7 +402,7 @@ networks:
         outiface: eth1
   local2:
     domain:
-      mgmt: mgmt.local.iaas.intern
+      mgmt: mgmt.local2.iaas.intern
     subnet:
       mgmt: 172.31.5.0/24
     dhcp:
