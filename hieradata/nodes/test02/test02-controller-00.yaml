@@ -1,4 +1,8 @@
 ---
+include:
+  default:
+    - profile::network::nat
+
 network::interfaces_hash:
   'em1':
     onboot:       'yes'
@@ -45,6 +49,11 @@ network::interfaces_hash:
 # Use controller-01 for himlar bootstrap
 profile::bootstrap::himlar::manage_bootstrap_scripts: true
 
+# NAT
+profile::network::nat::enable_snat: true
+profile::network::nat::source:      "%{hiera('netcfg_public_netpart')}.0/%{hiera('netcfg_public_netmask')}"
+profile::network::nat::outiface:    'em4'
+
 # On this host sdd is the OS disk
 lvm::volume_groups:
   vg_ext:
@@ -62,10 +71,10 @@ network::mroutes_hash:
     routes:
       10.100.200.0/24:  172.30.32.1
 
-################ TEMP DATA - SHALL BE FIXED IN COMMON #########################
-
 named_interfaces::config:
   mgmt:
-     - br0
+    - br0
   trp:
-     - br1
+    - br1
+  public:
+    - em4

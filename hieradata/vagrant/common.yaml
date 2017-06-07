@@ -187,7 +187,7 @@ designate::db::mysql::password:                     'designate_pass'
 designate::rabbit_password:                         'guest'
 
 # imagebuilder
-profile::openstack::resource::imagebuilder::password: 'imagebuilder_pass'
+imagebuilder_password:                              'imagebuilder_pass'
 
 # sensu.yaml
 sensu::rabbit_password:                             'sensu_guest'
