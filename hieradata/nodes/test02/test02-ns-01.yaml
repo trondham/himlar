@@ -1,4 +1,7 @@
 ---
+profile::dns::ns::master: true
+profile::dns::ns::my_transport_addr: "%{hiera('netcfg_trp_netpart')}.116"
+
 network::interfaces_hash:
   'eth0':
     ipaddress: '172.28.32.116'
