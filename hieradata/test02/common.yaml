@@ -56,6 +56,7 @@ profile::network::services::dns_records:
     "image.api.%{hiera('domain_public')}":                  "%{hiera('netcfg_mgmt_netpart')}.86" #FIXME (mgmt net)
     "volume.api.%{hiera('domain_public')}":                 "%{hiera('netcfg_mgmt_netpart')}.86" #FIXME (mgmt net)
     "compute.api.%{hiera('domain_public')}":                "%{hiera('netcfg_mgmt_netpart')}.86" #FIXME (mgmt net)
+    "designate.api.%{hiera('domain_public')}":              "%{hiera('netcfg_mgmt_netpart')}.86" #FIXME (mgmt net)
     "status.%{hiera('domain_public')}":                     "%{hiera('netcfg_mgmt_netpart')}.86" #FIXME (mgmt net)
     "access.%{hiera('domain_public')}":                     "%{hiera('netcfg_mgmt_netpart')}.56" #FIXME (mgmt net)
     "console.%{hiera('domain_public')}":                    "%{hiera('netcfg_mgmt_netpart')}.61" #FIXME (mgmt net)
