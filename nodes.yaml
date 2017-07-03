@@ -84,6 +84,12 @@ nodesets:
       memory:     2048
     - role:       "status"
     - role:       "builder"
+    - role:       "nat"
+      memory:     1024
+      cpus:       1
+      box:        "norcams/freebsd"
+    - role:       "admin"
+      memory:     3096
   infra:
     - role:       "login"
     - role:       "controller"

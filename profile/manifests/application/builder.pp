@@ -26,7 +26,9 @@ class profile::application::builder (
   } ->
   file { '/opt/images/public_builds':
     ensure => directory,
-    mode   => '0755'
+    mode   => '0755',
+    owner  => $user,
+    group  => $group
   }
 
   file { '/etc/imagebuilder':
@@ -52,6 +54,11 @@ class profile::application::builder (
     managehome => true,
     gid        => $group,
     before     => Class['profile::openstack::openrc']
+  } ->
+  file { "/home/${user}/build_scripts":
+    ensure => directory,
+    owner  => $user,
+    group  => $group
   }
 
   create_resources('profile::application::builder::jobs', hiera_hash('profile::application::builder::images', {}))
