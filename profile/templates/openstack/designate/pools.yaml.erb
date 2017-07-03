@@ -8,9 +8,9 @@
     - host: <%= @ns2_public_addr %>
       port: 53
   ns_records:
-    - hostname: ns-01.vagrant.iaas.intern.
+    - hostname: <%= @ns1_public_name %>
       priority: 1
-    - hostname: ns-02.vagrant.iaas.intern.
+    - hostname: <%= @ns2_public_name %>
       priority: 2
   targets:
     - type: bind9

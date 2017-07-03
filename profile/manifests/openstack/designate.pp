@@ -8,6 +8,8 @@ class profile::openstack::designate (
   $ns2_transport_addr = {},
   $ns1_public_addr = {},
   $ns2_public_addr = {},
+  $ns1_public_name = {},
+  $ns2_public_name = {},
   $manage_firewall = false,
 )
 {

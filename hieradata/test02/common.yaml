@@ -47,6 +47,8 @@ allow_from_network: # FIXME (public net and mgmt net)
 # DNS servers
 public__address__ns_01:           "%{hiera('netcfg_mgmt_netpart')}.116"
 public__address__ns_02:           "%{hiera('netcfg_mgmt_netpart')}.117"
+public__name__ns_01:              "ns01.%{hiera('domain_mgmt')}"
+public__name__ns_02:              "ns02.%{hiera('domain_mgmt')}"
 
 #
 # DNS (merge of common and this)

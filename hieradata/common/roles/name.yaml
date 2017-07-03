@@ -14,6 +14,8 @@ profile::openstack::designate::ns1_transport_addr:  "%{hiera('service__address__
 profile::openstack::designate::ns2_transport_addr:  "%{hiera('service__address__ns_02')}"
 profile::openstack::designate::ns1_public_addr:     "%{hiera('public__address__ns_01')}"
 profile::openstack::designate::ns2_public_addr:     "%{hiera('public__address__ns_02')}"
+profile::openstack::designate::ns1_public_name:     "%{hiera('public__name__ns_01')}"
+profile::openstack::designate::ns2_public_name:     "%{hiera('public__name__ns_02')}"
 
 # Add iptables rules
 profile::openstack::designate::manage_firewall: true

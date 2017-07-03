@@ -109,6 +109,8 @@ public__address__console:         "console.%{hiera('domain_public')}"
 # DNS servers
 public__address__ns_01:           "%{hiera('netcfg_public_netpart')}.116"
 public__address__ns_02:           "%{hiera('netcfg_public_netpart')}.117"
+public__name__ns_01:              "ns01.%{hiera('domain_public')}"
+public__name__ns_02:              "ns02.%{hiera('domain_public')}"
 
 #
 # Services (internal non openstack services)
@@ -219,6 +221,8 @@ profile::network::services::dns_records:
     "logger.%{hiera('domain_mgmt')}":                       "%{hiera('netcfg_mgmt_netpart')}.13"
     "monitor.%{hiera('domain_mgmt')}":                      "%{hiera('netcfg_mgmt_netpart')}.14"
     "builder.%{hiera('domain_mgmt')}":                      "%{hiera('netcfg_mgmt_netpart')}.15"
+    "ns01.%{hiera('domain_mgmt')}":                         "%{hiera('netcfg_mgmt_netpart')}.116"
+    "ns02.%{hiera('domain_mgmt')}":                         "%{hiera('netcfg_mgmt_netpart')}.117"
     # trp
     "status.%{hiera('domain_trp')}":                        "%{hiera('netcfg_trp_netpart')}.21"
     "mq01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.31"
