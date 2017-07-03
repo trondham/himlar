@@ -28,6 +28,11 @@ profile::highavailability::loadbalancing::haproxy::haproxy_listens:
       http-request:   'add-header X-Forwarded-Proto https if { ssl_fc }'
     bind:
       "%{::ipaddress_mgmt1}:9696":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
+  designate:
+    options:
+      http-request:   'add-header X-Forwarded-Proto https if { ssl_fc }'
+    bind:
+      "%{::ipaddress_mgmt1}:9001":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
   status:
     options:
       http-request:   'add-header X-Forwarded-Proto https if { ssl_fc }'
