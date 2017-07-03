@@ -54,7 +54,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_listens:
       http-request:   'add-header X-Forwarded-Proto https if { ssl_fc }'
     bind:
       "%{::ipaddress_public1}:9696":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
-  designate:
+  name:
     options:
       http-request:   'add-header X-Forwarded-Proto https if { ssl_fc }'
     bind:
@@ -107,8 +107,8 @@ profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
     ipaddresses:        ["network.%{hiera('domain_trp')}"]
     ports:              '9696'
     options:            'check'
-  designate:
-    listening_service:  'designate'
+  name:
+    listening_service:  'name'
     server_names:       ['name-01']
     ipaddresses:        ["name.%{hiera('domain_trp')}"]
     ports:              '9001'
