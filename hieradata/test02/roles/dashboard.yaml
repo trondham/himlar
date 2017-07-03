@@ -13,3 +13,6 @@ profile::base::lvm::logical_volume:
     volume_group: 'vg_upload'
     fs_type:      "xfs"
     mountpath:    "/image-upload"
+
+# Enable designate plugin
+profile::openstack::dashboard::enable_designate: true
