@@ -90,7 +90,7 @@ profile::network::services::dns_records:
     "compute.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.86"
     "network.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.86"
     "identity.%{hiera('domain_trp')}":                      "%{hiera('netcfg_trp_netpart')}.86"
-    "designate.%{hiera('domain_trp')}":                     "%{hiera('netcfg_trp_netpart')}.115"
+    "name.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.115"
     "ns01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.116"
     "ns02.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.117"
 

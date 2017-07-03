@@ -127,7 +127,7 @@ service__address__ns_02:          "%{hiera('netcfg_trp_netpart')}.117"
 #
 # Services (internal openstack services)
 #
-service__address__designate_api:  "designate.%{hiera('domain_trp')}"
+service__address__designate_api:  "name.%{hiera('domain_trp')}"
 service__address__mdns:           "%{hiera('netcfg_trp_netpart')}.115"
 
 #
@@ -160,8 +160,8 @@ endpoint__image__public:          "https://image.api.%{hiera('domain_public')}:9
 endpoint__network__admin:         "http://network.%{hiera('domain_trp')}:9696"
 endpoint__network__internal:      "http://network.%{hiera('domain_trp')}:9696"
 endpoint__network__public:        "https://network.api.%{hiera('domain_public')}:9696"
-endpoint__designate__admin:       "http://designate.%{hiera('domain_trp')}:9001"
-endpoint__designate__internal:    "http://designate.%{hiera('domain_trp')}:9001"
+endpoint__designate__admin:       "http://name.%{hiera('domain_trp')}:9001"
+endpoint__designate__internal:    "http://name.%{hiera('domain_trp')}:9001"
 endpoint__designate__public:      "https://designate.api.%{hiera('domain_public')}:9001"
 
 #
