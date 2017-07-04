@@ -39,7 +39,7 @@ class profile::dns::ns (
   }
   if $master {
     file { "/etc/named.${internal_zone}.conf":
-      content      => template("${module_name}/dns/bind/master.${internal_zone}.conf.erb"),
+      content      => template("${module_name}/dns/bind/master.internal.conf.erb"),
       mode         => '0640',
       owner        => 'root',
       group        => 'named',
@@ -55,7 +55,7 @@ class profile::dns::ns (
   }
   else {
     file { "/etc/named.${internal_zone}.conf":
-      content      => template("${module_name}/dns/bind/slave.${internal_zone}.conf.erb"),
+      content      => template("${module_name}/dns/bind/slave.internal.conf.erb"),
       mode         => '0640',
       owner        => 'root',
       group        => 'named',
