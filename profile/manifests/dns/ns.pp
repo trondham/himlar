@@ -7,7 +7,8 @@ class profile::dns::ns (
   $ns2_public_addr = {},
   $master = {},
   $manage_firewall = {},
-  $firewall_extras = {}
+  $firewall_extras = {},
+  $internal_zone = {}
 )
 {
   class { selinux:
@@ -37,15 +38,15 @@ class profile::dns::ns (
     require      => Package['bind'],
   }
   if $master {
-    file { '/etc/named.vagrant.zone.conf':
-      content      => template("${module_name}/dns/bind/master.vagrant.zone.conf.erb"),
+    file { "/etc/named.${internal_zone}.conf":
+      content      => template("${module_name}/dns/bind/master.${internal_zone}.conf.erb"),
       mode         => '0640',
       owner        => 'root',
       group        => 'named',
       require      => Package['bind'],
     }
-    file { '/var/named/vagrant.iaas.intern.zone':
-      content      => template("${module_name}/dns/bind/vagrant.iaas.intern.zone.erb"),
+    file { "/var/named/${internal_zone}.zone":
+      content      => template("${module_name}/dns/bind/${internal_zone}.zone.erb"),
       mode         => '0640',
       owner        => 'root',
       group        => 'named',
@@ -53,8 +54,8 @@ class profile::dns::ns (
     }
   }
   else {
-    file { '/etc/named.vagrant.zone.conf':
-      content      => template("${module_name}/dns/bind/slave.vagrant.zone.conf.erb"),
+    file { "/etc/named.${internal_zone}.conf":
+      content      => template("${module_name}/dns/bind/slave.${internal_zone}.conf.erb"),
       mode         => '0640',
       owner        => 'root',
       group        => 'named',
@@ -85,8 +86,8 @@ class profile::dns::ns (
       require => [ File['/etc/rndc.key'],
                    File['/etc/rndc.conf'],
                    File['/var/named'],
-                   File['/var/named/vagrant.iaas.intern.zone'],
-                   File['/etc/named.vagrant.zone.conf'],
+                   File["/var/named/${internal_zone}.zone"],
+                   File["/etc/named.${internal_zone}.conf"],
                    File['/etc/named.conf'] ],
     }
   }
@@ -97,7 +98,7 @@ class profile::dns::ns (
       require => [ File['/etc/rndc.key'],
                    File['/etc/rndc.conf'],
                    File['/var/named'],
-                   File['/etc/named.vagrant.zone.conf'],
+                   File["/etc/named.${internal_zone}.conf"],
                    File['/etc/named.conf'] ],
     }
   }
