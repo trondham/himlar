@@ -16,10 +16,10 @@ netcfg_trp_netpart:     '172.31.12'
 netcfg_trp_netmask:     '255.255.255.0'
 netcfg_trp_gateway:     '172.31.12.1'
 netcfg_trp_gateway6:    'fd00::1'
-netcfg_mgmt_netpart:    '172.31.4'
 netcfg_trp_netpart6:    'fd00'
-netcfg_mgmt_netmask:    '255.255.255.0'
 netcfg_trp_netmask6:    '64'
+netcfg_mgmt_netpart:    '172.31.4'
+netcfg_mgmt_netmask:    '255.255.255.0'
 netcfg_mgmt_gateway:    '172.31.4.10'
 netcfg_public_netmask:  '255.255.255.0'
 netcfg_public_netpart:  '192.168.12'
@@ -69,6 +69,8 @@ profile::network::services::dns_records:
     "network.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.250"
     "compute.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.250"
     "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
+    # mgmt
+    "%{::location}-login-01.%{hiera('domain_mgmt')}":   "%{hiera('netcfg_mgmt_netpart')}.10"
 
 #
 ## Secret data which for other environments are stored ooutside of this data tree

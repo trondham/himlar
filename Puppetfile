@@ -2,7 +2,7 @@
 # git repo base URIs
 #
 github = 'https://github.com/'
-local  = 'iaas@git.norcams.org:'
+#local  = 'iaas@git.norcams.org:'
 
 #
 # profile::base::common
@@ -20,7 +20,7 @@ mod 'lvm', :ref => '689d42a16c',                 :git => github + 'puppetlabs/pu
 mod 'firewall', :ref => '1.8.2',                 :git => github + 'puppetlabs/puppetlabs-firewall'
 mod 'kmod', :ref => '2.1.0',                     :git => github + 'camptocamp/puppet-kmod'
 mod 'named_interfaces', :ref => '88ce713994',    :git => github + 'norcams/puppet-named_interfaces'
-mod 'network', :ref => '10e6e1f140',             :git => github + 'norcams/puppet-network'
+mod 'network', :ref => 'e739f24fa3',             :git => github + 'norcams/puppet-network'
 mod 'ipmi', :ref => 'c4309504fd',                :git => github + 'norcams/puppet-ipmi'
 mod 'lldp', :ref => '06523de010',                :git => github + 'norcams/puppet-lldp'
 mod 'apt', :ref => '2.2.2',                      :git => github + 'puppetlabs/puppetlabs-apt'
@@ -77,7 +77,7 @@ mod 'gitolite', :ref => '1.0',                   :git => github + 'uib/puppet-gi
 
 # profile::application::foreman
 #
-mod 'zack/r10k', '2.5.2'                         # forge
+mod 'voxpupuli/r10k', :ref => 'v4.2.0',          :git => github + 'voxpupuli/puppet-r10k'
 mod 'theforeman/foreman', :ref => '7.0.0',       :git => github + 'theforeman/puppet-foreman.git'
 mod 'theforeman/concat_native', '1.5.0'          # forge
 mod 'theforeman/tftp', '2.0.0'                   # forge
@@ -168,9 +168,10 @@ mod 'libvirt', :ref => '0.3.2-norcams2',         :git => github + 'norcams/puppe
 mod 'ceph', :ref => '6a12d71f43',                :git => github + 'openstack/puppet-ceph'
 
 #
-# ceph
+# ha
 #
 mod 'haproxy', :ref => '1.5.0',                  :git => github + 'puppetlabs/puppetlabs-haproxy'
+mod 'corosync', :ref => 'v5.0.0',                :git => github + 'voxpupuli/puppet-corosync'
 
 #
 # Common libs
