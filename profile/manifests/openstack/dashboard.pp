@@ -58,11 +58,11 @@ class profile::openstack::dashboard(
 
   # Designate plugin
   if $enable_designate {
-    file { '/usr/share/openstack-dashboard/openstack_dashboard/local/enabled/_1720_project_dns_panel.py':
-      ensure => present,
-      source => 'file:///usr/lib/python2.7/site-packages/designatedashboard/enabled/_1720_project_dns_panel.py',
-      notify => Service['httpd']
-    }
+#    file { '/usr/share/openstack-dashboard/openstack_dashboard/local/enabled/_1720_project_dns_panel.py':
+#      ensure => present,
+#      source => 'file:///usr/lib/python2.7/site-packages/designatedashboard/enabled/_1720_project_dns_panel.py',
+#      notify => Service['httpd']
+#    }
     file { '/usr/share/openstack-dashboard/openstack_dashboard/local/enabled/_1710_project_dns_panel_group.py':
       ensure => present,
       source => 'file:///usr/lib/python2.7/site-packages/designatedashboard/enabled/_1710_project_dns_panel_group.py',
