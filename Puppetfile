@@ -149,7 +149,7 @@ mod 'glance', :ref => '8.2.0',                   :git => github + 'openstack/pup
 mod 'cinder', :ref => '8.2.0',                   :git => github + 'openstack/puppet-cinder'
 mod 'neutron', :ref => '8.3.0',                  :git => github + 'openstack/puppet-neutron'
 mod 'nova', :ref => '8.2.0',                     :git => github + 'openstack/puppet-nova'
-mod 'designate', :ref => '3448697',              :git => github + 'norcams/puppet-designate'
+mod 'designate', :ref => 'fa62489',              :git => github + 'openstack/puppet-designate'
 mod 'horizon', :ref => 'norcams-mitaka',         :git => github + 'norcams/puppet-horizon'
 mod 'keystone', :ref => 'norcams/newton',        :git => github + 'norcams/puppet-keystone'
 
