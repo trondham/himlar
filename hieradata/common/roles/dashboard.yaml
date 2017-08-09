@@ -45,6 +45,9 @@ profile::base::common::packages:
   'python2-designateclient': {}
   'designate-dashboard': {}
 
+# Override repo "rdo-release"
+openstack_version: 'newton'
+
 # Sensu
 profile::monitoring::sensu::agent::plugins:
   sensu-plugins-apache:
