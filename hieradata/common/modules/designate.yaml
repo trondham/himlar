@@ -27,6 +27,9 @@ designate::keystone::auth::public_url:   "%{hiera('endpoint__designate__public')
 designate::keystone::auth::internal_url: "%{hiera('endpoint__designate__internal')}"
 designate::keystone::auth::admin_url:    "%{hiera('endpoint__designate__admin')}"
 
+designate::keystone::authtoken::password:     "%{hiera('designate_api_password')}"
+designate::keystone::authtoken::auth_url:     "http://identity.%{hiera('domain_trp')}:35357"
+
 #---------------------------------------------------------------------
 # Central
 #---------------------------------------------------------------------
