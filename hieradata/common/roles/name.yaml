@@ -35,8 +35,8 @@ profile::base::common::packages:
 # Don't purge sudo stuff
 sudo::purge: false
 
-# Override repo "rdo-release": liberty -> mitaka
-openstack_version: 'mitaka'
+# Override repo "rdo-release"
+openstack_version: 'newton'
 
 # Enable extra yum repo
 profile::base::yumrepo::repo_hash:
