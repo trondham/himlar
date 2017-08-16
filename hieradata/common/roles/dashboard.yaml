@@ -46,7 +46,7 @@ profile::base::common::packages:
   'designate-dashboard': {}
 
 # Override repo "rdo-release"
-openstack_version: 'newton'
+#openstack_version: 'newton'
 
 # Sensu
 profile::monitoring::sensu::agent::plugins:
