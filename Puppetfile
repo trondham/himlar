@@ -146,8 +146,8 @@ mod 'rabbitmq', :ref => '8527f20',                 :git => github + 'puppetlabs/
 # profile::openstack::*
 #
 mod 'glance', :ref => '9.6.0',                   :git => github + 'openstack/puppet-glance'
-mod 'cinder', :ref => '8.2.0',                   :git => github + 'openstack/puppet-cinder'
-mod 'neutron', :ref => '8.3.0',                  :git => github + 'openstack/puppet-neutron'
+mod 'cinder', :ref => '9.5.0',                   :git => github + 'openstack/puppet-cinder'
+mod 'neutron', :ref => '9.5.0',                  :git => github + 'openstack/puppet-neutron'
 mod 'nova', :ref => '8.2.0',                     :git => github + 'openstack/puppet-nova'
 mod 'designate', :ref => 'fa62489',              :git => github + 'openstack/puppet-designate'
 mod 'horizon', :ref => 'norcams-newton',         :git => github + 'norcams/puppet-horizon'
