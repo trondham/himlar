@@ -47,10 +47,10 @@ profile::base::yumrepo::repo_hash:
 designate::config::designate_config:
   handler:nova_fixed/format:
     value: "'vm-%(octet0)s-%(octet1)s-%(octet2)s-%(octet3)s.%(zone)s'"
-  service:api/enabled_extensions_v1:
-    value: 'diagnostics, quotas, reports, sync, touch'
-  service:api/enabled_extensions_v2:
-    value: 'quotas, reports'
+#  service:api/enabled_extensions_v1:
+#    value: 'diagnostics, quotas, reports, sync, touch'
+#  service:api/enabled_extensions_v2:
+#    value: 'quotas, reports'
 
 #---------------------------------------------------------------------
 # Pools

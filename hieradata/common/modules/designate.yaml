@@ -57,6 +57,10 @@ designate::api::keystone_user:     'designate'
 designate::api::keystone_password: "%{hiera('designate_api_password')}"
 designate::api::enable_api_v1:     false
 designate::api::enable_api_v2:     true
+#designate::api::enabled_extensions_v1:     foo
+designate::api::enabled_extensions_v2:
+  - 'quotas'
+  - 'reports'
 # needs to be '0.0.0.0' for it to bind to localhost as well
 designate::api::api_host:          "0.0.0.0"
 designate::api::api_port:          '9001'
