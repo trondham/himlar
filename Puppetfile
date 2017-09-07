@@ -25,6 +25,7 @@ mod 'ipmi', :ref => 'c4309504fd',                :git => github + 'norcams/puppe
 mod 'lldp', :ref => '06523de010',                :git => github + 'norcams/puppet-lldp'
 mod 'apt', :ref => '2.2.2',                      :git => github + 'puppetlabs/puppetlabs-apt'
 mod 'selinux', :ref => 'v0.8.0',                 :git => github + 'voxpupuli/puppet-selinux'
+
 #
 # FreeBSD spesific
 #
@@ -148,9 +149,9 @@ mod 'rabbitmq', :ref => '8527f20',                 :git => github + 'puppetlabs/
 mod 'glance', :ref => '9.6.0',                   :git => github + 'openstack/puppet-glance'
 mod 'cinder', :ref => '9.5.0',                   :git => github + 'openstack/puppet-cinder'
 mod 'neutron', :ref => '9.5.0',                  :git => github + 'openstack/puppet-neutron'
-mod 'nova', :ref => '8.2.0',                     :git => github + 'openstack/puppet-nova'
+mod 'nova', :ref => '9.6.0',                     :git => github + 'openstack/puppet-nova'
 mod 'designate', :ref => 'fa62489',              :git => github + 'openstack/puppet-designate'
-mod 'horizon', :ref => 'norcams-newton',         :git => github + 'norcams/puppet-horizon'
+mod 'horizon', :ref => 'norcams-mitaka',         :git => github + 'norcams/puppet-horizon'
 mod 'keystone', :ref => 'norcams/newton',        :git => github + 'norcams/puppet-keystone'
 
 mod 'oslo', :ref => '9.5.0',                     :git => github + 'openstack/puppet-oslo'
