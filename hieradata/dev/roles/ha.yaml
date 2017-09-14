@@ -110,6 +110,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
     mappings:
       - "%{hiera('public__address__access')}":      'uib-https-uh-access'
       - "%{hiera('public__address__dashboard')}":   'uib-https-uh-dashboard'
+      - 'exch.uib.no':                              'uib-https-exch'
   'public_domains':
     ensure: present
     mappings:
@@ -167,6 +168,11 @@ profile::highavailability::loadbalancing::haproxy::haproxy_backends:
       - balance:      'roundrobin'
       - option:
         - 'httpchk /healthcheck.html'
+  uib-https-exch:
+    mode:             'tcp'
+    options:
+      - balance:      'roundrobin'
+#      - option:       ['ssl-hello-chk']
   bk-uib-ldaps:
     mode:             'tcp'
     options:
@@ -217,6 +223,13 @@ profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
     ports:              '389'
     server_names:       ['t1ldap01.uib.no']
     ipaddresses:        ['129.177.5.183']
+    options:
+      - 'check'
+  'uib-https-exch':
+    listening_service:  'uib-https-exch'
+    ports:              443
+    server_names:       ['exchange01.uib.no', 'exchange02.uib.no']
+    ipaddresses:        ['129.177.14.178','129.177.14.179']
     options:
       - 'check'
 
@@ -345,19 +358,19 @@ profile::highavailability::corosync::primitives:
 profile::highavailability::corosync::locations:
   'pubip_location1':
     primitive:  'pubip1'
-    node_name:  "%hiera('corosync_cluster_node1')"
+    node_name:  "%{hiera('corosync_cluster_node1')}"
     score:      'INFINITY'
   'pubip_location2':
     primitive:  'pubip2'
-    node_name:  "%hiera('corosync_cluster_node2')"
+    node_name:  "%{hiera('corosync_cluster_node2')}"
     score:      'INFINITY'
   'uibip_location1':
     primitive:  'uibip1'
-    node_name:  "%hiera('corosync_cluster_node1')"
+    node_name:  "%{hiera('corosync_cluster_node1')}"
     score:      'INFINITY'
   'uibip_location2':
     primitive:  'uibip2'
-    node_name:  "%hiera('corosync_cluster_node2')"
+    node_name:  "%{hiera('corosync_cluster_node2')}"
     score:      'INFINITY'
 
 profile::highavailability::corosync::colocations:

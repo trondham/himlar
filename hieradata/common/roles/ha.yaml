@@ -11,6 +11,9 @@ profile::base::selinux::manage_selinux: true
 
 profile::base::common::packages:
   'nmap-ncat': {}
+  'bash-completion': {}
+  'bash-completion-extras': {}
+  'jq': {}
 
 #
 # Firewall must be added in location or node section
@@ -117,9 +120,9 @@ profile::highavailability::corosync::clones:
 profile::highavailability::corosync::locations:
   'vip_location1':
     primitive:  'vip1'
-    node_name:  "%hiera('corosync_cluster_node1')"
+    node_name:  "%{hiera('corosync_cluster_node1')}"
     score:      'INFINITY'
   'vip_location2':
     primitive:  'vip2'
-    node_name:  "%hiera('corosync_cluster_node2')"
+    node_name:  "%{hiera('corosync_cluster_node2')}"
     score:      'INFINITY'

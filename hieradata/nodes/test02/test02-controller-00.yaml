@@ -46,6 +46,13 @@ network::interfaces_hash:
     netmask:      '255.255.255.0'
     defroute:     'no'
     bridge_stp:   'off'
+  'br2':
+    onboot:       'yes'
+    type:         'Bridge'
+    ipaddress:    '192.168.122.1'
+    netmask:      '255.255.255.0'
+    defroute:     'no'
+    bridge_stp:   'off'
 
 # NAT
 profile::network::nat::enable_snat: true
@@ -65,9 +72,9 @@ lvm::volume_groups:
 # route to public net via leaf-01
 # (test02 is a special case since leaf runs inside this node)
 network::mroutes_hash:
-  br1:
+  br2:
     routes:
-      10.100.200.0/24:  172.30.32.1
+      10.100.200.0/24:  192.168.122.2
 
 named_interfaces::config:
   mgmt:

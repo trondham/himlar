@@ -119,7 +119,7 @@ public__name__ns_02:              "ns02.%{hiera('domain_public')}"
 #
 service__address__mysql:          "db02.%{hiera('domain_trp')}"
 service__address__status:         "status.%{hiera('domain_trp')}"
-service__address__etcd_cluster:   "network.%{hiera('domain_trp')}"
+service__address__etcd_cluster:   "%{hiera('netcfg_trp_netpart')}.71"
 service__address__rabbitmq_01:    "mq01.%{hiera('domain_trp')}"
 service__address__rabbitmq_02:    "mq01.%{hiera('domain_trp')}"
 service__address__rabbitmq_03:    "mq01.%{hiera('domain_trp')}"
@@ -228,17 +228,17 @@ profile::network::services::dns_records:
     # trp
     "status.%{hiera('domain_trp')}":                        "%{hiera('netcfg_trp_netpart')}.21"
     "mq01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.31"
-    "image.%{hiera('domain_trp')}":                         "%{hiera('netcfg_trp_netpart')}.36"
     "db01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.41"
     "db02.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.42"
-    "volume.%{hiera('domain_trp')}":                        "%{hiera('netcfg_trp_netpart')}.46"
-    "compute.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.66"
-    "network.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.71"
-    "identity.%{hiera('domain_trp')}":                      "%{hiera('netcfg_trp_netpart')}.81"
+    "image.%{hiera('domain_trp')}":                         "%{hiera('netcfg_trp_netpart')}.86"
+    "volume.%{hiera('domain_trp')}":                        "%{hiera('netcfg_trp_netpart')}.86"
+    "compute.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.86"
+    "network.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.86"
+    "identity.%{hiera('domain_trp')}":                      "%{hiera('netcfg_trp_netpart')}.86"
     "name.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.115"
     "ns01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.116"
     "ns02.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.117"
-    
+
 
 #
 # Network configuration data

@@ -53,6 +53,9 @@ profile::base::common::packages:
   'networking-calico': {}
   'python-openstackclient': {}
   'gcc-c++': {}
+  'bash-completion': {}
+  'bash-completion-extras': {}
+  'jq': {}
 
 # Sensu (needs gcc-c++)
 profile::monitoring::sensu::agent::plugins:
