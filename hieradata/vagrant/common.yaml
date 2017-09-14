@@ -72,6 +72,8 @@ profile::network::services::dns_records:
     "network.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.86"
     "compute.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.86"
     "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.86"
+    "ns01.%{hiera('domain_public')}":                     "%{hiera('netcfg_public_netpart')}.116"
+    "ns02.%{hiera('domain_public')}":                     "%{hiera('netcfg_public_netpart')}.117"
     # trp
     "mq01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.86"
     "image.%{hiera('domain_trp')}":                         "%{hiera('netcfg_trp_netpart')}.86"
@@ -81,6 +83,8 @@ profile::network::services::dns_records:
     "compute.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.86"
     "network.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.86"
     "identity.%{hiera('domain_trp')}":                      "%{hiera('netcfg_trp_netpart')}.86"
+    "ns01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.116"
+    "ns02.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.117"
 
 #
 #  - Add vagrant user to wheel and users group
@@ -97,6 +101,18 @@ sudo::configs:
   vagrant:
     priority: 10
     content: 'vagrant ALL=(ALL) NOPASSWD:ALL'
+
+profile::network::services::dns_options:
+  CNAME:
+    default:
+      ttl: 3600
+      keyfile: "/etc/rndc.key"
+      server: "%{hiera('netcfg_mgmt_netpart')}.11"
+  A:
+    default:
+      ttl: 3600
+      keyfile: "/etc/rndc.key"
+      server: "%{hiera('netcfg_mgmt_netpart')}.11"
 
 #
 ## Secret data which for other environments are stored ooutside of this data tree
