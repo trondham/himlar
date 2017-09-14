@@ -1,0 +1,7 @@
+---
+include:
+  default:
+    - profile::dns::ns
+    - profile::logging::rsyslog::client
+
+profile::dns::ns::internal_zone: "vagrant.iaas.intern"
