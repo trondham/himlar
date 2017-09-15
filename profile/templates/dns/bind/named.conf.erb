@@ -4,7 +4,7 @@ include "/etc/rndc.key";
 
 controls  {
     inet 127.0.0.1 port 953 allow { 127.0.0.1; } keys { "rndc-key"; };
-    inet <%= @my_transport_addr %> port 953 allow { <%= @mdns_transport_addr %>; } keys { "rndc-key"; };
+#    inet <%= @my_transport_addr %> port 953 allow { <%= @mdns_transport_addr %>; } keys { "rndc-key"; };
 };
 
 options  {

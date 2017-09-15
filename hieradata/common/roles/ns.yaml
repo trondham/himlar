@@ -1,5 +1,5 @@
 ---
-profile::dns::ns::mdns_transport_addr: "%{hiera('service__address__mdns')}"
+#profile::dns::ns::mdns_transport_addr: "%{hiera('service__address__mdns')}"
 profile::dns::ns::ns1_transport_addr:  "%{hiera('service__address__ns_01')}"
 profile::dns::ns::ns2_transport_addr:  "%{hiera('service__address__ns_02')}"
 profile::dns::ns::ns1_public_addr:     "%{hiera('public__address__ns_01')}"

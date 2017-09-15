@@ -1,6 +1,6 @@
 class profile::dns::ns (
   $my_transport_addr = {},
-  $mdns_transport_addr = {},
+  #$mdns_transport_addr = {},
   $ns1_transport_addr = {},
   $ns2_transport_addr = {},
   $ns1_public_addr = {},
@@ -19,7 +19,7 @@ class profile::dns::ns (
     ensure     => 'on',
     persistent => true,
   }
-  
+
   package { 'bind':
     ensure => installed,
   }
