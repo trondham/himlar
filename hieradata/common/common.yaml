@@ -109,8 +109,8 @@ public__address__access:          "access.%{hiera('domain_frontend')}"
 public__address__console:         "console.%{hiera('domain_public')}"
 
 # DNS servers
-public__address__ns_01:           "%{hiera('netcfg_public_netpart')}.116"
-public__address__ns_02:           "%{hiera('netcfg_public_netpart')}.117"
+public__address__ns_01:           "%{hiera('netcfg_public_netpart')}.16"
+public__address__ns_02:           "%{hiera('netcfg_public_netpart')}.17"
 public__name__ns_01:              "ns01.%{hiera('domain_public')}"
 public__name__ns_02:              "ns02.%{hiera('domain_public')}"
 
@@ -125,8 +125,8 @@ service__address__rabbitmq_02:    "mq01.%{hiera('domain_trp')}"
 service__address__rabbitmq_03:    "mq01.%{hiera('domain_trp')}"
 service__address__cinder_ip:      "%{hiera('netcfg_trp_netpart')}.46"
 service__address__consoleproxy:
-service__address__ns_01:          "%{hiera('netcfg_trp_netpart')}.116"
-service__address__ns_02:          "%{hiera('netcfg_trp_netpart')}.117"
+service__address__ns_01:          "%{hiera('netcfg_trp_netpart')}.16"
+service__address__ns_02:          "%{hiera('netcfg_trp_netpart')}.17"
 
 #
 # Management (proxy and logger must be IP)
@@ -137,8 +137,8 @@ mgmt__address__monitor:           "monitor.%{hiera('domain_mgmt')}"
 mgmt__address__foreman:           "%{::location}-admin-01.%{hiera('domain_mgmt')}"
 mgmt__address__repo:              "repo.%{hiera('domain_mgmt')}"
 mgmt__address__mq_01:             "%{hiera('netcfg_mgmt_netpart')}.31"
-mgmt__address__ns_01:             "%{hiera('netcfg_mgmt_netpart')}.116"
-mgmt__address__ns_02:             "%{hiera('netcfg_mgmt_netpart')}.117"
+mgmt__address__ns_01:             "%{hiera('netcfg_mgmt_netpart')}.16"
+mgmt__address__ns_02:             "%{hiera('netcfg_mgmt_netpart')}.17"
 
 #
 # Endpoints (including protocole)

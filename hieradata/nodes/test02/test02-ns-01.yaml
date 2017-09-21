@@ -1,10 +1,10 @@
 ---
 profile::dns::ns::master: true
-profile::dns::ns::my_transport_addr: "%{hiera('netcfg_trp_netpart')}.116"
+profile::dns::ns::my_transport_addr: "%{hiera('netcfg_trp_netpart')}.16"
 
 network::interfaces_hash:
   'eth0':
-    ipaddress: '172.28.32.116'
+    ipaddress: '172.28.32.16'
     netmask:   '255.255.255.0'
     gateway:   '172.28.32.10'
     mtu:       '1500'
@@ -13,7 +13,7 @@ network::interfaces_hash:
     domain:    'test.iaas.uio.no'
     defroute:  'yes'
   'eth1':
-    ipaddress: '172.30.32.116'
+    ipaddress: '172.30.32.16'
     netmask:   '255.255.255.0'
     gateway:   '172.30.32.1'
     defroute:  'no'

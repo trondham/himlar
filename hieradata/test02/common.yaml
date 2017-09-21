@@ -41,8 +41,8 @@ allow_from_network: # FIXME (public net and mgmt net)
   - '192.168.122.1/32'
 
 # DNS servers
-public__address__ns_01:           "%{hiera('netcfg_mgmt_netpart')}.116"
-public__address__ns_02:           "%{hiera('netcfg_mgmt_netpart')}.117"
+public__address__ns_01:           "%{hiera('netcfg_mgmt_netpart')}.16"
+public__address__ns_02:           "%{hiera('netcfg_mgmt_netpart')}.17"
 public__name__ns_01:              "ns01.%{hiera('domain_mgmt')}"
 public__name__ns_02:              "ns02.%{hiera('domain_mgmt')}"
 

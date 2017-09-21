@@ -63,6 +63,8 @@ profile::firewall::pre::ssh_settings:
 profile::network::services::dns_records:
   A:
     # public
+    "ns01.%{hiera('domain_public')}":                     "%{hiera('netcfg_public_netpart')}.16"
+    "ns02.%{hiera('domain_public')}":                     "%{hiera('netcfg_public_netpart')}.17"
     "dashboard.%{hiera('domain_public')}":                "%{hiera('netcfg_public_netpart')}.51"
     "access.%{hiera('domain_public')}":                   "%{hiera('netcfg_public_netpart')}.56"
     "console.%{hiera('domain_public')}":                  "%{hiera('netcfg_public_netpart')}.61"
@@ -72,9 +74,9 @@ profile::network::services::dns_records:
     "network.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.86"
     "compute.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.86"
     "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.86"
-    "ns01.%{hiera('domain_public')}":                     "%{hiera('netcfg_public_netpart')}.116"
-    "ns02.%{hiera('domain_public')}":                     "%{hiera('netcfg_public_netpart')}.117"
     # trp
+    "ns01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.16"
+    "ns02.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.17"
     "mq01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.86"
     "image.%{hiera('domain_trp')}":                         "%{hiera('netcfg_trp_netpart')}.86"
     "db01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.86"
@@ -83,8 +85,6 @@ profile::network::services::dns_records:
     "compute.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.86"
     "network.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.86"
     "identity.%{hiera('domain_trp')}":                      "%{hiera('netcfg_trp_netpart')}.86"
-    "ns01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.116"
-    "ns02.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.117"
 
 #
 #  - Add vagrant user to wheel and users group
