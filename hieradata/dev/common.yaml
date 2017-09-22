@@ -93,6 +93,8 @@ profile::network::services::dns_options:
 #
 profile::network::services::dns_records:
   A:
+    "ns01.%{hiera('domain_public')}":                     "%{hiera('netcfg_public_netpart')}.16"
+    "ns02.%{hiera('domain_public')}":                     "%{hiera('netcfg_public_netpart')}.17"
     "dashboard.%{hiera('domain_frontend')}":              "%{hiera('netcfg_public_netpart')}.51"
     "access.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.56"
     "console.%{hiera('domain_public')}":                  "%{hiera('netcfg_public_netpart')}.61"
