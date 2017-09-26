@@ -2,6 +2,16 @@
 
 include "/etc/rndc.key";
 
+acl iaas_nets {
+    172.16.0.0/12;        # internal rfc1918
+    158.39.77.0/24;       # bgo IPv4
+    158.39.74.0/24;       # bgo IPv4
+    158.37.63.0/24;       # osl IPv4
+    158.39.75.0/24;       # osl IPv4
+    2001:700:2:8300::/56; # bgo IPv6
+    2001:700:2:8200::/56; # osl IPv6
+};
+
 controls  {
     inet 127.0.0.1 port 953 allow { 127.0.0.1; } keys { "rndc-key"; };
 #    inet <%= @my_transport_addr %> port 953 allow { <%= @mdns_transport_addr %>; } keys { "rndc-key"; };
@@ -10,7 +20,9 @@ controls  {
 options  {
     allow-new-zones yes;
     allow-query { any; };
-    recursion no;
+    allow-query-cache { 127.0.0.1; ::1; iaas_nets; };
+    allow-recursion { 127.0.0.1; ::1; iaas_nets; }
+    #recursion no;
     directory "/var/named";
     dnssec-enable yes;
     dnssec-validation yes;
