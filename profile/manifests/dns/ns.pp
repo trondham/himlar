@@ -8,7 +8,8 @@ class profile::dns::ns (
   $master = {},
   $manage_firewall = {},
   $firewall_extras = {},
-  $internal_zone = {}
+  $internal_zone = {},
+  $named_zone_records = {}
 )
 {
   class { selinux:
@@ -19,6 +20,11 @@ class profile::dns::ns (
     ensure     => 'on',
     persistent => true,
   }
+
+  # Fetch dns records
+  $dns_records = hiera_hash('profile::network::services::dns_records', {})
+  # Create temp variable
+  $named_zone_records = join_keys_to_values($dns_records['A'], ' IN A ')
 
   package { 'bind':
     ensure => installed,
