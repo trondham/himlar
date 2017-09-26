@@ -25,6 +25,7 @@ class profile::dns::ns (
   }
   file { '/etc/rndc.conf':
     content      => template("${module_name}/dns/bind/rndc.conf.erb"),
+    notify       => Service['named'],
     mode         => '0640',
     owner        => 'named',
     group        => 'named',
@@ -40,6 +41,7 @@ class profile::dns::ns (
   if $master {
     file { "/etc/named.${internal_zone}.conf":
       content      => template("${module_name}/dns/bind/master.internal.conf.erb"),
+      notify       => Service['named'],
       mode         => '0640',
       owner        => 'root',
       group        => 'named',
@@ -47,6 +49,7 @@ class profile::dns::ns (
     }
     file { "/var/named/${internal_zone}.zone":
       content      => template("${module_name}/dns/bind/${internal_zone}.zone.erb"),
+      notify       => Service['named'],
       mode         => '0640',
       owner        => 'root',
       group        => 'named',
@@ -56,6 +59,7 @@ class profile::dns::ns (
   else {
     file { "/etc/named.${internal_zone}.conf":
       content      => template("${module_name}/dns/bind/slave.internal.conf.erb"),
+      notify       => Service['named'],
       mode         => '0640',
       owner        => 'root',
       group        => 'named',
@@ -64,6 +68,7 @@ class profile::dns::ns (
   }
   file { '/etc/named.conf':
     content      => template("${module_name}/dns/bind/named.conf.erb"),
+    notify       => Service['named'],
     mode         => '0640',
     owner        => 'root',
     group        => 'named',
@@ -72,6 +77,7 @@ class profile::dns::ns (
   }
   file { '/etc/rndc.key':
     source  => "puppet:///modules/${module_name}/dns/bind/rndc.key",
+    notify       => Service['named'],
     ensure  => file,
     mode    => '0600',
     owner   => 'named',
