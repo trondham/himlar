@@ -8,6 +8,9 @@ network::interfaces_hash:
     mtu:       '1500'
     ipaddress: "%{hiera('netcfg_mgmt_netpart')}.17"
     netmask:   "%{hiera('netcfg_mgmt_netmask')}"
+    peerdns:   'yes'
+    dns1:      "%{hiera('netcfg_dns_server1')}"
+    domain:    "%{hiera('netcfg_dns_search')}"
   'eth2':
     onboot:    'yes'
     mtu:       '1500'
