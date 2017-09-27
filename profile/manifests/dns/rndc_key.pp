@@ -7,8 +7,8 @@ class profile::dns::rndc_key (
 {
 
   if $create_admin_key {
-    $name = 'admin'
-    $secret = $rndc_secret_admin
+    $this_rndc_name = 'admin'
+    $this_rndc_secret = $rndc_secret_admin
     file { "/etc/rndc-admin.key":
       content      => template("${module_name}/dns/bind/rndc.key.erb"),
       notify       => Service['named'],
@@ -20,8 +20,8 @@ class profile::dns::rndc_key (
   }
 
   if $create_mdns_key {
-    $name = 'mdns'
-    $secret = $rndc_secret_mdns
+    $this_rndc_name = 'mdns'
+    $this_rndc_secret = $rndc_secret_mdns
     file { "/etc/rndc-mdns.key":
       content      => template("${module_name}/dns/bind/rndc.key.erb"),
       notify       => Service['named'],
