@@ -1,9 +1,9 @@
 class profile::dns::rndc_key (
-  $name = {},
-  $secret = {}
+  $rndc_key_name = {},
+  $rndc_key_secret = {}
 )
 {
-  file { "/etc/rndc-${name}.key":
+  file { "/etc/rndc-${rndc_key_name}.key":
     content      => template("${module_name}/dns/bind/rndc.key.erb"),
     notify       => Service['named'],
     mode         => '0640',
