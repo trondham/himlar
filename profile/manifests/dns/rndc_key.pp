@@ -22,7 +22,7 @@ class profile::dns::rndc_key (
   if ($create_mdns_key == true) {
     $name = 'mdns'
     $secret = $rndc_secret_mdns
-    file { "/etc/rndc_secret_mdns.key":
+    file { "/etc/rndc-mdns.key":
       content      => template("${module_name}/dns/bind/rndc.key.erb"),
       notify       => Service['named'],
       mode         => '0640',
