@@ -4,7 +4,6 @@ class profile::dns::ns (
   $ns1_transport_addr = {},
   $ns2_transport_addr = {},
   $ns1_public_addr = {},
-  $ns2_public_addr = {},
   $master = {},
   $manage_firewall = {},
   $firewall_extras = {},
