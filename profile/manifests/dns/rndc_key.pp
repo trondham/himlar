@@ -6,7 +6,7 @@ class profile::dns::rndc_key (
 )
 {
 
-  if ($create_admin_key == true) {
+  if $create_admin_key {
     $name = 'admin'
     $secret = $rndc_secret_admin
     file { "/etc/rndc-admin.key":
@@ -19,7 +19,7 @@ class profile::dns::rndc_key (
     }
   }
 
-  if ($create_mdns_key == true) {
+  if $create_mdns_key {
     $name = 'mdns'
     $secret = $rndc_secret_mdns
     file { "/etc/rndc-mdns.key":
