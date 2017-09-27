@@ -1,6 +1,6 @@
 class profile::dns::rndc_key (
-  $rndc_key_name = {},
-  $rndc_key_secret = {}
+  $rndc_key_name = = $profile::dns::rndc_key_name,
+  $rndc_key_secret = $profile::dns::rndc_key_secret
 )
 {
   file { "/etc/rndc-${rndc_key_name}.key":
