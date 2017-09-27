@@ -18,7 +18,7 @@ class profile::dns::rndc_key (
   }
 
   if $create_admin_key {
-    create_resources('profile::dns::rndc_key::create_keyfile', [$name = 'admin', $secret = $rndc_secret_admin])
+    create_resources('profile::dns::rndc_key::create_keyfile', {$name = 'admin', $secret = $rndc_secret_admin})
 #    $this_rndc_name = 'admin'
 #    $this_rndc_secret = $rndc_secret_admin
 #    file { "/etc/rndc-admin.key":
@@ -32,7 +32,7 @@ class profile::dns::rndc_key (
   }
 
   if $create_mdns_key {
-    create_resources('profile::dns::rndc_key::create_keyfile', [$name = 'mdns', $secret = $rndc_secret_mdns])
+    create_resources('profile::dns::rndc_key::create_keyfile', {$name = 'mdns', $secret = $rndc_secret_mdns})
 #    profile::dns::rndc_key::create_keyfile('mdns', $rndc_secret_mdns)
 #    $this_rndc_name = 'mdns'
 #    $this_rndc_secret = $rndc_secret_mdns
