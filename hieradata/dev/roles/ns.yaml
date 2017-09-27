@@ -5,7 +5,7 @@ include:
     - profile::dns::rndc_key
     - profile::logging::rsyslog::client
 
-profile::dns::create_admin_key: true
-profile::dns::create_mdns_key:  true
+profile::dns::rndc_key::create_admin_key: true
+profile::dns::rndc_key::create_mdns_key:  true
 
 profile::dns::ns::internal_zone: "dev.iaas.intern"
