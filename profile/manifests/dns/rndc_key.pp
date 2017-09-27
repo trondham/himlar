@@ -1,4 +1,4 @@
-class profile::dns::rndc_key 
+class profile::dns::rndc_key ()
 {
 #  $rndc = hiera_hash('profile::dns::rndc_keys', {})
 
@@ -7,7 +7,7 @@ class profile::dns::rndc_key
 #    secret => $rndc[1],
 #  }
 
-  hiera_hash('profile::dns::rndc_keys').each |String $rndc_key_name, String $rndc_key_secret| {
+  hiera_hash('profile::dns::rndc_keys').each |$rndc_key_name, $rndc_key_secret| {
     file { "/etc/rndc-${rndc_key_name}.key":
       content      => template("${module_name}/dns/bind/rndc.key.erb"),
       notify       => Service['named'],
