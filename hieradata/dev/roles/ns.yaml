@@ -2,6 +2,10 @@
 include:
   default:
     - profile::dns::ns
+    - profile::dns::rndc_key
     - profile::logging::rsyslog::client
+
+profile::dns::rndc_key:name:   "admin"
+profile::dns::rndc_key:secret: "%{hiera('dns::rndc_secret_admin')}"
 
 profile::dns::ns::internal_zone: "dev.iaas.intern"

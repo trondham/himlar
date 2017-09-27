@@ -7,8 +7,7 @@ class profile::dns::ns (
   $master = {},
   $manage_firewall = {},
   $firewall_extras = {},
-  $internal_zone = {},
-  $named_zone_records = {}
+  $internal_zone = {}
 )
 {
   class { selinux:
@@ -75,22 +74,12 @@ class profile::dns::ns (
     validate_cmd => '/usr/sbin/named-checkconf %',
     require      => Package['bind'],
   }
-  file { '/etc/rndc.key':
-    source  => "puppet:///modules/${module_name}/dns/bind/rndc.key",
-    notify       => Service['named'],
-    ensure  => file,
-    mode    => '0600',
-    owner   => 'named',
-    group   => 'named',
-    require => Package['bind'],
-  }
 
   if $master {
     service { 'named':
       ensure => running,
       enable => true,
-      require => [ File['/etc/rndc.key'],
-                   File['/etc/rndc.conf'],
+      require => [ File['/etc/rndc.conf'],
                    File['/var/named'],
                    File["/var/named/${internal_zone}.zone"],
                    File["/etc/named.${internal_zone}.conf"],
@@ -101,8 +90,7 @@ class profile::dns::ns (
     service { 'named':
       ensure => running,
       enable => true,
-      require => [ File['/etc/rndc.key'],
-                   File['/etc/rndc.conf'],
+      require => [ File['/etc/rndc.conf'],
                    File['/var/named'],
                    File["/etc/named.${internal_zone}.conf"],
                    File['/etc/named.conf'] ],
