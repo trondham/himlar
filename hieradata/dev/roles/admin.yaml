@@ -3,8 +3,8 @@ include:
   default:
     - profile::dns::rndc_key
 
-profile::dns::rndc_keys:
-  "admin":  "%{hiera('dns::rndc_secret_admin')}"
+profile::dns::create_admin_key: true
+profile::dns::create_mdns_key:  false
 
 # Bind utils will be installed with foreman::dns
 profile::base::common::packages:
