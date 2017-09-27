@@ -179,8 +179,8 @@ local_rabbit_password:                              'local'
 accounts::root_user::password:                      '$1$vagrant$z3l/WWbF3HllJk0tnqO3i/'
 
 # rndc keys
-dns::rndc_key::rndc_secret_admin: '5n5fC0m42JovwO9PJMTQYaNP7j5UcRjmL0Lsq4JXz8eZIrGILt/5Lo+MVzdr31GbYn9C/fPEe1Nvbjs8NgTG6w=='
-dns::rndc_key::rndc_secret_mdns:  'CIGrQ5sAnoaQhRiDSXX+WUGg9Z0tiphT4BCKbp9A1ceOUr5hqAPiqNp/UHoApIXmIAgni+v90swVPmDfETsLdQ=='
+profile::dns::rndc_key::rndc_secret_admin: '5n5fC0m42JovwO9PJMTQYaNP7j5UcRjmL0Lsq4JXz8eZIrGILt/5Lo+MVzdr31GbYn9C/fPEe1Nvbjs8NgTG6w=='
+profile::dns::rndc_key::rndc_secret_mdns:  'CIGrQ5sAnoaQhRiDSXX+WUGg9Z0tiphT4BCKbp9A1ceOUr5hqAPiqNp/UHoApIXmIAgni+v90swVPmDfETsLdQ=='
 
 profile::openstack::resource::networks:
   public:
