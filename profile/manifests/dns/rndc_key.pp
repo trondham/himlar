@@ -1,8 +1,8 @@
 class profile::dns::rndc_key (
   $create_admin_key  = false,
   $create_mdns_key   = false,
-  $rndc_secret_admin = {},
-  $rndc_secret_mdns  = {}
+  $rndc_secret_admin = $profile::dns::rndc_key::rndc_secret_admin,
+  $rndc_secret_mdns  = $profile::dns::rndc_key::rndc_secret_mdns
 )
 {
 
