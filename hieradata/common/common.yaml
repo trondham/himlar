@@ -110,9 +110,7 @@ public__address__console:         "console.%{hiera('domain_public')}"
 
 # DNS servers
 public__address__ns_01:           "%{hiera('netcfg_public_netpart')}.16"
-public__address__ns_02:           "%{hiera('netcfg_public_netpart')}.17"
-public__name__ns_01:              "ns01.%{hiera('domain_public')}"
-public__name__ns_02:              "ns02.%{hiera('domain_public')}"
+public__name__ns_01:              "ns.%{hiera('domain_public')}"
 
 #
 # Services (internal non openstack services)

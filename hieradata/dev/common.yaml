@@ -81,20 +81,19 @@ profile::network::services::dns_options:
     default:
       ttl: 3600
       keyfile: "/etc/rndc.key"
-      server: "%{hiera('netcfg_mgmt_netpart')}.11"
+      server: "%{hiera('netcfg_mgmt_netpart')}.16"
   A:
     default:
       ttl: 3600
       keyfile: "/etc/rndc.key"
-      server: "%{hiera('netcfg_mgmt_netpart')}.11"
+      server: "%{hiera('netcfg_mgmt_netpart')}.16"
 
 #
 # DNS (merge of common and this)
 #
 profile::network::services::dns_records:
   A:
-    "ns01.%{hiera('domain_public')}":                     "%{hiera('netcfg_public_netpart')}.16"
-    "ns02.%{hiera('domain_public')}":                     "%{hiera('netcfg_public_netpart')}.17"
+    "ns.%{hiera('domain_public')}":                       "%{hiera('netcfg_public_netpart')}.16"
     "dashboard.%{hiera('domain_frontend')}":              "%{hiera('netcfg_public_netpart')}.51"
     "access.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.56"
     "console.%{hiera('domain_public')}":                  "%{hiera('netcfg_public_netpart')}.61"

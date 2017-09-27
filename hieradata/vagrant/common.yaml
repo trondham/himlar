@@ -63,8 +63,7 @@ profile::firewall::pre::ssh_settings:
 profile::network::services::dns_records:
   A:
     # public
-    "ns01.%{hiera('domain_public')}":                     "%{hiera('netcfg_public_netpart')}.16"
-    "ns02.%{hiera('domain_public')}":                     "%{hiera('netcfg_public_netpart')}.17"
+    "ns.%{hiera('domain_public')}":                       "%{hiera('netcfg_public_netpart')}.16"
     "dashboard.%{hiera('domain_public')}":                "%{hiera('netcfg_public_netpart')}.51"
     "access.%{hiera('domain_public')}":                   "%{hiera('netcfg_public_netpart')}.56"
     "console.%{hiera('domain_public')}":                  "%{hiera('netcfg_public_netpart')}.61"
