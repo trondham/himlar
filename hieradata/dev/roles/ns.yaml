@@ -8,4 +8,7 @@ include:
 profile::dns::rndc_key::rndc_key_name:   "admin"
 profile::dns::rndc_key::rndc_key_secret: "%{hiera('dns::rndc_secret_admin')}"
 
+profile::dns::rndc_key::rndc_key_name:   "mdns"
+profile::dns::rndc_key::rndc_key_secret: "%{hiera('dns::rndc_secret_mdns')}"
+
 profile::dns::ns::internal_zone: "dev.iaas.intern"
