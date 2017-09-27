@@ -1,5 +1,4 @@
-class profile::dns::rndc_key (
-)
+class profile::dns::rndc_key 
 {
 #  $rndc = hiera_hash('profile::dns::rndc_keys', {})
 
