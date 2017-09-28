@@ -1,10 +1,10 @@
 ---
 include:
   default:
-    - profile::application::foreman
-    - profile::database::postgresql
+#    - profile::application::foreman
+#    - profile::database::postgresql
     - profile::network::services
-    - profile::webserver::apache
+#    - profile::webserver::apache
 #    - foreman::cli
 #    - foreman::compute::libvirt
 #    - foreman::plugin::hooks
