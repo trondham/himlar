@@ -31,8 +31,6 @@ options  {
     listen-on-v6 { any; };
 };
 
-#include "/etc/named.<%= @internal_zone %>.conf";
-
 <% if @master %>
 zone "<%= @internal_zone %>" IN {
     type master;
@@ -41,33 +39,26 @@ zone "<%= @internal_zone %>" IN {
     allow-query { 127.0.0.1; ::1; iaas_nets; };
 };
 <% reverse_zones.each do |network, values| -%>
-#zone "<%= values["origin"] %>.in-addr.arpa" IN {
-#    type master;
-#    file "/var/named/<%= values["filename"] %>";
-#    allow-update { <%= @admin_mgmt_addr %>; };
-#    allow-query { 127.0.0.1; ::1; iaas_nets; };
-#};
+zone "<%= values["origin"] %>.in-addr.arpa" IN {
+    type master;
+    file "/var/named/<%= values["filename"] %>";
+    allow-update { <%= @admin_mgmt_addr %>; };
+    allow-query { 127.0.0.1; ::1; iaas_nets; };
+};
 <% end -%>
 <% else %>
 zone "<%= @internal_zone %>" IN {
     type slave;
-    file "/var/named/<%= @internal_zone %>.zone";
     masters { <%= @ns1_transport_addr %>; <%= @ns1_public_addr %>; };
     allow-query { 127.0.0.1; ::1; iaas_nets; };
 };
 <% reverse_zones.each do |network, values| -%>
-#zone "<%= values["origin"] %>.in-addr.arpa" IN {
-#    type slave;
-#    file "/var/named/<%= values["filename"] %>";
-#    masters { <%= @ns1_transport_addr %>; <%= @ns1_public_addr %>; };
-#    allow-query { 127.0.0.1; ::1; iaas_nets; };
-#};
+zone "<%= values["origin"] %>.in-addr.arpa" IN {
+    type slave;
+    masters { <%= @ns1_transport_addr %>; <%= @ns1_public_addr %>; };
+    allow-query { 127.0.0.1; ::1; iaas_nets; };
+};
 <% end -%>
 <% end %>
-
-
-<% reverse_zones.each do |network, values| -%>
-#include "/etc/named.<%= values["filename"] %>.conf";
-<% end -%>
 
 include "/etc/named.rfc1912.zones";

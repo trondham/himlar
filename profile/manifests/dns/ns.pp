@@ -42,26 +42,8 @@ class profile::dns::ns (
     require      => Package['bind'],
   }
   if $master {
-    file { "/etc/named.${internal_zone}.conf":
-      content      => template("${module_name}/dns/bind/master.internal.conf.erb"),
-      notify       => Service['named'],
-      mode         => '0640',
-      owner        => 'root',
-      group        => 'named',
-      require      => Package['bind'],
-    }
     file { "/var/named/${internal_zone}.zone":
       content      => template("${module_name}/dns/bind/${internal_zone}.zone.erb"),
-      notify       => Service['named'],
-      mode         => '0640',
-      owner        => 'root',
-      group        => 'named',
-      require      => Package['bind'],
-    }
-  }
-  else {
-    file { "/etc/named.${internal_zone}.conf":
-      content      => template("${module_name}/dns/bind/slave.internal.conf.erb"),
       notify       => Service['named'],
       mode         => '0640',
       owner        => 'root',
@@ -86,7 +68,6 @@ class profile::dns::ns (
       require => [ File['/etc/rndc.conf'],
                    File['/var/named'],
                    File["/var/named/${internal_zone}.zone"],
-                   File["/etc/named.${internal_zone}.conf"],
                    File['/etc/named.conf'] ],
     }
   }
@@ -96,7 +77,6 @@ class profile::dns::ns (
       enable => true,
       require => [ File['/etc/rndc.conf'],
                    File['/var/named'],
-                   File["/etc/named.${internal_zone}.conf"],
                    File['/etc/named.conf'] ],
     }
   }
@@ -112,7 +92,9 @@ class profile::dns::ns (
       require      => Package['bind'],
     }
   }
-  create_resources('reverse_zone', $reverse_zones)
+  if $master {
+    create_resources('reverse_zone', $reverse_zones)
+  }
 
   if $manage_firewall {
     profile::firewall::rule { '001 dns incoming tcp':
