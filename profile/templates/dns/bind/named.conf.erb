@@ -31,7 +31,23 @@ options  {
     listen-on-v6 { any; };
 };
 
-include "/etc/named.<%= @internal_zone %>.conf";
+#include "/etc/named.<%= @internal_zone %>.conf";
+
+<% if @master %>
+zone "<%= @internal_zone %>" {
+    type master;
+    file "/var/named/<%= @internal_zone %>.zone";
+    allow-update { <%= @admin_mgmt_addr %>; };
+    allow-query { 127.0.0.1; ::1; iaas_nets; };
+};
+<% else %>
+zone "<%= @internal_zone %>" IN {
+    type slave;
+    file "/var/named/<%= @internal_zone %>.zone";
+    masters { <%= @ns1_transport_addr %>; <%= @ns1_public_addr %>; };
+    allow-query { 127.0.0.1; ::1; iaas_nets; };
+};
+<% end %>
 
 <% reverse_zones.each do |network, values| -%>
 #include "/etc/named.<%= values["filename"] %>.conf";
