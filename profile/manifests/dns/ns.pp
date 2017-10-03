@@ -21,7 +21,7 @@ class profile::dns::ns (
     persistent => true,
   }
 
-  $trond_foo = [ "reverse-mgmt-172.31.0.0_21", "reverse-trp-172.31.16.0_21"]
+  $trond_foo = [ "Xreverse-mgmt-172.31.0.0_21", "Xreverse-trp-172.31.16.0_21"]
 
   package { 'bind':
     ensure => installed,
