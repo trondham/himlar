@@ -9,7 +9,8 @@ class profile::dns::ns (
   $master = {},
   $manage_firewall = {},
   $firewall_extras = {},
-  $internal_zone = {}
+  $internal_zone = {},
+  $trond_foo = {}
 )
 {
   class { selinux:
