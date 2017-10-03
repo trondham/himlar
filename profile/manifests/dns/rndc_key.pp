@@ -17,6 +17,7 @@ class profile::dns::rndc_key (
         group        => 'named',
         require      => Package['bind'],
       }
+    }
     else {
       file { "/etc/rndc-admin.key":
         content      => template("${module_name}/dns/bind/rndc-admin.key.erb"),
@@ -37,6 +38,7 @@ class profile::dns::rndc_key (
         group        => 'named',
         require      => Package['bind'],
       }
+    }
     else {
       file { "/etc/rndc-mdns.key":
         content      => template("${module_name}/dns/bind/rndc-mdns.key.erb"),
