@@ -9,7 +9,8 @@ class profile::dns::ns (
   $master = {},
   $manage_firewall = {},
   $firewall_extras = {},
-  $internal_zone = {}
+  $internal_zone = {},
+  $trond_foo = [ "reverse-mgmt-172.31.0.0_21", "reverse-trp-172.31.16.0_21"]
   )
 {
   class { selinux:
@@ -20,8 +21,6 @@ class profile::dns::ns (
     ensure     => 'on',
     persistent => true,
   }
-
-  $trond_foo = [ "reverse-mgmt-172.31.0.0_21", "reverse-trp-172.31.16.0_21"]
 
   package { 'bind':
     ensure => installed,
