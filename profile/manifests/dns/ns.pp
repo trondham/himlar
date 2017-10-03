@@ -99,10 +99,8 @@ class profile::dns::ns (
     }
   }
 
-  define reverse_zone(
-    $cidr,
-    $origin,
-    $filename) {
+  define reverse_zone($cidr, $origin, $filename) {
+    $internal_zone = $profile::dns::ns::internal_zone
     file { "/var/named/$filename":
       content      => template("${module_name}/dns/bind/reverse_zone.erb"),
       notify       => Service['named'],
