@@ -34,14 +34,14 @@ options  {
 #include "/etc/named.<%= @internal_zone %>.conf";
 
 <% if @master %>
-zone "<%= @internal_zone %>" {
+zone "<%= @internal_zone %>" IN {
     type master;
     file "/var/named/<%= @internal_zone %>.zone";
     allow-update { <%= @admin_mgmt_addr %>; };
     allow-query { 127.0.0.1; ::1; iaas_nets; };
 };
 <% reverse_zones.each do |network, values| -%>
-#zone "<%= values["origin"] %>.in-addr.arpa" in{
+#zone "<%= values["origin"] %>.in-addr.arpa" IN {
 #    type master;
 #    file "/var/named/<%= values["filename"] %>";
 #    allow-update { <%= @admin_mgmt_addr %>; };
@@ -56,7 +56,7 @@ zone "<%= @internal_zone %>" IN {
     allow-query { 127.0.0.1; ::1; iaas_nets; };
 };
 <% reverse_zones.each do |network, values| -%>
-#zone "<%= values["origin"] %>.in-addr.arpa" in{
+#zone "<%= values["origin"] %>.in-addr.arpa" IN {
 #    type slave;
 #    file "/var/named/<%= values["filename"] %>";
 #    masters { <%= @ns1_transport_addr %>; <%= @ns1_public_addr %>; };
