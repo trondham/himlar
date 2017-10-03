@@ -2,4 +2,5 @@ zone "<%= @internal_zone %>" {
        type master;
        file "/var/named/<%= @internal_zone %>.zone";
        allow-update { <%= @admin_mgmt_addr %>; };
+       allow-query { 127.0.0.1; ::1; iaas_nets; };
 };
