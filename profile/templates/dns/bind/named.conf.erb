@@ -34,7 +34,7 @@ options  {
 include "/etc/named.<%= @internal_zone %>.conf";
 
 <% reverse_zones.keys().each do |network| -%>
-#include "/etc/named.<%= network[filename] %>.conf";
+#include "/etc/named.<%= network["filename"] %>.conf";
 <% end -%>
 
 include "/etc/named.rfc1912.zones";
