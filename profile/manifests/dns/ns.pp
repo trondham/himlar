@@ -21,7 +21,7 @@ class profile::dns::ns (
     persistent => true,
   }
 
-  $trond_foo = [ "Xreverse-mgmt-172.31.0.0_21", "Xreverse-trp-172.31.16.0_21"]
+  $reverse_zones = hiera_hash('profile::dns::ns::ptr_zones', {})
 
   package { 'bind':
     ensure => installed,
@@ -112,8 +112,6 @@ class profile::dns::ns (
       require      => Package['bind'],
     }
   }
-
-  $reverse_zones = hiera_hash('profile::dns::ns::ptr_zones', {})
   create_resources('reverse_zone', $reverse_zones)
 
   if $manage_firewall {
