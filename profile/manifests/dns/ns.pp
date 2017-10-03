@@ -99,6 +99,20 @@ class profile::dns::ns (
     }
   }
 
+  define reverse_zone {
+    file { "/var/named/$filename":
+      content      => template("${module_name}/dns/bind/reverse_zone.erb"),
+      notify       => Service['named'],
+      mode         => '0640',
+      owner        => 'root',
+      group        => 'named',
+      require      => Package['bind'],
+    }
+  }
+
+  $reverse_zones = hiera_hash('profile::dns::ns::ptr_zones', {})
+  create_resources('reverse_zone', $reverse_zones)
+
   if $manage_firewall {
     profile::firewall::rule { '001 dns incoming tcp':
       port   => 53,
