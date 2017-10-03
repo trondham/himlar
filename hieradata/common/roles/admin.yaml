@@ -5,6 +5,7 @@ include:
 #    - profile::database::postgresql
     - profile::network::services
 #    - profile::webserver::apache
+    - profile::dns::rndc_key
 
 foreman_version: '1.14'
 
