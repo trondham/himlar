@@ -9,9 +9,8 @@ class profile::dns::ns (
   $master = {},
   $manage_firewall = {},
   $firewall_extras = {},
-  $internal_zone = {},
-  $trond_foo = {}
-)
+  $internal_zone = {}
+  )
 {
   class { selinux:
     mode => 'enforcing',

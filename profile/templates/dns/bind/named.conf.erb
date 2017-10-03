@@ -35,7 +35,7 @@ options  {
 include "/etc/named.<%= @internal_zone %>.conf";
 
 <% @trond_foo.each do |val| -%>
-include "/etc/named.<%= @val %>.conf"
+include "/etc/named.<%= val %>.conf";
 <% end -%>
 
 include "/etc/named.rfc1912.zones";
