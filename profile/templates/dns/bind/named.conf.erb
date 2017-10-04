@@ -64,6 +64,7 @@ zone "<%= @internal_zone %>" IN {
     allow-query { 127.0.0.1; ::1; iaas_nets; };
 };
 <% reverse_zones.each do |network, values| -%>
+
 # Reverse (PTR) zone for <%= network %> network, <%= values["cidr"] %> (slave)
 zone "<%= values["origin"] %>.in-addr.arpa" IN {
     type slave;
