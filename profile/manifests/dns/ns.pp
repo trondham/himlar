@@ -20,6 +20,12 @@ class profile::dns::ns (
     ensure     => 'on',
     persistent => true,
   }
+  package { 'setroubleshoot-server':
+    ensure => installed,
+  }
+  package { 'setools-console':
+    ensure => installed,
+  }
 
   $reverse_zones = hiera_hash('profile::dns::ns::ptr_zones', {})
 
