@@ -87,6 +87,11 @@ profile::network::services::dns_options:
       ttl: 3600
       keyfile: "/etc/rndc-admin.key"
       server: "%{hiera('netcfg_mgmt_netpart')}.16"
+  PTR:
+    default:
+      ttl: 3600
+      keyfile: "/etc/rndc-admin.key"
+      server: "%{hiera('netcfg_mgmt_netpart')}.16"
 
 #
 # DNS (merge of common and this)
