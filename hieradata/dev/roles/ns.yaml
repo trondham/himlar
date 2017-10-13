@@ -12,15 +12,7 @@ profile::dns::rndc_key::host_is_bind_server: true
 profile::dns::ns::internal_zone: "dev.iaas.intern"
 
 profile::dns::ns::ptr_zones:
-  mgmt:
-    cidr: "172.31.0.0/21"
-    origin: "21/0.0.31.172"
-    filename: "reverse-mgmt-172.31.0.0_21"
-  transport:
-    cidr: "172.31.16.0/21"
-    origin: "21/0.16.31.172"
-    filename: "reverse-trp-172.31.16.0_21"
-  public:
-    cidr: "172.31.24.0/21"
-    origin: "21/0.24.31.172"
-    filename: "reverse-public-172.31.24.0_21"
+  intern:
+    cidr: "172.31.0.0/16"
+    origin: "31.172"
+    filename: "reverse-172.31"
