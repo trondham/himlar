@@ -110,11 +110,21 @@ profile::network::services::dns_records:
     "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.86"
     "status.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.86"
   PTR:
-    '16.0.31.172.in-addr.arpa':                         "%{::location}-ns-01.%{hiera('domain_mgmt')}"
-    '17.0.31.172.in-addr.arpa':                         "%{::location}-ns-02.%{hiera('domain_mgmt')}"
-    '16.16.31.172.in-addr.arpa':                        "%{::location}-ns-01.%{hiera('domain_trp')}"
-    '17.16.31.172.in-addr.arpa':                        "%{::location}-ns-02.%{hiera('domain_trp')}"
-    '16.24.31.172.in-addr.arpa':                        "ns01.%{hiera('domain_public')}"
+    '16.0.31.172.in-addr.arpa':     "%{::location}-ns-01.%{hiera('domain_mgmt')}"
+    '17.0.31.172.in-addr.arpa':     "%{::location}-ns-02.%{hiera('domain_mgmt')}"
+    '16.16.31.172.in-addr.arpa':    "%{::location}-ns-01.%{hiera('domain_trp')}"
+    '17.16.31.172.in-addr.arpa':    "%{::location}-ns-02.%{hiera('domain_trp')}"
+    '16.24.31.172.in-addr.arpa':    "ns01.%{hiera('domain_public')}"
+    '51.24.31.172.in-addr.arpa':    "dashboard.%{hiera('domain_frontend')}"
+    '56.24.31.172.in-addr.arpa':    "access.%{hiera('domain_frontend')}"
+    '61.24.31.172.in-addr.arpa':    "console.%{hiera('domain_public')}"
+    '86.24.31.172.in-addr.arpa':    "api.%{hiera('domain_public')}"
+    '86.24.31.172.in-addr.arpa':    "identity.api.%{hiera('domain_public')}"
+    '86.24.31.172.in-addr.arpa':    "image.api.%{hiera('domain_public')}"
+    '86.24.31.172.in-addr.arpa':    "network.api.%{hiera('domain_public')}"
+    '86.24.31.172.in-addr.arpa':    "compute.api.%{hiera('domain_public')}"
+    '86.24.31.172.in-addr.arpa':    "volume.api.%{hiera('domain_public')}"
+    '86.24.31.172.in-addr.arpa':    "status.api.%{hiera('domain_public')}"
 
 
 #
