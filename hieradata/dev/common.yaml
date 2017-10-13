@@ -112,6 +112,8 @@ profile::network::services::dns_records:
   PTR:
     '16.0.31.172.in-addr.arpa':                         "%{::location}-ns-01.%{hiera('domain_mgmt')}"
     '17.0.31.172.in-addr.arpa':                         "%{::location}-ns-02.%{hiera('domain_mgmt')}"
+    '16.16.31.172.in-addr.arpa':                        "%{::location}-ns-01.%{hiera('domain_trp')}"
+    '17.16.31.172.in-addr.arpa':                        "%{::location}-ns-02.%{hiera('domain_trp')}"
     '16.24.31.172.in-addr.arpa':                        "ns01.%{hiera('domain_public')}"
 
 
