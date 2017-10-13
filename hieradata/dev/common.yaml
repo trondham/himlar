@@ -110,7 +110,9 @@ profile::network::services::dns_records:
     "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.86"
     "status.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.86"
   PTR:
-    "%{hiera('netcfg_public_netpart')}.16":  "ns.%{hiera('domain_public')}"
+    '16.0.31.172.in-addr.arpa':                         "%{::location}-ns-01.%{hiera('domain_mgmt')}"
+    '17.0.31.172.in-addr.arpa':                         "%{::location}-ns-02.%{hiera('domain_mgmt')}"
+
 
 #
 ## Secret data which for other environments are stored ooutside of this data tree
