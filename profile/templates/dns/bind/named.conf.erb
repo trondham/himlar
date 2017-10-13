@@ -46,7 +46,7 @@ zone "<%= @internal_zone %>" IN {
     file "/var/named/<%= @internal_zone %>.zone";
     allow-update { <%= @admin_mgmt_addr %>; };
     allow-query { 127.0.0.1; ::1; iaas_nets; };
-    also-notify { <%= @ns2_transport_addr %>; } ;
+    also-notify { <%= @ns2_transport_addr %>; };
 };
 <% reverse_zones.each do |network, values| -%>
 # Reverse (PTR) zone for <%= network %> network, <%= values["cidr"] %> (master)
@@ -55,7 +55,7 @@ zone "<%= values["origin"] %>.in-addr.arpa" IN {
     file "/var/named/<%= values["filename"] %>";
     allow-update { <%= @admin_mgmt_addr %>; };
     allow-query { 127.0.0.1; ::1; iaas_nets; };
-    also-notify { <%= @ns2_transport_addr %>; } ;
+    also-notify { <%= @ns2_transport_addr %>; };
 };
 <% end -%>
 <% else %>
