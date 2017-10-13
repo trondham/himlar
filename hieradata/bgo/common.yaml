@@ -44,6 +44,7 @@ profile::network::services::dns_records:
     "%{::location}-leaf-02.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_netpart')}.2"
     "%{::location}-leaf-03.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_netpart')}.3"
     "%{::location}-leaf-04.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_netpart')}.4"
+    "%{::location}-mgmt-01.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_netpart')}.5"
     "%{::location}-login-01.%{hiera('domain_mgmt')}":   "%{hiera('netcfg_mgmt_netpart')}.10"
     "git.%{hiera('domain_mgmt')}":                      "%{hiera('netcfg_mgmt_netpart')}.10"
     # Used as CNAME for uh-iaas.no (http://iaas.readthedocs.io/en/latest/team/operations/dns.html)
@@ -61,6 +62,7 @@ profile::network::services::dns_records:
     '2.0.16.172.in-addr.arpa':                          "%{::location}-leaf-02.%{hiera('domain_mgmt')}"
     '3.0.16.172.in-addr.arpa':                          "%{::location}-leaf-03.%{hiera('domain_mgmt')}"
     '4.0.16.172.in-addr.arpa':                          "%{::location}-leaf-04.%{hiera('domain_mgmt')}"
+    '5.0.16.172.in-addr.arpa':                          "%{::location}-mgmt-01.%{hiera('domain_mgmt')}"
 
 ntp::servers:
   - ntp.uib.no
@@ -91,6 +93,9 @@ profile::network::services::dhcp_reservation:
   bgo-leaf-04:
     mac: '00:01:e8:d8:37:24'
     ip:  '172.16.0.4'
+  bgo-mgmt-02:
+    mac: '34:17:eb:32:45:80'
+    ip:  '172.16.0.5'
 
 profile::network::services::dns_options:
   CNAME:
@@ -110,16 +115,22 @@ profile::network::services::dns_options:
       server: 'alfalfa.uib.no'
 
 profile::openstack::resource::networks:
-  public:
-    name: 'public'
+  dualStack:
+    name: 'dualStack'
     admin_state_up: true
     shared: true
     tenant_name: 'openstack'
     provider_network_type: 'local'
+  imagebuilder:
+    name: 'imagebuilder'
+    admin_state_up: true
+    shared: false
+    tenant_name: 'imagebuilder'
+    provider_network_type: 'local'
 
 profile::openstack::resource::subnets:
-  public:
-    name: 'public'
+  public1_IPv4:
+    name: 'public1_IPv4'
     cidr: '158.39.77.0/24'
     ip_version: '4'
     allocation_pools:
@@ -128,10 +139,10 @@ profile::openstack::resource::subnets:
     dns_nameservers:
       - '129.177.6.54'
       - '129.177.12.31'
-    network_name: 'public'
+    network_name: 'dualStack'
     tenant_name: 'openstack'
-  public2:
-    name: 'public2'
+  public2_IPv4:
+    name: 'public2_IPv4'
     cidr: '158.39.74.0/24'
     ip_version: '4'
     allocation_pools:
@@ -140,5 +151,17 @@ profile::openstack::resource::subnets:
     dns_nameservers:
       - '129.177.6.54'
       - '129.177.12.31'
-    network_name: 'public'
+    network_name: 'dualStack'
     tenant_name: 'openstack'
+  public3_IPv4:
+    name: 'public3_IPv4'
+    cidr: '158.39.77.0/24'
+    ip_version: '4'
+    allocation_pools:
+      - 'start=158.39.77.246,end=158.39.77.247'
+    gateway_ip: '158.39.77.1'
+    dns_nameservers:
+      - '129.177.6.54'
+      - '129.177.12.31'
+    network_name: 'imagebuilder'
+    tenant_name: 'imagebuilder'
