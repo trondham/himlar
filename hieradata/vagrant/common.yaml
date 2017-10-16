@@ -5,31 +5,31 @@ include:
     - profile::monitoring::sensu::agent
 
 # Location setting
-location_environment: dev
+location_environment: vagrant
 location_description: Local full development environment using vagrant
 
-domain_frontend:        'dev.iaas.intern'
-domain_public:          'dev.iaas.intern'
-domain_trp:             'trp.dev.iaas.intern'
-domain_mgmt:            'mgmt.dev.iaas.intern'
+domain_frontend:        'vagrant.iaas.intern'
+domain_public:          'vagrant.iaas.intern'
+domain_trp:             'trp.vagrant.iaas.intern'
+domain_mgmt:            'mgmt.vagrant.iaas.intern'
 
 netcfg_mgmt_gateway:    '172.31.0.1'
 netcfg_mgmt_netpart:    '172.31.0'
 netcfg_mgmt_netmask:    '255.255.255.0'
-netcfg_trp_gateway:     '172.31.16.1'
-netcfg_trp_netpart:     '172.31.16'
+netcfg_trp_gateway:     '172.31.8.1'
+netcfg_trp_netpart:     '172.31.8'
 netcfg_trp_netmask:     '255.255.255.0'
-netcfg_public_netpart:  '172.31.24'
+netcfg_public_netpart:  '192.168.0'
 netcfg_public_netmask:  '255.255.255.0'
 netcfg_dns_server1:     "%{hiera('netcfg_trp_netpart')}.16"
 netcfg_dns_server2:     '8.8.8.8'
 netcfg_dns_search:      "%{hiera('domain_mgmt')} %{hiera('domain_trp')}"
-netcfg_priv_gateway:    '172.31.16.26'
+netcfg_priv_gateway:    '172.31.8.26'
 netcfg_priv_network:    '10.0.252.0/24'
-netcfg_pub_natgw:       '172.31.24.248'
+netcfg_pub_natgw:       '192.168.0.248'
 netcfg_trp_rr:
   rr1:
-    peer_ipv4: '172.31.16.1'
+    peer_ipv4: '172.31.8.1'
 
 #
 # Services (internal non openstack services)
@@ -54,7 +54,7 @@ named_interfaces::config:
     - eth3
 
 allow_from_network:
-  - '172.31.24.0/24'
+  - "%{hiera('netcfg_public_netpart')}.0/24"
 
 profile::firewall::pre::ssh_settings:
   source: "0.0.0.0/0"
@@ -98,18 +98,18 @@ profile::network::services::dns_options:
 #
 profile::network::services::dns_records:
   A:
-    "api.%{hiera('domain_trp')}":              "%{hiera('netcfg_trp_netpart')}.86"
-    "ns.%{hiera('domain_public')}":            "%{hiera('netcfg_public_netpart')}.16"
-    "dashboard.%{hiera('domain_frontend')}":   "%{hiera('netcfg_public_netpart')}.51"
-    "access.%{hiera('domain_frontend')}":      "%{hiera('netcfg_public_netpart')}.56"
-    "console.%{hiera('domain_public')}":       "%{hiera('netcfg_public_netpart')}.61"
-    "api.%{hiera('domain_public')}":           "%{hiera('netcfg_public_netpart')}.86"
-    "identity.api.%{hiera('domain_public')}":  "%{hiera('netcfg_public_netpart')}.86"
-    "image.api.%{hiera('domain_public')}":     "%{hiera('netcfg_public_netpart')}.86"
-    "network.api.%{hiera('domain_public')}":   "%{hiera('netcfg_public_netpart')}.86"
-    "compute.api.%{hiera('domain_public')}":   "%{hiera('netcfg_public_netpart')}.86"
-    "volume.api.%{hiera('domain_public')}":    "%{hiera('netcfg_public_netpart')}.86"
-    "status.%{hiera('domain_frontend')}":      "%{hiera('netcfg_public_netpart')}.86"
+    "api.%{hiera('domain_trp')}":                         "%{hiera('netcfg_trp_netpart')}.250"
+    "ns.%{hiera('domain_public')}":                       "%{hiera('netcfg_public_netpart')}.16"
+    "dashboard.%{hiera('domain_frontend')}":              "%{hiera('netcfg_public_netpart')}.254"
+    "access.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.252"
+    "console.%{hiera('domain_public')}":                  "%{hiera('netcfg_public_netpart')}.251"
+    "api.%{hiera('domain_public')}":                      "%{hiera('netcfg_public_netpart')}.250"
+    "identity.api.%{hiera('domain_public')}":             "%{hiera('netcfg_public_netpart')}.250"
+    "image.api.%{hiera('domain_public')}":                "%{hiera('netcfg_public_netpart')}.250"
+    "network.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.250"
+    "compute.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.250"
+    "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
+    "status.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
   PTR:
     '1.0.31.172.in-addr.arpa':      "%{::location}-leaf-01.%{hiera('domain_mgmt')}"
     '11.0.31.172.in-addr.arpa':     "%{::location}-admin-01.%{hiera('domain_mgmt')}"
@@ -155,18 +155,18 @@ profile::network::services::dns_records:
     '114.0.31.172.in-addr.arpa':    "%{::location}-controller-04.%{hiera('domain_mgmt')}"
     '115.0.31.172.in-addr.arpa':    "%{::location}-compute-07.%{hiera('domain_mgmt')}"
     '116.0.31.172.in-addr.arpa':    "%{::location}-compute-08.%{hiera('domain_mgmt')}"
-    '16.16.31.172.in-addr.arpa':    "ns01.%{hiera('domain_trp')}"
-    '17.16.31.172.in-addr.arpa':    "ns02.%{hiera('domain_trp')}"
-    '21.16.31.172.in-addr.arpa':    "status.%{hiera('domain_trp')}"
-    '31.16.31.172.in-addr.arpa':    "mq01.%{hiera('domain_trp')}"
-    '41.16.31.172.in-addr.arpa':    "db01.%{hiera('domain_trp')}"
-    '42.16.31.172.in-addr.arpa':    "db02.%{hiera('domain_trp')}"
-    '86.16.31.172.in-addr.arpa':    "api.%{hiera('domain_trp')}"
-    '16.24.31.172.in-addr.arpa':    "ns01.%{hiera('domain_public')}"
-    '51.24.31.172.in-addr.arpa':    "dashboard.%{hiera('domain_frontend')}"
-    '56.24.31.172.in-addr.arpa':    "access.%{hiera('domain_frontend')}"
-    '61.24.31.172.in-addr.arpa':    "console.%{hiera('domain_public')}"
-    '86.24.31.172.in-addr.arpa':    "api.%{hiera('domain_public')}"
+    '16.8.31.172.in-addr.arpa':     "ns01.%{hiera('domain_trp')}"
+    '17.8.31.172.in-addr.arpa':     "ns02.%{hiera('domain_trp')}"
+    '21.8.31.172.in-addr.arpa':     "status.%{hiera('domain_trp')}"
+    '31.8.31.172.in-addr.arpa':     "mq01.%{hiera('domain_trp')}"
+    '41.8.31.172.in-addr.arpa':     "db01.%{hiera('domain_trp')}"
+    '42.8.31.172.in-addr.arpa':     "db02.%{hiera('domain_trp')}"
+    '86.8.31.172.in-addr.arpa':     "api.%{hiera('domain_trp')}"
+    '16.0.168.192.in-addr.arpa':    "ns01.%{hiera('domain_public')}"
+    '254.0.168.192.in-addr.arpa':   "dashboard.%{hiera('domain_frontend')}"
+    '252.0.168.192.in-addr.arpa':   "access.%{hiera('domain_frontend')}"
+    '251.0.168.192.in-addr.arpa':   "console.%{hiera('domain_public')}"
+    '250.0.168.192.in-addr.arpa':   "api.%{hiera('domain_public')}"
 
 
 #
@@ -257,11 +257,11 @@ profile::openstack::resource::networks:
 profile::openstack::resource::subnets:
   public:
     name: 'public'
-    cidr: '172.31.24.0/24'
+    cidr: "%{hiera('netcfg_public_netpart')}.0/24"
     ip_version: '4'
     allocation_pools:
-      - 'start=172.31.24.200,end=172.31.24.250'
-    gateway_ip: '172.31.24.1'
+      - "start=%{hiera('netcfg_public_netpart')}.200,end=%{hiera('netcfg_public_netpart')}.250"
+    gateway_ip: "%{hiera('netcfg_public_netpart')}.1"
     dns_nameservers:
       - '129.177.6.54'
       - '129.177.12.31'
