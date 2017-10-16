@@ -23,7 +23,7 @@ class profile::dns::rndc_key (
         content      => template("${module_name}/dns/bind/rndc-admin.key.erb"),
         mode         => '0640',
         owner        => 'root',
-        group        => 'named',
+        group        => 'root',
       }
     }
   }
