@@ -113,7 +113,7 @@ profile::network::services::dns_records:
   PTR:
     '1.0.31.172.in-addr.arpa':      "%{::location}-leaf-01.%{hiera('domain_mgmt')}"
     '11.0.31.172.in-addr.arpa':     "%{::location}-admin-01.%{hiera('domain_mgmt')}"
-    '12.0.31.172.in-addr.arpa':     "%{::location}-pro'y-01.%{hiera('domain_mgmt')}"
+    '12.0.31.172.in-addr.arpa':     "%{::location}-proxy-01.%{hiera('domain_mgmt')}"
     '13.0.31.172.in-addr.arpa':     "%{::location}-logger-01.%{hiera('domain_mgmt')}"
     '14.0.31.172.in-addr.arpa':     "%{::location}-monitor-01.%{hiera('domain_mgmt')}"
     '15.0.31.172.in-addr.arpa':     "%{::location}-builder-01.%{hiera('domain_mgmt')}"
