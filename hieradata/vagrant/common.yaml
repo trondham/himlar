@@ -98,7 +98,6 @@ profile::network::services::dns_options:
 #
 profile::network::services::dns_records:
   A:
-    "api.%{hiera('domain_trp')}":                         "%{hiera('netcfg_trp_netpart')}.250"
     "ns.%{hiera('domain_public')}":                       "%{hiera('netcfg_public_netpart')}.16"
     "dashboard.%{hiera('domain_frontend')}":              "%{hiera('netcfg_public_netpart')}.254"
     "access.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.252"
@@ -155,13 +154,6 @@ profile::network::services::dns_records:
     '114.0.31.172.in-addr.arpa':    "%{::location}-controller-04.%{hiera('domain_mgmt')}"
     '115.0.31.172.in-addr.arpa':    "%{::location}-compute-07.%{hiera('domain_mgmt')}"
     '116.0.31.172.in-addr.arpa':    "%{::location}-compute-08.%{hiera('domain_mgmt')}"
-    '16.8.31.172.in-addr.arpa':     "ns01.%{hiera('domain_trp')}"
-    '17.8.31.172.in-addr.arpa':     "ns02.%{hiera('domain_trp')}"
-    '21.8.31.172.in-addr.arpa':     "status.%{hiera('domain_trp')}"
-    '31.8.31.172.in-addr.arpa':     "mq01.%{hiera('domain_trp')}"
-    '41.8.31.172.in-addr.arpa':     "db01.%{hiera('domain_trp')}"
-    '42.8.31.172.in-addr.arpa':     "db02.%{hiera('domain_trp')}"
-    '86.8.31.172.in-addr.arpa':     "api.%{hiera('domain_trp')}"
     '16.0.168.192.in-addr.arpa':    "ns01.%{hiera('domain_public')}"
     '254.0.168.192.in-addr.arpa':   "dashboard.%{hiera('domain_frontend')}"
     '252.0.168.192.in-addr.arpa':   "access.%{hiera('domain_frontend')}"
