@@ -13,25 +13,6 @@ class profile::dns::ns (
   $internal_zone = {}
   )
 {
-  # Configure SELinux to enforcing
-  class { 'selinux':
-    mode => 'enforcing',
-    type => 'targeted',
-  }
-  # Set boolean named_write_master_zones, so that named is allowed to write
-  # master zones
-  selinux::boolean { 'named_write_master_zones':
-    ensure     => 'on',
-    persistent => true,
-  }
-  # Install packages that we want when running SELinux
-  package { 'setroubleshoot-server':
-    ensure => installed,
-  }
-  package { 'setools-console':
-    ensure => installed,
-  }
-
   # Our reverse zones
   $reverse_zones = hiera_hash('profile::dns::ns::ptr_zones', {})
 
@@ -84,11 +65,11 @@ class profile::dns::ns (
       ensure  => running,
       enable  => true,
       require => [
-                   File['/etc/rndc.conf'],
-                   File['/var/named'],
-                   File["/var/named/${internal_zone}.zone"],
-                   File['/etc/named.conf']
-                 ],
+        File['/etc/rndc.conf'],
+        File['/var/named'],
+        File["/var/named/${internal_zone}.zone"],
+        File['/etc/named.conf']
+        ],
     }
   }
   else {
@@ -96,10 +77,10 @@ class profile::dns::ns (
       ensure  => running,
       enable  => true,
       require => [
-                   File['/etc/rndc.conf'],
-                   File['/var/named'],
-                   File['/etc/named.conf']
-                 ],
+        File['/etc/rndc.conf'],
+        File['/var/named'],
+        File['/etc/named.conf']
+        ],
     }
   }
 
