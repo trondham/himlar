@@ -4,8 +4,6 @@ network::interfaces_hash:
     'ipaddress': '172.28.32.1/24'
     'post_up': [ '/etc/network/if-up.d/z90-route-eth0', ]
     'post_down': [ '/etc/network/if-down.d/z90-route-eth0', ]
-  'swp1':
-    'ipaddress': '192.168.122.2/24'
 #    'post_up': [ '/etc/network/if-up.d/z90-route-swp1', ]
 #    'post_down': [ '/etc/network/if-down.d/z90-route-swp1', ]
 #    'dns_nameservers': '172.28.32.12'
@@ -16,12 +14,28 @@ network::interfaces_hash:
 # In production environment these should be VLAN aware
 # bridges and actually tagged. This is not possible in
 # dev01 environment, though.
+
 profile::base::network::cumulus_bridges:
   'bridge':
-    'ipv4': [ '172.30.32.1/24', ]
-    'ports': [ 'swp2', ]
+    'ports': [ 'swp1', 'swp2', ]
     'alias_name': 'Transport L2 if'
+    'vlan_aware': 'true'
+    'stp': 'false'
+    'vids': [ '100', '101', ]
     'mtu': '1500'
+
+profile::base::network::cumulus_interfaces:
+  'swp1':
+    'pvid': '101'
+    'vids': '101'
+  'swp2':
+    'pvid': '100'
+    'vids': '100'
+  'bridge.100':
+    'ipv4': [ '172.30.32.1/24', ]
+    'ipv6': [ 'fd32::1/64', ]
+  'bridge.101':
+    'ipv4': [ '192.168.122.2/24', ]
 
 # Add default route for management VRF
 profile::base::network::routes:
@@ -70,6 +84,9 @@ quagga::quagga::bgp_networks:
   - '0.0.0.0/0'
   - '10.100.200.0/24'
   - '172.30.32.0/24'
+quagga::quagga::bgp_networks6:
+  - '::/0'
+  - 'fd32::/64'
 
 quagga::quagga::bgp_neighbor_groups:
   'rr-clients':
@@ -84,6 +101,12 @@ quagga::quagga::bgp_neighbor_groups:
       - '172.30.32.103'
       - '172.30.32.104'
       - '172.30.32.105'
+    'options6':
+      - 'route-reflector-client'
+    'members6':
+      - 'fd32::103'
+      - 'fd32::104'
+      - 'fd32::105'
 #  'other-clients':
 #    'options':
 #    - 'peer-group'

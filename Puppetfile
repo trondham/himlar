@@ -20,7 +20,7 @@ mod 'lvm', :ref => '689d42a16c',                 :git => github + 'puppetlabs/pu
 mod 'firewall', :ref => '1.8.2',                 :git => github + 'puppetlabs/puppetlabs-firewall'
 mod 'kmod', :ref => '2.1.0',                     :git => github + 'camptocamp/puppet-kmod'
 mod 'named_interfaces', :ref => '88ce713994',    :git => github + 'norcams/puppet-named_interfaces'
-mod 'network', :ref => 'e739f24fa3',             :git => github + 'norcams/puppet-network'
+mod 'network', :ref => '8b641b386f',             :git => github + 'norcams/puppet-network'
 mod 'ipmi', :ref => 'c4309504fd',                :git => github + 'norcams/puppet-ipmi'
 mod 'lldp', :ref => '06523de010',                :git => github + 'norcams/puppet-lldp'
 mod 'apt', :ref => '2.2.2',                      :git => github + 'puppetlabs/puppetlabs-apt'
@@ -45,7 +45,7 @@ mod 'quagga', :ref => '4f7cac717c',              :git => github + 'norcams/puppe
 # profile::network::
 #
 mod 'bird', :ref => 'master',                    :git => github + 'norcams/puppet-bird'
-mod 'calico', :ref => '07ee8c3592',              :git => github + 'norcams/puppet-calico'
+mod 'calico', :ref => 'fad10cac71',              :git => github + 'norcams/puppet-calico'
 mod 'dnsmasq', :ref => 'v1.2.0',                 :git => github + 'saz/puppet-dnsmasq'
 mod 'ipcalc', :ref => '1.2.2',                   :git => github + 'inkblot/puppet-ipcalc'
 mod 'tinyproxy', :ref => 'bc56e3ecc2',           :git => github + 'earsdown/puppet-tinyproxy'
@@ -54,7 +54,7 @@ mod 'interfaces', :ref => '1.2.2',               :git => github + 'CumulusNetwor
 #
 # profile::application::etcd
 #
-mod 'etcd', :ref => 'c26961fe94',                :git => github + 'norcams/puppet-etcd'
+mod 'etcd', :ref => '1.11.0',                    :git => github + 'cristifalcas/puppet-etcd'
 
 #
 # profile::application::openssl
@@ -151,7 +151,7 @@ mod 'cinder', :ref => '9.5.0',                   :git => github + 'openstack/pup
 mod 'neutron', :ref => '9.5.0',                  :git => github + 'openstack/puppet-neutron'
 mod 'nova', :ref => '9.6.0',                     :git => github + 'openstack/puppet-nova'
 mod 'designate', :ref => 'fa62489',              :git => github + 'openstack/puppet-designate'
-mod 'horizon', :ref => 'norcams-mitaka',         :git => github + 'norcams/puppet-horizon'
+mod 'horizon', :ref => 'stable/newton',          :git => github + 'openstack/puppet-horizon'
 mod 'keystone', :ref => 'norcams/newton',        :git => github + 'norcams/puppet-keystone'
 
 mod 'oslo', :ref => '9.5.0',                     :git => github + 'openstack/puppet-oslo'
@@ -168,7 +168,7 @@ mod 'libvirt', :ref => '0.3.2-norcams2',         :git => github + 'norcams/puppe
 #
 # ceph
 #
-mod 'ceph', :ref => '6a12d71f43',                :git => github + 'openstack/puppet-ceph'
+mod 'ceph', :ref => 'd652d54f6f',                :git => github + 'norcams/puppet-ceph'
 
 #
 # ha

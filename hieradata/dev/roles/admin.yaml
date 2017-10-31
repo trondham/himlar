@@ -1,4 +1,0 @@
----
-# Bind utils will be installed with foreman::dns
-profile::base::common::packages:
-  'bind-utils': { ensure: absent }

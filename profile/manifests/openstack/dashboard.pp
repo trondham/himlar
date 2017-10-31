@@ -13,6 +13,9 @@ class profile::openstack::dashboard(
   $custom_uploaddir     = '/image-upload',
   $enable_pwd_retrieval = false,
   $enable_designate     = false,
+  $enable_image_upload  = false,
+  $image_upload_mode    = undef,
+  $change_region_selector = false
 ) {
 
   if $manage_dashboard {
@@ -77,6 +80,17 @@ class profile::openstack::dashboard(
       ensure => present,
       source => 'file:///usr/lib/python2.7/site-packages/designatedashboard/enabled/_1722_dns_reversedns_panel.py',
       notify => Service['httpd']
+    }
+  }
+
+  if $change_region_selector {
+    file_line { 'clear_ file_content':
+      ensure            => absent,
+      path              => '/usr/lib/python2.7/site-packages/horizon/templates/horizon/common/_region_selector.html',
+      match             => '^.',
+      match_for_absence => true,
+      multiple          => true,
+      replace           => false,
     }
   }
 }
