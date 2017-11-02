@@ -14,7 +14,7 @@ class profile::dns::ns (
   )
 {
   # Our forward zones
-  $forward_zones = hiera_hash('profile::dns::ns::forward_zones', {})
+  $forward_zones = hiera_hash('profile::dns::ns::fw_zones', {})
 
   # Our reverse zones
   $reverse_zones = hiera_hash('profile::dns::ns::ptr_zones', {})

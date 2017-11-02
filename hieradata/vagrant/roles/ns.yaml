@@ -11,10 +11,13 @@ profile::dns::rndc_key::host_is_bind_server: true
 
 profile::dns::ns::internal_zone: "vagrant.iaas.intern"
 
-profile::dns::ns::forward_zones:
-  "vagrant.iaas.intern":
-    filename: "vagrant.iaas.intern.zone"
+# Forward zones
+profile::dns::ns::fw_zones:
+  internal:
+    zone: "%{hiera('::internal_zone')}"
+    filename: "%{hiera('::internal_zone')}.zone"
 
+# Reverse zones
 profile::dns::ns::ptr_zones:
   internal:
     cidr: "172.31.0.0/16"
