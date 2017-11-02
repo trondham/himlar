@@ -14,6 +14,7 @@ profile::dns::ns::internal_zone: "vagrant.iaas.intern"
 # Name servers in zone file
 profile::dns::ns::name_servers:
   - "ns.vagrant.iaas.intern"
+  - "foo"
 
 # Forward zones
 profile::dns::ns::fw_zones:
