@@ -1,5 +1,4 @@
 define profile::dns::forward_zone($zone, $filename) {
-  $internal_zone = $::profile::dns::ns::internal_zone
 
   # Our name servers
   $name_servers = hiera_array('profile::dns::ns::name_servers', {})

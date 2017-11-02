@@ -13,14 +13,14 @@ profile::dns::ns::internal_zone: "test02.uhdc.no"
 
 # Name servers in zone file
 profile::dns::ns::name_servers:
-  - "ns.test02.uhdc.no"
+  - "ns.%{hiera('profile::dns::ns::internal_zone')}"
   - "ns.test01.uhdc.no"
 
 # Forward zones
 profile::dns::ns::fw_zones:
   internal:
-    zone: "test02.uhdc.no"
-    filename: "test02.uhdc.no.zone"
+    zone: "%{hiera('profile::dns::ns::internal_zone')}"
+    filename: "%{hiera('profile::dns::ns::internal_zone')}.zone"
   frontend:
     zone: "iaas.uio.no"
     filename: "iaas.uio.no.zone"
