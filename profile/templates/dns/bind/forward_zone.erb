@@ -8,6 +8,8 @@ $TTL    3600
                             604800         ; Expire
                             43200 )        ; Negative Cache TTL
 
-        IN      NS      ns.<%= @zone %>.
+<% name_servers.each do |ns| -%>
+        IN      NS      <%= ns %>.
+<% end -%>
 
 ns  	  IN	  A		<%= @ns1_public_addr %>
