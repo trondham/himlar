@@ -10,6 +10,7 @@ define profile::dns::reverse_zone($cidr, $origin, $filename) {
     mode         => '0640',
     owner        => 'root',
     group        => 'named',
+    replace      => 'no',
     require      => Package['bind'],
   }
 }

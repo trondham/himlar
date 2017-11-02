@@ -9,6 +9,7 @@ define profile::dns::forward_zone($zone, $filename) {
     mode         => '0640',
     owner        => 'root',
     group        => 'named',
+    replace      => 'no',
     require      => Package['bind'],
   }
 }
