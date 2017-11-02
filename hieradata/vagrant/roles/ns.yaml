@@ -18,8 +18,8 @@ profile::dns::ns::name_servers:
 # Forward zones
 profile::dns::ns::fw_zones:
   internal:
-    zone: "vagrant.iaas.intern"
-    filename: "vagrant.iaas.intern.zone"
+    zone: "%{hiera('internal_zone')}"
+    filename: "%{hiera('internal_zone')}.zone"
 
 # Reverse zones
 profile::dns::ns::ptr_zones:
