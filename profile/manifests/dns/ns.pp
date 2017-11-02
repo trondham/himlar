@@ -20,7 +20,7 @@ class profile::dns::ns (
   $reverse_zones = hiera_hash('profile::dns::ns::ptr_zones', {})
 
   # Our name servers
-  $name_servers = hiera_hash('profile::dns::ns::name_servers', {})
+  $name_servers = hiera_array('profile::dns::ns::name_servers', {})
 
   # Make sure that bind is installed
   package { 'bind':
