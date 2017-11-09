@@ -170,7 +170,7 @@ profile::network::services::dns_records:
     '251.0.168.192.in-addr.arpa':   "console.%{hiera('domain_public')}"
     '250.0.168.192.in-addr.arpa':   "api.%{hiera('domain_public')}"
     # public IPv6
-    '6.1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.2.0.0.0.1.0.0.0.7.0.0.0.c.f.ip6.arpa':  "ns.%{hiera('domain_public')}"
+    '6.1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.2.0.0.0.1.0.0.0.7.0.0.0.c.f.ip6.arpa':  "ns.%{hiera('domain_public')}"
 
 #
 ## Secret data which for other environments are stored ooutside of this data tree
