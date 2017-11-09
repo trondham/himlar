@@ -31,6 +31,9 @@ netcfg_trp_rr:
   rr1:
     peer_ipv4: '172.31.8.1'
 
+ipv6_netcfg_public_netpart:  '10:10:10::10'
+ipv6_netcfg_public_prefix:   '64'
+
 #
 # Services (internal non openstack services)
 #
@@ -115,7 +118,7 @@ profile::network::services::dns_records:
     "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
     "status.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
   AAAA:
-    "ns99.%{hiera('domain_public')}":                       "2001:700:100:202::202:16"
+    "ns.%{hiera('domain_public')}":                       "%{hiera('ipv6_netcfg_public_netpart')}:16"
   PTR:
     '1.0.31.172.in-addr.arpa':      "%{::location}-leaf-01.%{hiera('domain_mgmt')}"
     '11.0.31.172.in-addr.arpa':     "%{::location}-admin-01.%{hiera('domain_mgmt')}"
