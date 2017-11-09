@@ -87,6 +87,11 @@ profile::network::services::dns_options:
       ttl: 3600
       keyfile: "/etc/rndc-admin.key"
       server: "%{hiera('netcfg_mgmt_netpart')}.16"
+  AAAA:
+    default:
+      ttl: 3600
+      keyfile: "/etc/rndc-admin.key"
+      server: "%{hiera('netcfg_mgmt_netpart')}.16"
   PTR:
     default:
       ttl: 3600
@@ -109,6 +114,8 @@ profile::network::services::dns_records:
     "compute.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.250"
     "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
     "status.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
+  AAAA:
+    "ns.%{hiera('domain_public')}":                       "2001:700:100:202::202:16"
   PTR:
     '1.0.31.172.in-addr.arpa':      "%{::location}-leaf-01.%{hiera('domain_mgmt')}"
     '11.0.31.172.in-addr.arpa':     "%{::location}-admin-01.%{hiera('domain_mgmt')}"
