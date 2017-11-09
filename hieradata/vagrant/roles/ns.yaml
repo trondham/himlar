@@ -25,13 +25,13 @@ profile::dns::ns::fw_zones:
 profile::dns::ns::ptr_zones:
   internal:
     cidr: "172.31.0.0/16"
-    origin: "31.172.IN-ADDR.arpa"
+    origin: "31.172.in-addr.arpa"
     filename: "reverse-172.31"
   public:
     cidr: "192.168.0/16"
-    origin: "168.192.IN-ADDR.arpa"
+    origin: "168.192.in-addr.arpa"
     filename: "reverse-192.168"
   ipv6:
     cidr: "10:10:10::/64"
-    origin: ""
+    origin: "1.0.0.0.1.0.0.0.1.0.0.ip6.arpa"
     filename: "reverse-ipv6-10.10.10"
