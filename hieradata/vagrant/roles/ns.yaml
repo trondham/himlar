@@ -31,3 +31,7 @@ profile::dns::ns::ptr_zones:
     cidr: "192.168.0/16"
     origin: "168.192"
     filename: "reverse-192.168"
+  ipv6:
+    cidr: "10:10:10::/64"
+    origin: "."
+    filename: "reverse-ipv6-10.10.10"
