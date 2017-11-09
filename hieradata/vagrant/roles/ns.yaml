@@ -32,6 +32,6 @@ profile::dns::ns::ptr_zones:
     origin: "168.192.in-addr.arpa"
     filename: "reverse-192.168"
   ipv6:
-    cidr: "10:10:10::/64"
-    origin: "1.0.0.0.1.0.0.0.1.0.0.ip6.arpa"
-    filename: "reverse-ipv6-10.10.10"
+    cidr: "fc00::/7"
+    origin: "c.f.ip6.arpa"
+    filename: "reverse-ipv6-fc00"

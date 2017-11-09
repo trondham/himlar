@@ -31,7 +31,7 @@ netcfg_trp_rr:
   rr1:
     peer_ipv4: '172.31.8.1'
 
-ipv6_netcfg_public_netpart:  '10:10:10::10'
+ipv6_netcfg_public_netpart:  'fc00:700:100:200'
 ipv6_netcfg_public_prefix:   '64'
 
 #
@@ -118,7 +118,7 @@ profile::network::services::dns_records:
     "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
     "status.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
   AAAA:
-    "ns99.%{hiera('domain_public')}":                       "%{hiera('ipv6_netcfg_public_netpart')}:16"
+    "ns99.%{hiera('domain_public')}":                       "%{hiera('ipv6_netcfg_public_netpart')}::16"
   PTR:
     '1.0.31.172.in-addr.arpa':      "%{::location}-leaf-01.%{hiera('domain_mgmt')}"
     '11.0.31.172.in-addr.arpa':     "%{::location}-admin-01.%{hiera('domain_mgmt')}"
@@ -169,7 +169,8 @@ profile::network::services::dns_records:
     '252.0.168.192.in-addr.arpa':   "access.%{hiera('domain_frontend')}"
     '251.0.168.192.in-addr.arpa':   "console.%{hiera('domain_public')}"
     '250.0.168.192.in-addr.arpa':   "api.%{hiera('domain_public')}"
-    '1.0.0.0.1.0.0.0.1.0.0.ip6.arpa': "ns.%{hiera('domain_public')}"
+    # public IPv6
+    '6.1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.2.0.0.0.1.0.0.0.7.0.0.0.c.f.ip6.arpa':  "ns.%{hiera('domain_public')}"
 
 #
 ## Secret data which for other environments are stored ooutside of this data tree
