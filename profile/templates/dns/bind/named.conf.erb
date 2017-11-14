@@ -45,7 +45,7 @@ options  {
 # Forward zone for <%= network %>, <%= values["zone"] %> (master)
 zone "<%= values["zone"] %>" IN {
     type master;
-    file "pz/<%= values["filename"] %>";
+    file "<%= values["filename"] %>";
     allow-update { <%= @admin_mgmt_addr %>; };
     allow-query { 127.0.0.1; ::1; iaas_nets; };
     also-notify { <%= @ns2_mgmt_addr %>; };
@@ -55,7 +55,7 @@ zone "<%= values["zone"] %>" IN {
 # Reverse (PTR) zone for <%= network %> network, <%= values["cidr"] %> (master)
 zone "<%= values["origin"] %>" IN {
     type master;
-    file "pz/<%= values["filename"] %>";
+    file "<%= values["filename"] %>";
     allow-update { <%= @admin_mgmt_addr %>; };
     allow-query { 127.0.0.1; ::1; iaas_nets; };
     also-notify { <%= @ns2_mgmt_addr %>; };
