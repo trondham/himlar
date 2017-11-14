@@ -9,12 +9,12 @@ profile::dns::rndc_key::create_admin_key:    true
 profile::dns::rndc_key::create_mdns_key:     true
 profile::dns::rndc_key::host_is_bind_server: true
 
-profile::dns::ns::internal_zone: "test02.uhdc.no"
+profile::dns::ns::internal_zone: "test01.uhdc.no"
 
 # Name servers in zone file
 profile::dns::ns::name_servers:
   - "ns.%{hiera('profile::dns::ns::internal_zone')}"
-  - "ns.test01.uhdc.no"
+  - "ns.test02.uhdc.no"
 
 # Forward zones
 profile::dns::ns::fw_zones:
@@ -22,8 +22,8 @@ profile::dns::ns::fw_zones:
     zone: "%{hiera('profile::dns::ns::internal_zone')}"
     filename: "%{hiera('profile::dns::ns::internal_zone')}.zone"
   frontend:
-    zone: "iaas.uio.no"
-    filename: "iaas.uio.no.zone"
+    zone: "iaas.uib.no"
+    filename: "iaas.uib.no.zone"
 
 # Reverse zones
 profile::dns::ns::ptr_zones:
@@ -32,6 +32,6 @@ profile::dns::ns::ptr_zones:
     origin: "28.172.in-addr.arpa"
     filename: "reverse-172.28"
   public:
-    cidr: "10.100.0.0/16"
-    origin: "100.10.in-addr.arpa"
-    filename: "reverse-10.100"
+    cidr: "129.177.0.0/16"
+    origin: "177.129.in-addr.arpa"
+    filename: "reverse-129.177"
