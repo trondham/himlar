@@ -41,8 +41,8 @@ class profile::dns::ns (
     group        => 'named',
     require      => Package['bind'],
   }
-  # Ensure that /var/named/pz exists with correct permissions
-  file { '/var/named/pz':
+  # Ensure that /var/named/$zonedir exists with correct permissions
+  file { "/var/named/${zonedir}":
     ensure       => directory,
     mode         => '0770',
     owner        => 'root',
@@ -67,7 +67,7 @@ class profile::dns::ns (
     require => [
       File['/etc/rndc.conf'],
       File['/var/named'],
-      File['/var/named/pz'],
+      File["/var/named/${zonedir}"],
       File['/etc/named.conf']
       ],
   }
