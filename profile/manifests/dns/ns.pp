@@ -40,6 +40,14 @@ class profile::dns::ns (
     group        => 'named',
     require      => Package['bind'],
   }
+  # Ensure that /var/named/pz exists with correct permissions
+  file { '/var/named/pz':
+    ensure       => directory,
+    mode         => '0770',
+    owner        => 'root',
+    group        => 'named',
+    require      => Package['bind'],
+  }
   # Create named.conf from template
   file { '/etc/named.conf':
     content      => template("${module_name}/dns/bind/named.conf.erb"),
@@ -58,6 +66,7 @@ class profile::dns::ns (
     require => [
       File['/etc/rndc.conf'],
       File['/var/named'],
+      File['/var/named/pz'],
       File['/etc/named.conf']
       ],
   }
