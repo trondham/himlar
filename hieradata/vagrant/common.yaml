@@ -121,7 +121,7 @@ profile::network::services::dns_records:
     "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
     "status.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
   AAAA:
-    "ns.%{hiera('domain_public')}":                       "%{hiera('netcfg_public_netpart6')}::16"
+    "ns6.%{hiera('domain_public')}":                       "%{hiera('netcfg_public_netpart6')}::16"
   PTR:
     # mgmt
     "1.%{hiera('reverse_mgmt')}":      "%{::location}-leaf-01.%{hiera('domain_mgmt')}"
