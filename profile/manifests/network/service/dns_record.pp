@@ -29,7 +29,7 @@ define profile::network::service::dns_record(
 
   $record = {
     "${type}_record_${record_name}" => {
-      'record' => $name,
+      'record' => $record_name,
       'type'   => $type,
       'data'   => $data,
     },
