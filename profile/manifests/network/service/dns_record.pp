@@ -21,13 +21,13 @@ define profile::network::service::dns_record(
     }
   }
 
+  notify { $data: }
+
   if is_hash($options[$name]) {
     $record_options = merge($options['default'], $options[$name])
   } else {
     $record_options = $options['default']
   }
-
-  notify { $data: }
 
   $record = {
     "${type}_record_${record_name}" => {
