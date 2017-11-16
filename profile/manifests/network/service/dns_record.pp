@@ -27,6 +27,8 @@ define profile::network::service::dns_record(
     $record_options = $options['default']
   }
 
+  notify { $data: }
+
   $record = {
     "${type}_record_${record_name}" => {
       'record' => $record_name,
