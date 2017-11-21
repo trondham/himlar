@@ -36,3 +36,4 @@ define profile::network::service::dns_record(
   }
   create_resources('resource_record', $record, $record_options)
 }
+

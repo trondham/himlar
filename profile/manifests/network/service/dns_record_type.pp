@@ -14,7 +14,5 @@ define profile::network::service::dns_record_type(
     records => $type_records,
   }
 
-  notify { $type_records: }
-
 }
 
