@@ -21,15 +21,8 @@ define profile::network::service::dns_record(
     }
   }
 
-<<<<<<< HEAD
-#  notify { $data: }
-
-  if is_hash($options[$name]) {
-    $record_options = merge($options['default'], $options[$name])
-=======
   if is_hash($options[$record_name]) {
     $record_options = merge($options['default'], $options[$record_name])
->>>>>>> master
   } else {
     $record_options = $options['default']
   }
@@ -43,4 +36,3 @@ define profile::network::service::dns_record(
   }
   create_resources('resource_record', $record, $record_options)
 }
-
