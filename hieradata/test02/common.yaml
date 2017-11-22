@@ -12,7 +12,7 @@ domain_trp:             'test02.uhdc.no'
 domain_mgmt:            'mgmt.test02.uhdc.no'
 
 reverse_public:         '200.100.10.in-addr.arpa'
-reverse_public6:        '2.3.d.f.ip6.arpa'
+reverse_public6:        '4.3.d.f.ip6.arpa'
 reverse_mgmt:           '32.28.172.in-addr.arpa'
 
 bgp_as:                 '65536'
@@ -30,7 +30,9 @@ netcfg_dns_server1:     '129.240.2.3'
 netcfg_dns_server2:     '129.240.2.40'
 netcfg_dns_search:      "%{hiera('domain_mgmt')} %{hiera('domain_trp')} %{hiera('domain_mgmt')}"
 netcfg_public_netpart:  '10.100.200'
+netcfg_public_netpart6: 'fd34'
 netcfg_public_netmask:  '255.255.255.0'
+netcfg_public_netmask6: '64'
 
 netcfg_priv_gateway:    '172.30.32.26'
 netcfg_priv_network:    '10.0.244.0/24'
