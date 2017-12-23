@@ -17,7 +17,7 @@ location_description: unset
 location_environment: unset
 location_tag:         unset
 
-bgp_as:                 '65535'
+bgp_as:               '65535'
 
 domain_frontend:      "%{::domain}"
 domain_public:        "%{::domain}"
@@ -61,6 +61,7 @@ allow_from_network:
   - '129.177.10.189/32'  # tor
   - '129.177.10.212/32'  # raymond
   - '129.177.10.111/32'  # anders
+  - '129.240.202.64/32'  # usit
   - '158.36.0.0/16'      # UiA
   - '128.39.0.0/16'      # UiA
   - '158.37.216.0/21'    # UiA
@@ -112,7 +113,6 @@ public__address__access:          "access.%{hiera('domain_frontend')}"
 public__address__console:         "console.%{hiera('domain_public')}"
 
 # DNS servers
-public__address__ns_01:           "%{hiera('netcfg_public_netpart')}.16"
 public__name__ns_01:              "ns.%{hiera('domain_public')}"
 
 #
@@ -178,6 +178,7 @@ profile::network::services::dns_records:
     "%{::location}-builder-01.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.15"
     "%{::location}-ns-01.%{hiera('domain_mgmt')}":          "%{hiera('netcfg_mgmt_netpart')}.16"
     "%{::location}-ns-02.%{hiera('domain_mgmt')}":          "%{hiera('netcfg_mgmt_netpart')}.17"
+    "%{::location}-admin-02.%{hiera('domain_mgmt')}":       "%{hiera('netcfg_mgmt_netpart')}.18"
     "%{::location}-status-01.%{hiera('domain_mgmt')}":      "%{hiera('netcfg_mgmt_netpart')}.21"
     "%{::location}-nat-linux-01.%{hiera('domain_mgmt')}":   "%{hiera('netcfg_mgmt_netpart')}.26"
     "%{::location}-mq-01.%{hiera('domain_mgmt')}":          "%{hiera('netcfg_mgmt_netpart')}.31"
@@ -215,6 +216,13 @@ profile::network::services::dns_records:
     "%{::location}-controller-04.%{hiera('domain_mgmt')}":  "%{hiera('netcfg_mgmt_netpart')}.114"
     "%{::location}-compute-07.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.115"
     "%{::location}-compute-08.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.116"
+    "%{::location}-compute-09.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.117"
+    "%{::location}-compute-10.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.118"
+    "%{::location}-object-01.%{hiera('domain_mgmt')}":      "%{hiera('netcfg_mgmt_netpart')}.119"
+    "%{::location}-object-02.%{hiera('domain_mgmt')}":      "%{hiera('netcfg_mgmt_netpart')}.120"
+    "%{::location}-object-03.%{hiera('domain_mgmt')}":      "%{hiera('netcfg_mgmt_netpart')}.121"
+    "%{::location}-object-04.%{hiera('domain_mgmt')}":      "%{hiera('netcfg_mgmt_netpart')}.122"
+    "%{::location}-object-05.%{hiera('domain_mgmt')}":      "%{hiera('netcfg_mgmt_netpart')}.123"
     # mgmt
     "foreman.%{hiera('domain_mgmt')}":                      "%{hiera('netcfg_mgmt_netpart')}.11"
     "puppet.%{hiera('domain_mgmt')}":                       "%{hiera('netcfg_mgmt_netpart')}.11"
@@ -224,18 +232,21 @@ profile::network::services::dns_records:
     "builder.%{hiera('domain_mgmt')}":                      "%{hiera('netcfg_mgmt_netpart')}.15"
     "ns01.%{hiera('domain_mgmt')}":                         "%{hiera('netcfg_mgmt_netpart')}.16"
     "ns02.%{hiera('domain_mgmt')}":                         "%{hiera('netcfg_mgmt_netpart')}.17"
+    "foreman4.%{hiera('domain_mgmt')}":                     "%{hiera('netcfg_mgmt_netpart')}.18"
+    "puppet4.%{hiera('domain_mgmt')}":                      "%{hiera('netcfg_mgmt_netpart')}.18"
+    "git.%{hiera('domain_mgmt')}":                          "%{hiera('netcfg_mgmt_netpart')}.10"
     # trp
     "status.%{hiera('domain_trp')}":                        "%{hiera('netcfg_trp_netpart')}.21"
     "mq01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.31"
     "db01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.41"
     "db02.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.42"
+    "%{::location}-access-01.%{hiera('domain_trp')}":       "%{hiera('netcfg_trp_netpart')}.56"
     "image.%{hiera('domain_trp')}":                         "%{hiera('netcfg_trp_netpart')}.86"
     "volume.%{hiera('domain_trp')}":                        "%{hiera('netcfg_trp_netpart')}.86"
     "compute.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.86"
     "network.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.86"
     "identity.%{hiera('domain_trp')}":                      "%{hiera('netcfg_trp_netpart')}.86"
     "metric.%{hiera('domain_trp')}":                        "%{hiera('netcfg_trp_netpart')}.96"
-
 
 #
 # Network configuration data

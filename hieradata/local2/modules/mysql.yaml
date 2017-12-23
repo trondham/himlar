@@ -12,6 +12,7 @@ mysql::server::override_options:
     ssl-ca:                         "%{hiera('db_ssl_ca')}"
     ssl-key:                        "%{hiera('db_ssl_key')}"
     ssl-cert:                       "%{hiera('db_ssl_cert')}"
+    wsrep_sst_auth:                 "root:%{hiera('mysql::server::root_password')}"
   galera:
     binlog_format:                  'ROW'
     default_storage_engine:         'InnoDB'
@@ -27,3 +28,8 @@ mysql::server::override_options:
     wsrep_node_name:                "%{::hostname}"
     wsrep_sst_method:               "%{hiera('wsrep_sst_method')}"
     wsrep_provider_options:         "%{hiera('wsrep_provider_options')}"
+  sst:
+    encrypt:                        4
+    tca:                            "%{hiera('db_ssl_ca')}"
+    tcert:                          "%{hiera('db_ssl_cert')}"
+    tkey:                           "%{hiera('db_ssl_key')}"

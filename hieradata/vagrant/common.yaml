@@ -42,6 +42,9 @@ netcfg_trp_rr:
 #
 service__address__mysql:  "db01.%{hiera('domain_trp')}" #FIXME
 
+# DNS server
+public__address__ns_01:   "%{hiera('netcfg_public_netpart')}.16"
+
 #
 # Default interfaces
 #
@@ -111,8 +114,8 @@ profile::network::services::dns_records:
   A:
     "ns.%{hiera('domain_public')}":                       "%{hiera('netcfg_public_netpart')}.16"
     "dashboard.%{hiera('domain_frontend')}":              "%{hiera('netcfg_public_netpart')}.254"
-    "access.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.252"
-    "console.%{hiera('domain_public')}":                  "%{hiera('netcfg_public_netpart')}.251"
+    "access.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
+    "console.%{hiera('domain_public')}":                  "%{hiera('netcfg_public_netpart')}.250"
     "api.%{hiera('domain_public')}":                      "%{hiera('netcfg_public_netpart')}.250"
     "identity.api.%{hiera('domain_public')}":             "%{hiera('netcfg_public_netpart')}.250"
     "image.api.%{hiera('domain_public')}":                "%{hiera('netcfg_public_netpart')}.250"
@@ -172,8 +175,8 @@ profile::network::services::dns_records:
     # public
     "16.%{hiera('reverse_public')}":    "ns.%{hiera('domain_public')}"
     "254.%{hiera('reverse_public')}":   "dashboard.%{hiera('domain_frontend')}"
-    "252.%{hiera('reverse_public')}":   "access.%{hiera('domain_frontend')}"
-    "251.%{hiera('reverse_public')}":   "console.%{hiera('domain_public')}"
+    #"250.%{hiera('reverse_public')}":   "access.%{hiera('domain_frontend')}" #252
+    #"250.%{hiera('reverse_public')}":   "console.%{hiera('domain_public')}" #251
     "250.%{hiera('reverse_public')}":   "api.%{hiera('domain_public')}"
     # public IPv6
     "6.1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "ns.%{hiera('domain_public')}"

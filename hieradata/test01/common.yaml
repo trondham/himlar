@@ -36,6 +36,9 @@ netcfg_trp_rr:
     peer_ipv4: '172.30.0.1'
     peer_ipv6: 'fd00::1'
 
+# DNS server
+public__address__ns_01: '129.177.31.118'
+
 #
 # DNS (merge of common and this)
 #
@@ -53,10 +56,10 @@ profile::network::services::dns_records:
     "volume.api.%{hiera('domain_public')}":                 '129.177.31.122'
     "compute.api.%{hiera('domain_public')}":                '129.177.31.122'
     "status.%{hiera('domain_public')}":                     '129.177.31.122'
-    "access.%{hiera('domain_public')}":                     '129.177.31.124'
-    "console.%{hiera('domain_public')}":                    '129.177.31.125'
+    "access.%{hiera('domain_public')}":                     '129.177.31.122' #124
+    "console.%{hiera('domain_public')}":                    '129.177.31.122' #125
     "dashboard.%{hiera('domain_public')}":                  '129.177.31.126'
-PTR:
+  PTR:
     # mgmt
     "1.%{hiera('reverse_mgmt')}":      "%{::location}-leaf-01.%{hiera('domain_mgmt')}"
     "11.%{hiera('reverse_mgmt')}":     "%{::location}-admin-01.%{hiera('domain_mgmt')}"
@@ -105,8 +108,8 @@ PTR:
     # public
     "118.%{hiera('reverse_public')}":  "ns.%{hiera('domain_public')}"
     "122.%{hiera('reverse_public')}":  "api.%{hiera('domain_public')}"
-    "125.%{hiera('reverse_public')}":  "console.%{hiera('domain_public')}"
-    "124.%{hiera('reverse_public')}":  "access.%{hiera('domain_frontend')}"
+  #  "122.%{hiera('reverse_public')}":  "console.%{hiera('domain_public')}"  #125
+  #  "122.%{hiera('reverse_public')}":  "access.%{hiera('domain_frontend')}" #124
     "126.%{hiera('reverse_public')}":  "dashboard.%{hiera('domain_frontend')}"
 
 profile::network::services::dns_options:
@@ -221,7 +224,7 @@ profile::openstack::resource::subnets:
     cidr: '2001:700:200:916::/64'
     ip_version: '6'
     allocation_pools:
-      - 'start=2001:700:200:916::1000,end=2001:700:200:916::3fff'
+      - 'start=2001:700:200:916::1000,end=2001:700:200:916::3eff'
     gateway_ip: '2001:700:200:916::1'
     dns_nameservers:
       - '2001:700:200:6::a1f:a1fa'
@@ -232,7 +235,7 @@ profile::openstack::resource::subnets:
     cidr: '2001:700:200:915::/64'
     ip_version: '6'
     allocation_pools:
-      - 'start=2001:700:200:915::2000,end=2001:700:200:915::2fff'
+      - 'start=2001:700:200:915::2000,end=2001:700:200:915::2eff'
     gateway_ip: '2001:700:200:915::1'
     dns_nameservers:
       - '2001:700:200:6::a1f:a1fa'
