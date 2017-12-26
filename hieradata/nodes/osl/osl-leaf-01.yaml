@@ -31,7 +31,7 @@ profile::base::network::cumulus_interfaces:
 
 profile::base::network::cumulus_bridges:
   'bridge':
-    'ports': [ 'host1', 'host2', 'host3', 'host4', 'host5', 'host6', 'host7', 'host8', 'host9', 'host10', 'peerlink', 'downlink' ]
+    'ports': [ 'host1', 'host2', 'host3', 'host4', 'host5', 'host6', 'host7', 'host8', 'host9', 'host10', 'host11', 'host12', 'peerlink', 'downlink' ]
     'alias_name': 'Transport L2 if'
     'vlan_aware': 'true'
     'stp': 'true'
@@ -104,6 +104,18 @@ profile::base::network::cumulus_bonds:
     'pvid': '100'
     'mstpctl_portadminedge': true
     'mstpctl_bpduguard': true
+  'host11':
+    'slaves': [ 'swp11', ]
+    'clag_id': '11'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+  'host12':
+    'slaves': [ 'swp12', ]
+    'clag_id': '12'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
 
 quagga::quagga::zebra_interfaces:
   'bridge':
@@ -132,13 +144,19 @@ quagga::quagga::zebra_interfaces:
     - 'link-detect'
   'host10':
     - 'link-detect'
+  'host11':
+    - 'link-detect'
+  'host12':
+    - 'link-detect'
 
 quagga::quagga::zebra_ip6_routes:
   - '::/0 fd32::2'
+  - '2001:700:2:82ff::12/128 fd32::12'
 quagga::quagga::zebra_ip_routes:
   - '0.0.0.0/0 172.18.228.2'
   - '10.0.0.0/8 Null0'
   - '158.37.63.0/24 Null0'
+  - '158.37.63.248/32 172.18.32.26'
   - '158.37.63.249/32 172.18.32.41'
   - '158.37.63.250/32 172.18.32.86'
   - '158.37.63.251/32 172.18.32.61'
@@ -188,6 +206,8 @@ quagga::quagga::bgp_neighbor_groups:
       - '172.18.32.111'
       - '172.18.32.112'
       - '172.18.32.113'
+      - '172.18.32.115'
+      - '172.18.32.116'
     'options6':
       - 'route-reflector-client'
     'members6':
@@ -197,6 +217,8 @@ quagga::quagga::bgp_neighbor_groups:
       - 'fd32::111'
       - 'fd32::112'
       - 'fd32::113'
+      - 'fd32::115'
+      - 'fd32::116'
 
 quagga::quagga::bgp_accesslist:
   '10':

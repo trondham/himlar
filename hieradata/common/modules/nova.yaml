@@ -66,6 +66,7 @@ nova::scheduler::filter::scheduler_default_filters:
   - "ImagePropertiesFilter"
   - "ServerGroupAntiAffinityFilter"
   - "ServerGroupAffinityFilter"
+  - "AggregateMultiTenancyIsolation"
 
 # conductor (node: novactrl)
 nova::conductor::enabled: true

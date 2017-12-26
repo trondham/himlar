@@ -20,7 +20,7 @@ mod 'lvm', :ref => '689d42a16c',                 :git => github + 'puppetlabs/pu
 mod 'firewall', :ref => '1.8.2',                 :git => github + 'puppetlabs/puppetlabs-firewall'
 mod 'kmod', :ref => '2.1.0',                     :git => github + 'camptocamp/puppet-kmod'
 mod 'named_interfaces', :ref => '88ce713994',    :git => github + 'norcams/puppet-named_interfaces'
-mod 'network', :ref => '8b641b386f',             :git => github + 'norcams/puppet-network'
+mod 'network', :ref => '40f84826a8',             :git => github + 'norcams/puppet-network'
 mod 'ipmi', :ref => 'c4309504fd',                :git => github + 'norcams/puppet-ipmi'
 mod 'lldp', :ref => '06523de010',                :git => github + 'norcams/puppet-lldp'
 mod 'apt', :ref => '2.2.2',                      :git => github + 'puppetlabs/puppetlabs-apt'
@@ -69,7 +69,7 @@ mod 'consul', :ref => '7c428f4b2b',              :git => github + 'solarkennedy/
 #
 # profile::application::dpapp
 #
-mod 'dpapp', :ref => '1.2',                      :git => github + 'norcams/puppet-dpapp'
+mod 'dpapp', :ref => '1.3',                      :git => github + 'norcams/puppet-dpapp'
 
 #
 # profile::application::git
@@ -78,26 +78,26 @@ mod 'gitolite', :ref => '1.0',                   :git => github + 'uib/puppet-gi
 
 # profile::application::foreman
 #
-mod 'voxpupuli/r10k', :ref => 'v4.2.0',          :git => github + 'voxpupuli/puppet-r10k'
-mod 'theforeman/foreman', :ref => '7.0.0',       :git => github + 'theforeman/puppet-foreman.git'
-mod 'theforeman/concat_native', '1.5.0'          # forge
-mod 'theforeman/tftp', '2.0.0'                   # forge
-mod 'theforeman/puppet', :ref => '6.0.1',        :git => github + 'theforeman/puppet-puppet.git'
-mod 'theforeman/dns', '4.0.0'                    # forge
-mod 'theforeman/dhcp', :ref => '3.1.1-norcams',  :git => github + 'norcams/puppet-dhcp.git'
-mod 'theforeman/foreman_proxy', '5.0.0'          # forge
-mod 'theforeman/git', '2.0.0'                    # forge
-mod 'adrien/alternatives', '0.3.0'               # forge
-mod 'voxpupuli/extlib', :ref => 'v0.11.3',      :git => github + 'voxpupuli/puppet-extlib.git'
-mod 'puppetlabs/ruby', '0.5.0'                   # forge
-mod 'puppetlabs/xinetd', '2.0.0'                 # forge
-mod 'eyaml', :ref => 'v0.3.0',                   :git => github + 'ghoneycutt/puppet-module-eyaml'
-mod 'bind', :ref => 'keyfile_resource_record',   :git => github + 'norcams/puppet-bind'
+mod 'voxpupuli/r10k', :ref => 'v4.2.0',            :git => github + 'voxpupuli/puppet-r10k'
+mod 'theforeman/foreman', :ref => '7.0.0',         :git => github + 'theforeman/puppet-foreman.git'
+mod 'theforeman/concat_native', '1.5.0'            # forge
+mod 'theforeman/tftp', '2.0.0'                     # forge
+mod 'theforeman/puppet', :ref => '6.0.1',          :git => github + 'theforeman/puppet-puppet.git'
+mod 'theforeman/dns', '4.0.0'                      # forge
+mod 'theforeman/dhcp', :ref => '3.1.1-norcams',    :git => github + 'norcams/puppet-dhcp.git'
+mod 'theforeman/foreman_proxy', :ref => '04abf5f', :git => github + 'theforeman/puppet-foreman_proxy.git'
+mod 'theforeman/git', '2.0.0'                      # forge
+mod 'adrien/alternatives', '0.3.0'                 # forge
+mod 'voxpupuli/extlib', :ref => 'v0.11.3',         :git => github + 'voxpupuli/puppet-extlib.git'
+mod 'puppetlabs/ruby', '0.5.0'                     # forge
+mod 'puppetlabs/xinetd', '2.0.0'                   # forge
+mod 'eyaml', :ref => 'v0.3.0',                     :git => github + 'ghoneycutt/puppet-module-eyaml'
+mod 'bind', :ref => 'keyfile_resource_record',     :git => github + 'norcams/puppet-bind'
 
 #
 # bootstrap
 #
-mod 'himlar_bootstrap', :ref => '1.0.0',         :git => github + 'norcams/puppet-himlar_bootstrap'
+mod 'himlar_bootstrap', :ref => '1.0.1',         :git => github + 'norcams/puppet-himlar_bootstrap'
 
 #
 # profile::logging
@@ -153,6 +153,7 @@ mod 'nova', :ref => '9.6.0',                     :git => github + 'openstack/pup
 mod 'designate', :ref => 'fa62489',              :git => github + 'openstack/puppet-designate'
 mod 'horizon', :ref => 'stable/newton',          :git => github + 'openstack/puppet-horizon'
 mod 'keystone', :ref => 'norcams/newton',        :git => github + 'norcams/puppet-keystone'
+mod 'gnocchi', :ref => '9.5.0',                  :git => github + 'openstack/puppet-gnocchi'
 
 mod 'oslo', :ref => '9.5.0',                     :git => github + 'openstack/puppet-oslo'
 mod 'openstacklib', :ref => '9.5.0',             :git => github + 'openstack/puppet-openstacklib'

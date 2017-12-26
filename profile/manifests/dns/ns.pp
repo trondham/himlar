@@ -13,6 +13,9 @@ class profile::dns::ns (
   $internal_zone = {}
   )
 {
+  # Our forward zones
+  $forward_zones = hiera_hash('profile::dns::ns::fw_zones', {})
+
   # Our reverse zones
   $reverse_zones = hiera_hash('profile::dns::ns::ptr_zones', {})
 
@@ -37,16 +40,21 @@ class profile::dns::ns (
     group        => 'named',
     require      => Package['bind'],
   }
-  # Create zone file for the internal zone (on master)
-  if $master {
-    file { "/var/named/${internal_zone}.zone":
-      content      => template("${module_name}/dns/bind/${internal_zone}.zone.erb"),
-      notify       => Service['named'],
-      mode         => '0640',
-      owner        => 'root',
-      group        => 'named',
-      require      => Package['bind'],
-    }
+  # Ensure that /var/named/pz exists with correct permissions
+  file { '/var/named/pz':
+    ensure       => directory,
+    mode         => '0770',
+    owner        => 'root',
+    group        => 'named',
+    require      => Package['bind'],
+  }
+  # Ensure that /var/named/sz exists with correct permissions
+  file { '/var/named/sz':
+    ensure       => directory,
+    mode         => '0770',
+    owner        => 'root',
+    group        => 'named',
+    require      => Package['bind'],
   }
   # Create named.conf from template
   file { '/etc/named.conf':
@@ -60,47 +68,36 @@ class profile::dns::ns (
   }
 
   # Define dependencies for the named service
-  if $master {
-    service { 'named':
-      ensure  => running,
-      enable  => true,
-      require => [
-        File['/etc/rndc.conf'],
-        File['/var/named'],
-        File["/var/named/${internal_zone}.zone"],
-        File['/etc/named.conf']
-        ],
-    }
-  }
-  else {
-    service { 'named':
-      ensure  => running,
-      enable  => true,
-      require => [
-        File['/etc/rndc.conf'],
-        File['/var/named'],
-        File['/etc/named.conf']
-        ],
-    }
+  service { 'named':
+    ensure  => running,
+    enable  => true,
+    require => [
+      File['/etc/rndc.conf'],
+      File['/var/named'],
+      File['/var/named/pz'],
+      File['/var/named/sz'],
+      File['/etc/named.conf']
+      ],
   }
 
-  # Create the reverse zones (on master)
+  # Create the zones (on master)
   if $master {
+    create_resources('profile::dns::forward_zone', $forward_zones)
     create_resources('profile::dns::reverse_zone', $reverse_zones)
   }
 
   # Open nameserver ports in the firewall
   if $manage_firewall {
     profile::firewall::rule { '001 dns incoming tcp':
-      port   => 53,
+      dport  => 53,
       proto  => 'tcp'
     }
     profile::firewall::rule { '002 dns incoming udp':
-      port   => 53,
+      dport  => 53,
       proto  => 'udp'
     }
     profile::firewall::rule { '003 rndc incoming - bind only':
-      port   => 953,
+      dport  => 953,
       proto  => 'tcp',
       extras => $firewall_extras
     }

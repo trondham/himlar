@@ -8,6 +8,7 @@ class profile::openstack::identity (
   $swift_enabled            = false,
   $trove_enabled            = false,
   $designate_enabled        = false,
+  $gnocchi_enabled          = false,
   $roles_extra              = [],
   $manage_firewall          = true,
   $firewall_extras          = {},
@@ -77,6 +78,10 @@ class profile::openstack::identity (
 
   if $designate_enabled {
     include ::designate::keystone::auth
+  }
+
+  if $gnocchi_enabled {
+    include ::gnocchi::keystone::auth
   }
 
   unless empty($roles_extra) {
