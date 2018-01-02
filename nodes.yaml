@@ -92,6 +92,7 @@ nodesets:
     - role:       "dashboard"
     - role:       "identity"
     - role:       "api"
+    - role:       "mq"
 
 networks:
   mgmt:
