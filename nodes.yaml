@@ -88,6 +88,10 @@ nodesets:
       hostid:     "01"
     - role:       "ns"
       hostid:     "02"
+    - role:       "name"
+    - role:       "dashboard"
+    - role:       "identity"
+    - role:       "api"
 
 networks:
   mgmt:
