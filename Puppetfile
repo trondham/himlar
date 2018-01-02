@@ -150,7 +150,7 @@ mod 'glance', :ref => '9.6.0',                   :git => github + 'openstack/pup
 mod 'cinder', :ref => '9.5.0',                   :git => github + 'openstack/puppet-cinder'
 mod 'neutron', :ref => '9.5.0',                  :git => github + 'openstack/puppet-neutron'
 mod 'nova', :ref => '9.6.0',                     :git => github + 'openstack/puppet-nova'
-mod 'designate', :ref => 'fa62489',              :git => github + 'openstack/puppet-designate'
+mod 'designate', :ref => '3e28a26',              :git => github + 'openstack/puppet-designate'
 mod 'horizon', :ref => 'stable/newton',          :git => github + 'openstack/puppet-horizon'
 mod 'keystone', :ref => 'norcams/newton',        :git => github + 'norcams/puppet-keystone'
 mod 'gnocchi', :ref => '9.5.0',                  :git => github + 'openstack/puppet-gnocchi'
