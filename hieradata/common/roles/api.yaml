@@ -78,6 +78,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
       - "compute.%{hiera('domain_trp')}:8774":          'bk_compute'
       - "volume.%{hiera('domain_trp')}:8776":           'bk_volume'
       - "image.%{hiera('domain_trp')}:9292":            'bk_image'
+      - "name.%{hiera('domain_trp')}:9001":             'bk_name'
 
 # HAproxy backends: public, internal and haproxy monitor
 profile::highavailability::loadbalancing::haproxy::haproxy_frontends:
