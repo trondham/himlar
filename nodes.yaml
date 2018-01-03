@@ -89,10 +89,17 @@ nodesets:
     - role:       "ns"
       hostid:     "02"
     - role:       "name"
-    - role:       "dashboard"
-    - role:       "identity"
-    - role:       "api"
     - role:       "mq"
+    - role:       "api"
+    - role:       "identity"
+    - role:       "novactrl"
+    - role:       "image"
+    - role:       "network"
+    - role:       "volume"
+    - role:       "dashboard"
+    - role:       "compute"
+      memory:     4096 
+      cpus:       2
 
 networks:
   mgmt:
