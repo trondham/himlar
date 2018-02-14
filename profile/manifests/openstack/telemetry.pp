@@ -9,14 +9,13 @@ class profile::openstack::telemetry (
   include ::profile::openstack::telemetry::centralagent
   include ::profile::openstack::telemetry::collector
   include ::profile::openstack::telemetry::notification
-#  include ::profile::openstack::telemetry::api
+  include ::profile::openstack::telemetry::api
 
 #  include ::ceilometer::db
 #  include ::ceilometer::expirer
   include ::ceilometer::client
   include ::ceilometer::agent::auth
   include ::ceilometer::agent::polling
-  include ::ceilometer::keystone::auth
   include ::ceilometer::keystone::authtoken
   include ::ceilometer::dispatcher::gnocchi
   include ::gnocchi::client

@@ -24,11 +24,16 @@ netcfg_trp_netpart:       '172.18.64'
 netcfg_trp_netpart6:      'fd64'
 netcfg_trp_netmask:       '255.255.248.0'
 netcfg_trp_netmask6:      '64'
+netcfg_client_gateway:    '10.246.16.1'
+netcfg_client_netpart:    '10.246.16'
+netcfg_client_netmask:    '255.255.248.0'
+netcfg_ceph_netpart:      '172.20.64'
+netcfg_ceph_netmask:      '255.255.248.0'
 #netcfg_live_netpart:      '172.22.0'
 #netcfg_live_netmask:      '255.255.248.0'
-netcfg_dns_server1:       '129.242.9.253'
+netcfg_dns_server1:       '172.16.64.11'
+netcfg_dns_server2:       '129.242.9.253'
 #netcfg_dns_server1:       '172.16.64.12'
-netcfg_dns_server2:       '129.177.12.31'
 netcfg_dns_search:        "%{hiera('domain_mgmt')} %{hiera('domain_trp')}"
 netcfg_priv_gateway:      '172.18.0.26'
 netcfg_priv_network:      '10.1.0.0/20'
@@ -38,6 +43,19 @@ netcfg_pub_natgw:         '158.39.77.248'
 #    peer_ipv4: '172.18.64.1'
 #  rr2:
 #    peer_ipv4: '172.18.64.2'
+
+#
+# Default interfaces
+#
+named_interfaces::config:
+  mgmt:
+    - eth0
+  trp:
+    - eth1
+  client:
+    - eth2
+  public:
+    - dummy0
 
 # DNS server
 #public__address__ns_01:  FIXME
@@ -127,12 +145,11 @@ profile::network::services::dns_records:
 #    '254.77.39.158':  'uh-dboard.iaas.tos.no'
 
 ntp::servers:
-  - 0.no.pool.ntp.org
-  - 1.no.pool.ntp.org
-  - 2.no.pool.ntp.org
+  - ntp.uit.no
+  - ntp2.uit.no
 
 ceph::profile::params::mon_initial_members:         'tos-cephmon-01, tos-cephmon-02, tos-cephmon-03'
-ceph::profile::params::mon_host:                    '172.18.64.91:6789, 172.18.64.92:6789, 172.18.64.93:6789'
+ceph::profile::params::mon_host:                    '10.246.16.91:6789, 10.246.16.92:6789, 10.246.16.93:6789'
 ceph::profile::params::cluster_network:             '172.20.64.0/21'
 ceph::profile::params::public_network:              '10.246.16.0/21'
 
