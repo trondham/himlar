@@ -134,8 +134,8 @@ profile::network::services::dns_records:
     "252.%{hiera('reverse_public')}":   "resolver.%{hiera('domain_public')}"
     "254.%{hiera('reverse_public')}":   "dashboard.%{hiera('domain_frontend')}"
     # public IPv6
-    "1.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "ns.%{hiera('domain_public')}"
-    "2.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "resolver.%{hiera('domain_public')}"
+    "1.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "ns.%{hiera('domain_public')}"
+    "2.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "resolver.%{hiera('domain_public')}"
 
 ntp::servers:
   - ntp1.uio.no
