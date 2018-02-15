@@ -29,3 +29,7 @@ profile::dns::ns::ptr_zones:
     cidr: "10.100.0.0/16"
     origin: "100.10.in-addr.arpa"
     filename: "%{hiera('profile::dns::ns::zonedir')}/100.10.in-addr.arpa"
+  ipv6:
+    cidr: "fd34::/7"
+    origin: "4.3.d.f.ip6.arpa"
+    filename: "%{hiera('profile::dns::ns::zonedir')}/4.3.d.f.ip6.arpa"
