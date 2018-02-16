@@ -51,6 +51,14 @@ options  {
     dnssec-validation no;
     empty-zones-enable yes;
     listen-on-v6 { any; };
+<% if @forward_everything %>
+    forward only;
+    forwarders {
+<% @forwarders.each do |fw| -%>
+        <%= fw %>;
+<% end -%>
+    };
+<% end -%>
 };
 
 <% if @authoritative %>
