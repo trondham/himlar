@@ -11,7 +11,7 @@ class profile::dns::ns (
   $manage_firewall = {},
   $firewall_extras = {},
   $internal_zone = {},
-  $forward_everything = {},
+  $forward_everything = false,
   $forwarders = {}
   )
 {
