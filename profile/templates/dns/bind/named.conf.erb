@@ -68,7 +68,6 @@ zone "<%= values["zone"] %>" IN {
     type master;
     file "<%= values["filename"] %>";
     allow-update { <%= @admin_mgmt_addr %>; };
-    allow-query { 127.0.0.1; ::1; iaas_nets; };
 };
 <% end -%>
 <% @reverse_zones.each do |network, values| -%>
@@ -77,7 +76,6 @@ zone "<%= values["origin"] %>" IN {
     type master;
     file "<%= values["filename"] %>";
     allow-update { <%= @admin_mgmt_addr %>; };
-    allow-query { 127.0.0.1; ::1; iaas_nets; };
 };
 <% end -%>
 <% else %>
