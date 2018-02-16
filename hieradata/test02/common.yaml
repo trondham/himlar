@@ -153,41 +153,27 @@ profile::openstack::compute::hypervisor::manage_libvirt_rbd: true
 # If backend != file, you must explicitly define stores in %location/modules/glance.yaml
 profile::openstack::image::api::backend: 'rbd'
 
-#--------------------------------------------------------------
-# OLD NAMESERVERS!
-#--------------------------------------------------------------
-#profile::network::services::dns_options:
+profile::network::services::dns_options:
 #  CNAME:
 #    default:
 #      ttl: 3600
-#      keyfile: "/etc/rndc.key"
-#      server: "129.240.2.6"
+#      keyfile: "/etc/rndc-admin.key"
+#      server: "%{hiera('netcfg_mgmt_netpart')}.16"
 #  A:
 #    default:
 #      ttl: 3600
-#      keyfile: "/etc/rndc.key"
-#      server: "129.240.2.6"
-#  PTR:
-#    default:
-#      ttl: 86400
-#      keyfile: "/etc/rndc.key"
-#      server: "129.240.2.6"
-#--------------------------------------------------------------
-
-#--------------------------------------------------------------
-# NEW NAMESERVERS!
-#--------------------------------------------------------------
-profile::network::services::dns_options:
+#      keyfile: "/etc/rndc-admin.key"
+#      server: "%{hiera('netcfg_mgmt_netpart')}.16"
   CNAME:
     default:
       ttl: 3600
-      keyfile: "/etc/rndc-admin.key"
-      server: "%{hiera('netcfg_mgmt_netpart')}.16"
+      keyfile: "/etc/rndc.key"
+      server: "129.240.2.6"
   A:
     default:
       ttl: 3600
-      keyfile: "/etc/rndc-admin.key"
-      server: "%{hiera('netcfg_mgmt_netpart')}.16"
+      keyfile: "/etc/rndc.key"
+      server: "129.240.2.6"
   AAAA:
     default:
       ttl: 3600
@@ -198,7 +184,6 @@ profile::network::services::dns_options:
       ttl: 3600
       keyfile: "/etc/rndc-admin.key"
       server: "%{hiera('netcfg_mgmt_netpart')}.16"
-#--------------------------------------------------------------
 
 profile::openstack::resource::networks:
   dualStack:
