@@ -39,10 +39,10 @@ netcfg_trp_rr:
     peer_ipv6: 'fd00::1'
 
 # DNS servers
-public__address__ns:           '129.177.31.118'
-public6__address__ns:          '2001:700:200:916::3f18'
-public__address__resolver_01:  '129.177.31.117'
-public6__address__resolver_01: '2001:700:200:916::3f17'
+public__address__ns:           '129.177.31.117'
+public6__address__ns:          '2001:700:200:916::3f17'
+public__address__resolver_01:  '129.177.31.118'
+public6__address__resolver_01: '2001:700:200:916::3f18'
 
 #
 # DNS (merge of common and this)
@@ -53,8 +53,8 @@ profile::network::services::dns_records:
     "%{::location}-controller-04.%{hiera('domain_mgmt')}":  "%{hiera('netcfg_mgmt_netpart')}.111"
     "%{::location}-compute-04.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.112"
     # public
-    "resolver.%{hiera('domain_public')}":                   '129.177.31.117'
-    "ns.%{hiera('domain_public')}":                         '129.177.31.118'
+    "ns.%{hiera('domain_public')}":                         '129.177.31.117'
+    "resolver.%{hiera('domain_public')}":                   '129.177.31.118'
     "api.%{hiera('domain_public')}":                        '129.177.31.122'
     "identity.api.%{hiera('domain_public')}":               '129.177.31.122'
     "network.api.%{hiera('domain_public')}":                '129.177.31.122'
@@ -66,8 +66,8 @@ profile::network::services::dns_records:
     "console.%{hiera('domain_public')}":                    '129.177.31.122' #125
     "dashboard.%{hiera('domain_public')}":                  '129.177.31.126'
   AAAA:
-    "resolver.%{hiera('domain_public')}": '2001:700:200:916::3f17'
-    "ns.%{hiera('domain_public')}":       '2001:700:200:916::3f18'
+    "ns.%{hiera('domain_public')}":       '2001:700:200:916::3f17'
+    "resolver.%{hiera('domain_public')}": '2001:700:200:916::3f18'
   PTR:
     # mgmt
     "1.%{hiera('reverse_mgmt')}":      "%{::location}-leaf-01.%{hiera('domain_mgmt')}"
@@ -77,7 +77,8 @@ profile::network::services::dns_records:
     "14.%{hiera('reverse_mgmt')}":     "%{::location}-monitor-01.%{hiera('domain_mgmt')}"
     "15.%{hiera('reverse_mgmt')}":     "%{::location}-builder-01.%{hiera('domain_mgmt')}"
     "16.%{hiera('reverse_mgmt')}":     "%{::location}-ns-01.%{hiera('domain_mgmt')}"
-    "17.%{hiera('reverse_mgmt')}":     "%{::location}-ns-02.%{hiera('domain_mgmt')}"
+    "17.%{hiera('reverse_mgmt')}":     "%{::location}-resolver-01.%{hiera('domain_mgmt')}"
+    "18.%{hiera('reverse_mgmt')}":     "%{::location}-resolver-02.%{hiera('domain_mgmt')}"
     "21.%{hiera('reverse_mgmt')}":     "%{::location}-status-01.%{hiera('domain_mgmt')}"
     "26.%{hiera('reverse_mgmt')}":     "%{::location}-nat-01.%{hiera('domain_mgmt')}"
     "31.%{hiera('reverse_mgmt')}":     "%{::location}-mq-01.%{hiera('domain_mgmt')}"
@@ -115,13 +116,13 @@ profile::network::services::dns_records:
     "115.%{hiera('reverse_mgmt')}":    "%{::location}-compute-07.%{hiera('domain_mgmt')}"
     "116.%{hiera('reverse_mgmt')}":    "%{::location}-compute-08.%{hiera('domain_mgmt')}"
     # public IPv4
-    "117.%{hiera('reverse_public')}":  "resolver.%{hiera('domain_public')}"
-    "118.%{hiera('reverse_public')}":  "ns.%{hiera('domain_public')}"
+    "117.%{hiera('reverse_public')}":  "ns.%{hiera('domain_public')}"
+    "118.%{hiera('reverse_public')}":  "resolver.%{hiera('domain_public')}"
     "122.%{hiera('reverse_public')}":  "api.%{hiera('domain_public')}"
     "126.%{hiera('reverse_public')}":  "dashboard.%{hiera('domain_frontend')}"
     # public IPv6
-    "8.1.f.3.0.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "ns.%{hiera('domain_public')}"
-    "7.1.f.3.0.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "resolver.%{hiera('domain_public')}"
+    "7.1.f.3.0.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "ns.%{hiera('domain_public')}"
+    "8.1.f.3.0.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "resolver.%{hiera('domain_public')}"
 
 
 profile::network::services::dns_options:
