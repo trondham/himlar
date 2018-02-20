@@ -17,7 +17,7 @@ location_description: unset
 location_environment: unset
 location_tag:         unset
 
-bgp_as:               '65535'
+bgp_as:               65535
 
 domain_frontend:      "%{::domain}"
 domain_public:        "%{::domain}"
@@ -79,6 +79,9 @@ allow_from_network:
   - '158.39.17.0/25'     # UiT ita
   - '158.39.93.0/27'     # UiT ita
   - '158.39.87.96/28'    # UiT ita
+  - '77.88.71.128/26'    # Kvantel (Simula/IFI project) NAT range
+  - '77.88.125.0/24'     # Kvantel (Simula/IFI project)
+  - '158.39.4.0/24'      # NorNett/UNINETT (Simula/IFI project)
 
 #
 # Default interfaces
@@ -120,8 +123,9 @@ service__address__consoleproxy:
 service__address__designate_api:  "name.%{hiera('domain_trp')}"
 service__address__mdns:           "%{hiera('netcfg_trp_netpart')}.115"
 service__address__metric:         "metric.%{hiera('domain_trp')}"
-service__address__ns_01:          "%{hiera('netcfg_trp_netpart')}.16"
-service__address__ns_02:          "%{hiera('netcfg_trp_netpart')}.17"
+service__address__ns:             "%{hiera('netcfg_trp_netpart')}.16"
+service__address__resolver_01:    "%{hiera('netcfg_trp_netpart')}.17"
+service__address__resolver_02:    "%{hiera('netcfg_trp_netpart')}.18"
 
 #
 # Management (proxy and logger must be IP)
@@ -132,8 +136,9 @@ mgmt__address__monitor:           "monitor.%{hiera('domain_mgmt')}"
 mgmt__address__foreman:           "%{::location}-admin-01.%{hiera('domain_mgmt')}"
 mgmt__address__repo:              "repo.%{hiera('domain_mgmt')}"
 mgmt__address__mq_01:             "%{hiera('netcfg_mgmt_netpart')}.31"
-mgmt__address__ns_01:             "%{hiera('netcfg_mgmt_netpart')}.16"
-mgmt__address__ns_02:             "%{hiera('netcfg_mgmt_netpart')}.17"
+mgmt__address__ns:                "%{hiera('netcfg_mgmt_netpart')}.16"
+mgmt__address__resolver_01:       "%{hiera('netcfg_mgmt_netpart')}.17"
+mgmt__address__resolver_02:       "%{hiera('netcfg_mgmt_netpart')}.18"
 
 #
 # Endpoints (including protocole)
@@ -159,6 +164,11 @@ endpoint__designate__public:      "https://designate.api.%{hiera('domain_public'
 endpoint__metric__admin:          "http://metric.%{hiera('domain_trp')}:8041"
 endpoint__metric__internal:       "http://metric.%{hiera('domain_trp')}:8041"
 endpoint__metric__public:         "https://metric.api.%{hiera('domain_public')}:8041"
+endpoint__object__admin:          "http://object.%{hiera('domain_trp')}:8080"
+endpoint__object__internal:       "http://object.%{hiera('domain_trp')}:8080"
+endpoint__object__public:         "https://object.api.%{hiera('domain_public')}:8080"
+endpoint__telemetry__admin:       "http://telemetry.%{hiera('domain_trp')}:8777"
+endpoint__telemetry__internal:    "http://telemetry.%{hiera('domain_trp')}:8777"
 
 #
 # DNS (merge of this and location)
@@ -173,8 +183,8 @@ profile::network::services::dns_records:
     "%{::location}-monitor-01.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.14"
     "%{::location}-builder-01.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.15"
     "%{::location}-ns-01.%{hiera('domain_mgmt')}":          "%{hiera('netcfg_mgmt_netpart')}.16"
-    "%{::location}-ns-02.%{hiera('domain_mgmt')}":          "%{hiera('netcfg_mgmt_netpart')}.17"
-    "%{::location}-admin-02.%{hiera('domain_mgmt')}":       "%{hiera('netcfg_mgmt_netpart')}.18"
+    "%{::location}-resolver-01.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_netpart')}.17"
+    "%{::location}-resolver-02.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_netpart')}.18"
     "%{::location}-status-01.%{hiera('domain_mgmt')}":      "%{hiera('netcfg_mgmt_netpart')}.21"
     "%{::location}-nat-linux-01.%{hiera('domain_mgmt')}":   "%{hiera('netcfg_mgmt_netpart')}.26"
     "%{::location}-mq-01.%{hiera('domain_mgmt')}":          "%{hiera('netcfg_mgmt_netpart')}.31"
@@ -189,6 +199,7 @@ profile::network::services::dns_records:
     "%{::location}-network-01.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.71"
     "%{::location}-network-02.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.72"
     "%{::location}-network-03.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.73"
+    "%{::location}-telemetry-01.%{hiera('domain_mgmt')}":   "%{hiera('netcfg_mgmt_netpart')}.76"
     "%{::location}-identity-01.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_netpart')}.81"
     "%{::location}-api-01.%{hiera('domain_mgmt')}":         "%{hiera('netcfg_mgmt_netpart')}.86"
     "%{::location}-cephmon-01.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.91"
@@ -220,31 +231,33 @@ profile::network::services::dns_records:
     "%{::location}-object-03.%{hiera('domain_mgmt')}":      "%{hiera('netcfg_mgmt_netpart')}.121"
     "%{::location}-object-04.%{hiera('domain_mgmt')}":      "%{hiera('netcfg_mgmt_netpart')}.122"
     "%{::location}-object-05.%{hiera('domain_mgmt')}":      "%{hiera('netcfg_mgmt_netpart')}.123"
-    # mgmt
+    "%{::location}-storage-06.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.124"
+    "%{::location}-storage-07.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.125"
+    # mgmt nodes
     "foreman.%{hiera('domain_mgmt')}":                      "%{hiera('netcfg_mgmt_netpart')}.11"
     "puppet.%{hiera('domain_mgmt')}":                       "%{hiera('netcfg_mgmt_netpart')}.11"
     "repo.%{hiera('domain_mgmt')}":                         "%{hiera('netcfg_mgmt_netpart')}.11"
     "logger.%{hiera('domain_mgmt')}":                       "%{hiera('netcfg_mgmt_netpart')}.13"
     "monitor.%{hiera('domain_mgmt')}":                      "%{hiera('netcfg_mgmt_netpart')}.14"
     "builder.%{hiera('domain_mgmt')}":                      "%{hiera('netcfg_mgmt_netpart')}.15"
-    "ns01.%{hiera('domain_mgmt')}":                         "%{hiera('netcfg_mgmt_netpart')}.16"
-    "ns02.%{hiera('domain_mgmt')}":                         "%{hiera('netcfg_mgmt_netpart')}.17"
-    "foreman4.%{hiera('domain_mgmt')}":                     "%{hiera('netcfg_mgmt_netpart')}.18"
-    "puppet4.%{hiera('domain_mgmt')}":                      "%{hiera('netcfg_mgmt_netpart')}.18"
     "git.%{hiera('domain_mgmt')}":                          "%{hiera('netcfg_mgmt_netpart')}.10"
-    # trp
+    # trp nodes
     "status.%{hiera('domain_trp')}":                        "%{hiera('netcfg_trp_netpart')}.21"
     "mq01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.31"
     "db01.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.41"
     "db02.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.42"
     "%{::location}-access-01.%{hiera('domain_trp')}":       "%{hiera('netcfg_trp_netpart')}.56"
+    "%{::location}-metric-01.%{hiera('domain_trp')}":       "%{hiera('netcfg_trp_netpart')}.96"
+    # trp api services
+    "telemetry.%{hiera('domain_trp')}":                     "%{hiera('netcfg_trp_netpart')}.86"
     "image.%{hiera('domain_trp')}":                         "%{hiera('netcfg_trp_netpart')}.86"
     "volume.%{hiera('domain_trp')}":                        "%{hiera('netcfg_trp_netpart')}.86"
     "compute.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.86"
     "network.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.86"
     "identity.%{hiera('domain_trp')}":                      "%{hiera('netcfg_trp_netpart')}.86"
     "name.%{hiera('domain_trp')}":                          "%{hiera('netcfg_trp_netpart')}.115"
-    "metric.%{hiera('domain_trp')}":                        "%{hiera('netcfg_trp_netpart')}.96"
+    "object.%{hiera('domain_trp')}":                        "%{hiera('netcfg_trp_netpart')}.86"
+    "metric.%{hiera('domain_trp')}":                        "%{hiera('netcfg_trp_netpart')}.86"
 
 #
 # Network configuration data
@@ -278,6 +291,23 @@ networks:
     subnet:
       mgmt: 172.16.32.0/21
       oob: 172.17.32.0/21
+    dhcp:
+      mgmt:
+        ensure: absent
+      oob:
+        ensure: absent
+    nat:
+      mgmt:
+        ensure: absent
+      oob:
+        ensure: absent
+  tos:
+    domain:
+      mgmt: mgmt.tos.uhdc.no
+      oob: oob.tos.uhdc.no
+    subnet:
+      mgmt: 172.16.64.0/21
+      oob: 172.17.64.0/21
     dhcp:
       mgmt:
         ensure: absent

@@ -8,6 +8,7 @@ class profile::openstack::database::sql (
   $cinder_enabled   = false,
   $designate_enabled = true,
   $gnocchi_enabled  = false,
+  $ceilometer_enabled = false,
   $create_cell0     = false,
   $database         = 'mariadb',
 ) {
@@ -33,8 +34,8 @@ class profile::openstack::database::sql (
     #FIXME nova puppet module creates database in ocata
     if $create_cell0 {
 
-      $addr1 = hiera('netcfg_trp_netpart')
-      $addr2 = hiera('domain_trp')
+      $addr1 = lookup('netcfg_trp_netpart', String, 'first', '')
+      $addr2 = lookup('domain_trp', String, 'first', '')
 
       mysql_database { 'nova_cell0':
         ensure    => present,
@@ -46,12 +47,12 @@ class profile::openstack::database::sql (
         table    => '*.*',
         user     => "nova@${addr1}.%",
       }
-      mysql_grant { "nova@compute.${addr2}/*.*":
-        ensure    => present,
-        privileges => ['ALL'],
-        table    => '*.*',
-        user     => "nova@compute.${addr2}",
-      }
+      # mysql_grant { "nova@compute.${addr2}/*.*":
+      #   ensure    => present,
+      #   privileges => ['ALL'],
+      #   table    => '*.*',
+      #   user     => "nova@compute.${addr2}",
+      #}
     }
   }
 
@@ -77,6 +78,10 @@ class profile::openstack::database::sql (
 
   if $gnocchi_enabled {
     include ::gnocchi::db::mysql
+  }
+
+  if $ceilometer_enabled {
+    include ::ceilometer::db::mysql
   }
 
 }

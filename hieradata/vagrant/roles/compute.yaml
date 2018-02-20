@@ -3,6 +3,11 @@
 #include:
 #  default:
 #    -  profile::network::yum_proxy
+#
+# include this to get automatic patching after installation
+include:
+  default:
+    - profile::development::patch
 
 # The current vagrant box image do not have vda3 parso switch
 # off lvm for compute on vagrant
@@ -40,13 +45,16 @@ consul::services:
 # Add custom routing table for private network to NAT
 profile::base::network::routes:
   'eth2':
-    'ipaddress': [ '0.0.0.0', ]
-    'netmask':   [ '0.0.0.0', ]
-    'gateway':   [ "%{hiera('netcfg_priv_gateway')}", ]
-    'table':     [ 'private', ]
+    'ipaddress': [ '0.0.0.0', '0.0.0.0', ]
+    'netmask':   [ '0.0.0.0', '0.0.0.0', ]
+    'gateway':   [ "%{hiera('netcfg_priv_gateway')}", "%{hiera('netcfg_trp_gateway')}" ]
+    'table':     [ 'private', 'main', ]
 profile::base::network::routing_tables:
   'private':
     'table_id':  '240'
 profile::base::network::rules:
   'eth2':
     iprule: [ "from %{hiera('netcfg_priv_network')} lookup private", ]
+
+# remove when telemetry/ceilometer is up in all environments and move to common
+profile::openstack::compute::manage_telemetry: true

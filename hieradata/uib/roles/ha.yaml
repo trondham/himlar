@@ -16,6 +16,15 @@ profile::base::selinux::ports:
     port:     '389'
     argument: '-m'
 
+#
+# Default interfaces
+#
+named_interfaces::config:
+  mgmt:
+    - em1
+  public:
+    - bond0.6
+
 corosync::unicast_addresses:
   - "%{hiera('netcfg_public_netpart')}.96"
   - "%{hiera('netcfg_public_netpart')}.97"
@@ -95,7 +104,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
       - 'sfb-webpool01.uib.no':                   'uib-https-sfb'
       - 'lyncadmin.uib.no':                       'uib-https-sfb'
       - 'exch.uib.no':                            'uib-https-exch'
-      - 'adm2.uib.no':                            'uib-https-adm'
+      - 'portal.uib.no':                          'uib-https-adm'
       - "dashboard.uh-iaas.no":                   'uib-https-uh-dashboard'
       - "dashboard-ha.uh-iaas.no":                'uib-https-uh-dashboard'
       - "access.uh-iaas.no":                      'uib-https-uh-access'
@@ -113,7 +122,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
       - 'lyncdiscoverinternal.bergento.no':       'uib-http-sfb'
       - 'sfb-webpool01.uib.no':                   'uib-http-sfb'
       - 'lyncadmin.uib.no':                       'uib-http-sfb'
-      - 'adm2.uib.no':                            'uib-http-adm'
+      - 'portal.uib.no':                          'uib-http-adm'
   public_https_domains:
     ensure: present
     mappings:

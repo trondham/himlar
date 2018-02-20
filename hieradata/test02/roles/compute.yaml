@@ -1,4 +1,3 @@
-
 ---
 include:
   kickstart:
@@ -6,13 +5,11 @@ include:
 
 named_interfaces::config:
   mgmt:
-     - em3
+    - em3
   trp:
-     - em1
-  transport:
-     - em1
-  service:
-     - em1
+    - em1
+  live:
+    - em1
 
 ntp::servers:
   - 172.28.32.100
@@ -21,24 +18,25 @@ ntp::servers:
 
 profile::monitoring::sensu::agent::enable_agent:  true
 
-puppet::cron_cmd: "if [ -e /root/proxy.sh ] ; then source /root/proxy.sh ; fi ; \
-  /usr/bin/env puppet agent --config %{puppet::dir}/puppet.conf --onetime --no-daemonize"
-
 # Add custom routing table for private network to NAT
 profile::base::network::routes:
   'em1':
-    'ipaddress': [ '0.0.0.0', ]
-    'netmask':   [ '0.0.0.0', ]
-    'gateway':   [ "%{hiera('netcfg_priv_gateway')}", ]
-    'table':     [ 'private', ]
+    'ipaddress': [ '0.0.0.0', '0.0.0.0', ]
+    'netmask':   [ '0.0.0.0', '0.0.0.0', ]
+    'gateway':   [ "%{hiera('netcfg_priv_gateway')}", "%{hiera('netcfg_trp_gateway')}" ]
+    'table':     [ 'private', 'main', ]
 profile::base::network::routing_tables:
   'private':
     'table_id':  '240'
 profile::base::network::rules:
   'em1':
     iprule: [ "from %{hiera('netcfg_priv_network')} lookup private", ]
+profile::base::network::manage_neutron_blackhole: true
 
 ################ TEMP DATA - SHOULD BE FIXED IN COMMON #########################
 calico::compute::bird_template: 'profile/bird/bird.conf.erb'
 
 nova::debug: true
+
+# remove when telemetry/ceilometer is up in all environments and move to common
+profile::openstack::compute::manage_telemetry: true

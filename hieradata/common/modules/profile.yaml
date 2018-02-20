@@ -1,5 +1,6 @@
 ---
-profile::base::common::manage_augeasproviders: true
+# Is this still needed?
+# profile::base::common::manage_augeasproviders: true
 profile::base::common::manage_epel:            false
 profile::base::common::manage_accounts:        true
 profile::base::common::manage_logging:         false
@@ -36,6 +37,7 @@ profile::firewall::pre::ssh_settings:
 profile::logging::rsyslog::client::manage_rsyslog:         true
 profile::openstack::compute::hypervisor::manage_telemetry: false
 
+profile::openstack::database::sql::ceilometer_enabled: true
 profile::openstack::database::sql::keystone_enabled: true
 profile::openstack::database::sql::glance_enabled:   true
 profile::openstack::database::sql::nova_enabled:     true
@@ -49,7 +51,7 @@ profile::openstack::database::sql::trove_enabled:    false
 profile::database::mariadb::backuptopdir:        '/var/db/dumps'
 profile::database::mariadb::backupscript:        '/usr/local/sbin/mysqlbackup.sh'
 
-profile::openstack::identity::ceilometer_enabled: false
+profile::openstack::identity::ceilometer_enabled: true
 profile::openstack::identity::cinder_enabled:     true
 profile::openstack::identity::glance_enabled:     true
 profile::openstack::identity::neutron_enabled:    true
@@ -102,8 +104,8 @@ profile::base::yumrepo::repo_hash:
     gpgcheck:       1
   puppetlabs:
     descr:          Puppetlabs Yum Repo
-    baseurl:        "%{hiera('yum_base_mirror')}/puppetlabs/"
-    gpgkey:         "%{hiera('yum_base_mirror')}/puppetlabs/RPM-GPG-KEY-puppetlabs"
+    baseurl:        "%{hiera('yum_base_mirror')}/puppetlabs-PC1/"
+    gpgkey:         "%{hiera('yum_base_mirror')}/puppetlabs-PC1/RPM-GPG-KEY-puppet"
     gpgcheck:       1
   puppetlabs-deps:
     descr:          Puppetlabs Dependencies Yum Repo

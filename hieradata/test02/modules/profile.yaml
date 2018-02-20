@@ -9,3 +9,5 @@ profile::openstack::identity::designate_enabled:     true
 
 # test02 is up and coming; on 'test'
 yum_base_mirror:    'https://download.iaas.uio.no/uh-iaas/test'
+
+profile::openstack::identity::swift_enabled:      true

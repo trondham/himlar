@@ -13,7 +13,6 @@ class profile::openstack::dashboard(
   $custom_uploaddir     = '/image-upload',
   $enable_pwd_retrieval = false,
   $enable_designate     = false,
-  $enable_image_upload  = false,
   $image_upload_mode    = undef,
   $change_region_selector = false
 ) {
@@ -27,11 +26,11 @@ class profile::openstack::dashboard(
     }
   }
 
-  $policies = hiera_hash('profile::openstack::dashboard::policies')
+  $policies = lookup('profile::openstack::dashboard::policies', Hash, 'deep', {})
   create_resources('openstacklib::policy::base', $policies, { require => Class['horizon']})
 
   if $manage_firewall {
-    $hiera_allow_from_network = hiera_array('allow_from_network', undef)
+    $hiera_allow_from_network = lookup('allow_from_network', Array, 'unique', undef)
     $source = $allow_from_network? {
       undef   => $hiera_allow_from_network,
       ''      => $hiera_allow_from_network,

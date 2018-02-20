@@ -1,5 +1,7 @@
 ---
 include:
+  bootstrap:
+    - profile::development::network::dns
   default:
     - profile::development::network::dns
     - profile::monitoring::sensu::agent
@@ -23,6 +25,8 @@ netcfg_mgmt_netmask:    '255.255.255.0'
 netcfg_trp_gateway:     '172.31.8.1'
 netcfg_trp_netpart:     '172.31.8'
 netcfg_trp_netmask:     '255.255.255.0'
+netcfg_live_netpart:    '172.31.8'
+netcfg_live_netmask:    '255.255.255.0'
 netcfg_public_netpart:  '192.168.0'
 netcfg_public_netmask:  '255.255.255.0'
 netcfg_public_netpart6: 'fc00:700:100:200'
@@ -42,8 +46,11 @@ netcfg_trp_rr:
 #
 service__address__mysql:  "db01.%{hiera('domain_trp')}" #FIXME
 
-# DNS server
-public__address__ns_01:   "%{hiera('netcfg_public_netpart')}.16"
+# DNS servers
+public__address__ns:           "%{hiera('netcfg_public_netpart')}.251"
+public6__address__ns:          "%{hiera('netcfg_public_netpart6')}::251"
+public__address__resolver_01:  "%{hiera('netcfg_public_netpart')}.252"
+public6__address__resolver_01: "%{hiera('netcfg_public_netpart6')}::252"
 
 #
 # Endpoints (including protocole)
@@ -60,9 +67,7 @@ named_interfaces::config:
     - eth1
   trp:
     - eth2
-  service: #FIXME (delete)
-    - eth2
-  transport: #FIXME (delete)
+  live:
     - eth2
   public:
     - eth3
@@ -117,8 +122,6 @@ profile::network::services::dns_options:
 #
 profile::network::services::dns_records:
   A:
-    "ns.%{hiera('domain_public')}":                       "%{hiera('netcfg_public_netpart')}.16"
-    "dashboard.%{hiera('domain_frontend')}":              "%{hiera('netcfg_public_netpart')}.254"
     "access.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
     "console.%{hiera('domain_public')}":                  "%{hiera('netcfg_public_netpart')}.250"
     "api.%{hiera('domain_public')}":                      "%{hiera('netcfg_public_netpart')}.250"
@@ -128,9 +131,14 @@ profile::network::services::dns_records:
     "compute.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.250"
     "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
     "status.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
-    "metric.api.%{hiera('domain_frontend')}":             "%{hiera('netcfg_public_netpart')}.250"
+    "metric.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
+    "object.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
+    "ns.%{hiera('domain_public')}":                       "%{hiera('netcfg_public_netpart')}.251"
+    "resolver.%{hiera('domain_public')}":                 "%{hiera('netcfg_public_netpart')}.252"
+    "dashboard.%{hiera('domain_frontend')}":              "%{hiera('netcfg_public_netpart')}.254"
   AAAA:
-    "ns.%{hiera('domain_public')}":                       "%{hiera('netcfg_public_netpart6')}::16"
+    "ns.%{hiera('domain_public')}":                       "%{hiera('netcfg_public_netpart6')}::251"
+    "resolver.%{hiera('domain_public')}":                 "%{hiera('netcfg_public_netpart6')}::252"
   PTR:
     # mgmt
     "1.%{hiera('reverse_mgmt')}":      "%{::location}-leaf-01.%{hiera('domain_mgmt')}"
@@ -140,7 +148,8 @@ profile::network::services::dns_records:
     "14.%{hiera('reverse_mgmt')}":     "%{::location}-monitor-01.%{hiera('domain_mgmt')}"
     "15.%{hiera('reverse_mgmt')}":     "%{::location}-builder-01.%{hiera('domain_mgmt')}"
     "16.%{hiera('reverse_mgmt')}":     "%{::location}-ns-01.%{hiera('domain_mgmt')}"
-    "17.%{hiera('reverse_mgmt')}":     "%{::location}-ns-02.%{hiera('domain_mgmt')}"
+    "17.%{hiera('reverse_mgmt')}":     "%{::location}-resolver-01.%{hiera('domain_mgmt')}"
+    "18.%{hiera('reverse_mgmt')}":     "%{::location}-resolver-02.%{hiera('domain_mgmt')}"
     "21.%{hiera('reverse_mgmt')}":     "%{::location}-status-01.%{hiera('domain_mgmt')}"
     "26.%{hiera('reverse_mgmt')}":     "%{::location}-nat-01.%{hiera('domain_mgmt')}"
     "31.%{hiera('reverse_mgmt')}":     "%{::location}-mq-01.%{hiera('domain_mgmt')}"
@@ -177,14 +186,14 @@ profile::network::services::dns_records:
     "114.%{hiera('reverse_mgmt')}":    "%{::location}-controller-04.%{hiera('domain_mgmt')}"
     "115.%{hiera('reverse_mgmt')}":    "%{::location}-compute-07.%{hiera('domain_mgmt')}"
     "116.%{hiera('reverse_mgmt')}":    "%{::location}-compute-08.%{hiera('domain_mgmt')}"
-    # public
-    "16.%{hiera('reverse_public')}":    "ns.%{hiera('domain_public')}"
-    "254.%{hiera('reverse_public')}":   "dashboard.%{hiera('domain_frontend')}"
-    #"250.%{hiera('reverse_public')}":   "access.%{hiera('domain_frontend')}" #252
-    #"250.%{hiera('reverse_public')}":   "console.%{hiera('domain_public')}" #251
+    # public IPv4
     "250.%{hiera('reverse_public')}":   "api.%{hiera('domain_public')}"
+    "251.%{hiera('reverse_public')}":   "ns.%{hiera('domain_public')}"
+    "252.%{hiera('reverse_public')}":   "resolver.%{hiera('domain_public')}"
+    "254.%{hiera('reverse_public')}":   "dashboard.%{hiera('domain_frontend')}"
     # public IPv6
-    "6.1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "ns.%{hiera('domain_public')}"
+    "1.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "ns.%{hiera('domain_public')}"
+    "2.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "resolver.%{hiera('domain_public')}"
 
 #
 ## Secret data which for other environments are stored ooutside of this data tree
@@ -192,6 +201,14 @@ profile::network::services::dns_records:
 
 # ceph.yaml
 ceph::profile::params::mon_key:                     'AQATGHJTUCBqIBAA7M2yafV1xctn1pgr3GcKPg=='
+client_admin::secret:                               'AQBMGHJTkC8HKhAAJ7NH255wYypgm1oVuV41MA=='
+client_bootstrap-osd::secret:                       'AQARG3JTsDDEHhAAVinHPiqvJkUi5Mww/URupw=='
+client_bootstrap-mds::secret:                       'AQCztJdSyNb0NBAASA2yPZPuwXeIQnDJ9O8gVw=='
+client_glance::secret:                              'AQBGJ8dWKhgcNhAA+VU0GlKHcRLJSsJ8WouuSQ=='
+client_volumes::secret:                             'AQA4MPZTOGU0ARAAXH9a0fXxVq0X25n2yPREDw=='
+client_cinder::secret:                              'AQBypF1V2JYiChAA2qYbjM6jbXJBMmpXPkvwBg=='
+
+# FIXME: puppet 3 legacy params
 client.admin::secret:                               'AQBMGHJTkC8HKhAAJ7NH255wYypgm1oVuV41MA=='
 client.bootstrap-osd::secret:                       'AQARG3JTsDDEHhAAVinHPiqvJkUi5Mww/URupw=='
 client.bootstrap-mds::secret:                       'AQCztJdSyNb0NBAASA2yPZPuwXeIQnDJ9O8gVw=='
@@ -206,6 +223,8 @@ glance_api_password:                                'glance_pass'
 neutron_api_password:                               'neutron_pass'
 nova_api_password:                                  'nova_pass'
 designate_api_password:                             'designate_pass'
+gnocchi_api_password:                               'gnocchi'
+ceilometer_api_password:                            'ceilometer_pass'
 
 # rabbitmq
 rabbitmq::default_pass:                             'guest'
@@ -262,11 +281,15 @@ grafana_admin_password:                             'changeme'
 local_rabbit_password:                              'local'
 
 # telemetry/metrics
-gnocchi::api::keystone_password:                    'gnocchi'
 gnocchi::db::mysql::password:                       'gnocchi_pass'
-ceilometer::keystone::authtoken:                    'ceilometer'
+ceilometer::db::mysql::password:                    'ceilometer_pass'
 ceilometer::telemetry_secret:                       'ceilometer'
 ceilometer::rabbit_password:                        'ceilometer'
+
+# object
+swift::swift_hash_path_suffix:                      'shared_secret'
+swift_api_password:                                 'swift_pass'
+dispersion_api_password:                            'dispersion_pass'
 
 # The root user password: himlardev
 accounts::root_user::password:                      '$1$vagrant$z3l/WWbF3HllJk0tnqO3i/'
