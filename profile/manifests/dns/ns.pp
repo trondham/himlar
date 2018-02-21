@@ -111,7 +111,7 @@ class profile::dns::ns (
 
   # Create the manual zones (on master/slave)
   if $host_is_ns_master or $host_is_ns_slave {
-    create_resources('profile::dns::manual_zone', $manual_zones)
+    create_resources('profile::dns::forward_zone', $manual_zones)
   }
 
   # Open nameserver ports in the firewall
