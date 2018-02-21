@@ -26,3 +26,6 @@ profile::dns::ns::ptr_zones:
     cidr: "fc00::/7"
     origin: "c.f.ip6.arpa"
     filename: "%{hiera('profile::dns::ns::zonedir')}/c.f.ip6.arpa"
+
+# TEST
+profile::dns::ns::host_is_ns_master: true

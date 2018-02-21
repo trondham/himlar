@@ -13,8 +13,8 @@ class profile::dns::ns (
   $public_zone = {},
   $forward_everything = false,
   $forwarders = {},
-  $manual_zone_master = false,
-  $manual_zone_slave = false
+  $host_is_ns_master = false,
+  $host_is_ns_slave = false
   )
 {
   # Our forward zones

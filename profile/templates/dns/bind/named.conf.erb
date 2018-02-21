@@ -116,7 +116,7 @@ zone "uh-iaas.no" IN {
 zone "uh-iaas.no" IN {
     type slave;
     file "sz/uh-iaas.no";
-    masters { <%= @ns_master_server %>; };
+    masters { <% @ns_master_servers.each do |master| -%><%= master %>; <% end -%>};
 };
 <% end -%>
 
