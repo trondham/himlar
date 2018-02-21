@@ -16,7 +16,8 @@ class profile::dns::ns (
   $host_is_ns_master = false,
   $host_is_ns_slave = false,
   $ns_master_servers = {},
-  $ns_slave_servers = {}
+  $ns_slave_servers = {},
+  $manual_zones = {}
   )
 {
   # Our forward zones
@@ -106,6 +107,11 @@ class profile::dns::ns (
   if $authoritative {
     create_resources('profile::dns::forward_zone', $forward_zones)
     create_resources('profile::dns::reverse_zone', $reverse_zones)
+  }
+
+  # Create the manual zones (on master/slave)
+  if $host_is_ns_master or $host_is_ns_slave {
+    create_resources('profile::dns::manual_zone', $manual_zones)
   }
 
   # Open nameserver ports in the firewall

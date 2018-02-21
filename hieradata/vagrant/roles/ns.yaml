@@ -13,6 +13,12 @@ profile::dns::ns::fw_zones:
     zone: "%{hiera('profile::dns::ns::public_zone')}"
     filename: "%{hiera('profile::dns::ns::zonedir')}/%{hiera('profile::dns::ns::public_zone')}"
 
+# Forward zones, for which the name server is authoritative
+profile::dns::ns::manual_zones:
+  frontend:
+    zone: "uh-iaas.no"
+    filename: "%{hiera('profile::dns::ns::zonedir')}/uh-iaas.no"
+
 # Reverse zones, for which the name server is authoritative
 profile::dns::ns::ptr_zones:
   internal:
