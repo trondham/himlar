@@ -1,4 +1,9 @@
-define profile::dns::forward_zone($zone, $filename, $ns_a_records = {}, $ns_aaaa_records = {}) {
+define profile::dns::forward_zone(
+    $zone,
+    $filename,
+    $ns_a_records = {},
+    $ns_aaaa_records = {}
+  ) {
 
   # Hostmaster email address
   $hostmaster = $::profile::dns::ns::hostmaster
