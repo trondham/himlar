@@ -1,7 +1,7 @@
 ; Forward zone for <%= @zone %>
 $ORIGIN <%= @zone %>.
 $TTL    3600
-@  IN	SOA	<%= @name_servers.select {"master"} %>.    <%= @mail %>. (
+@  IN	SOA	<%= @master %>.    <%= @mail %>. (
                         2018021201         ; Serial
                               3600         ; Refresh
                               1800         ; Retry
@@ -9,6 +9,6 @@ $TTL    3600
                             43200 )        ; Negative Cache TTL
 
         IN      NS      foo.
-<% @name_servers.each do |ns, values| -%>
-        IN      NS      <%= values["slaves"] %>.
+<% @slaves.each do |ns, values| -%>
+        IN      NS      <%= ns %>.
 <% end -%>
