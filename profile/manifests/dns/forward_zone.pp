@@ -3,7 +3,7 @@ define profile::dns::forward_zone($zone, $filename) {
   $mail    = $::profile::dns::ns::mail
 
   # Our name servers
-  $name_servers = lookup('profile::dns::ns::name_servers', Array, 'deep', [])
+  $name_servers = lookup('profile::dns::ns::name_servers', Hash, 'deep', [])
 
   file { "/var/named/${filename}":
     content => template("${module_name}/dns/bind/forward_zone.erb"),
