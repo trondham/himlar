@@ -5,9 +5,8 @@ profile::dns::ns::public_zone:   "vagrant.iaas.intern"
 
 # NS servers in zone file (with NS records)
 profile::dns::ns::ns_master: "ns.%{hiera('profile::dns::ns::public_zone')}"
-profile::dns::ns::ns_slaves:
-  - "tux.uio.no"
-  - "kipepeo.uio.no"
+#profile::dns::ns::ns_slaves:
+#  - "tux.uio.no"
 
 # Forward zones, for which the name server is authoritative
 profile::dns::ns::fw_zones:
