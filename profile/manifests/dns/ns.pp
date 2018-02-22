@@ -15,8 +15,8 @@ class profile::dns::ns (
   $forwarders = {},
   $host_is_ns_master = false,
   $host_is_ns_slave = false,
-  $ns_master_ips = {},
-  $ns_slave_ips = {},
+  $ns_master_ip_addresses = {},
+  $ns_slave_ip_addresses = {},
   $hostmaster = {},
   $manual_zones = {}
   )
