@@ -1,6 +1,7 @@
 define profile::dns::forward_zone($zone, $filename) {
-  $main_ns = $::profile::dns::ns::main_ns
-  $mail    = $::profile::dns::ns::mail
+
+  # Hostmaster email address
+  $hostmaster = $::profile::dns::ns::hostmaster
 
   # Our name servers
   $ns_master = $::profile::dns::ns::ns_master

@@ -9,9 +9,6 @@ profile::dns::ns::ns_slaves:
   - "tux.uio.no"
   - "kipepeo.uio.no"
 
-# Main NS for all the zones
-profile::dns::ns::main_ns: "ns.%{hiera('profile::dns::ns::public_zone')}"
-
 # Forward zones, for which the name server is authoritative
 profile::dns::ns::fw_zones:
   internal:

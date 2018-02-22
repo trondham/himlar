@@ -109,14 +109,14 @@ zone "uh-iaas.no" IN {
     type master;
     file "pz/uh-iaas.no";
     allow-update { none; };
-    also-notify { <% @ns_slave_servers.each do |slave| -%><%= slave %>; <% end -%>};
+    also-notify { <% @ns_slave_ips.each do |slave| -%><%= slave %>; <% end -%>};
 };
 <% elsif @host_is_ns_slave %>
 # Forward zone for frontend, uh-iaas.no (SLAVE)
 zone "uh-iaas.no" IN {
     type slave;
     file "sz/uh-iaas.no";
-    masters { <% @ns_master_servers.each do |master| -%><%= master %>; <% end -%>};
+    masters { <% @ns_master_ips.each do |master| -%><%= master %>; <% end -%>};
 };
 <% end -%>
 
