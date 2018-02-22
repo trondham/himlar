@@ -1,5 +1,6 @@
 define profile::dns::reverse_zone($cidr, $origin, $filename) {
-  $public_zone = $::profile::dns::ns::public_zone
+  $main_ns = $::profile::dns::ns::main_ns
+  $mail    = $::profile::dns::ns::mail
 
   # Our name servers
   $name_servers = lookup('profile::dns::ns::name_servers', Array, 'deep', [])

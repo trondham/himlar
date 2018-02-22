@@ -15,6 +15,9 @@ profile::dns::ns::authoritative: true
 # Any zones should be placed in the "primary zone" dir
 profile::dns::ns::zonedir: 'pz'
 
+# Our mail address (in zone file)
+profile::dns::ns::mail: 'support.uh-iaas.no'
+
 # DNS server addresses (used by file templates)
 #profile::dns::ns::mdns_transport_addr: "%{hiera('service__address__mdns')}"
 profile::dns::ns::admin_mgmt_addr:          "%{hiera('netcfg_mgmt_netpart')}.11"

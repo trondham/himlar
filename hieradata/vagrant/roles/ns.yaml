@@ -3,35 +3,41 @@
 profile::dns::ns::internal_zone: "vagrant.iaas.intern"
 profile::dns::ns::public_zone:   "vagrant.iaas.intern"
 
-# Name servers in zone file
+# NS servers in zone file (with NS records)
 profile::dns::ns::name_servers:
-  - "ns.%{hiera('profile::dns::ns::public_zone')}"
+  master: "ns.%{hiera('profile::dns::ns::public_zone')}"
+  slaves:
+    - "tux.uio.no"
+    - "kipepeo.uio.no"
+
+# Main NS for all the zones
+profile::dns::ns::main_ns: "ns.%{hiera('profile::dns::ns::public_zone')}"
 
 # Forward zones, for which the name server is authoritative
 profile::dns::ns::fw_zones:
   internal:
-    zone: "%{hiera('profile::dns::ns::public_zone')}"
+    zone:     "%{hiera('profile::dns::ns::public_zone')}"
     filename: "%{hiera('profile::dns::ns::zonedir')}/%{hiera('profile::dns::ns::public_zone')}"
 
-# Forward zones, for which the name server is authoritative
+# Manual zones, maintained manually
 profile::dns::ns::manual_zones:
   frontend:
-    zone: "uh-iaas.no"
+    zone:     "uh-iaas.no"
     filename: "%{hiera('profile::dns::ns::zonedir')}/uh-iaas.no"
 
 # Reverse zones, for which the name server is authoritative
 profile::dns::ns::ptr_zones:
   internal:
-    cidr: "172.31.0.0/16"
-    origin: "31.172.in-addr.arpa"
+    cidr:     "172.31.0.0/16"
+    origin:   "31.172.in-addr.arpa"
     filename: "%{hiera('profile::dns::ns::zonedir')}/31.172.in-addr.arpa"
   public:
-    cidr: "192.168.0/16"
-    origin: "168.192.in-addr.arpa"
+    cidr:     "192.168.0/16"
+    origin:   "168.192.in-addr.arpa"
     filename: "%{hiera('profile::dns::ns::zonedir')}/168.192.in-addr.arpa"
   ipv6:
-    cidr: "fc00::/7"
-    origin: "c.f.ip6.arpa"
+    cidr:     "fc00::/7"
+    origin:   "c.f.ip6.arpa"
     filename: "%{hiera('profile::dns::ns::zonedir')}/c.f.ip6.arpa"
 
 # TEST
