@@ -15,11 +15,11 @@ $TTL    3600
 
 <% unless @ns_a_records.empty? %>
 <% @ns_a_records.each do |name,ip| -%>
-<% @name %>      IN      A             <%= @ip %>
+<% name %>      IN      A             <%= ip %>
 <% end -%>
 <% end -%>
 <% unless @ns_aaaa_records.empty? %>
 <% @ns_aaaa_records.each do |name,ip| -%>
-<% @name %>      IN      AAAA          <%= @ip %>
+<% name %>      IN      AAAA          <%= ip %>
 <% end -%>
 <% end -%>
