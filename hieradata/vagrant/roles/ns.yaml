@@ -24,10 +24,6 @@ profile::dns::ns::manual_zones:
   frontend:
     zone:     "uh-iaas.no"
     filename: "%{hiera('profile::dns::ns::zonedir')}/uh-iaas.no"
-    ns_a_records:
-      'ns': "%{hiera('public__address__ns')}"
-    ns_aaaa_records:
-      'ns': "%{hiera('public6__address__ns')}"
 
 # Reverse zones, for which the name server is authoritative
 profile::dns::ns::ptr_zones:
