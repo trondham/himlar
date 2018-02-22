@@ -84,6 +84,7 @@ zone "<%= values["origin"] %>" IN {
     <% end -%>
 };
 <% end -%>
+<% unless @slave_zones.empty? %>
 <% @slave_zones.each do |network, values| -%>
 # Reverse (PTR) zone for <%= network %> network, <%= values["cidr"] %> (master)
 zone "<%= values["origin"] %>" IN {
@@ -94,6 +95,7 @@ zone "<%= values["origin"] %>" IN {
     masters { <% @ns_master_ip_addresses.each do |master| -%><%= master %>; <% end -%>};
     <% end -%>
 };
+<% end -%>
 <% end -%>
 <% else %>
 <% unless @forward_zones.empty? %>
