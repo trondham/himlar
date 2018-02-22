@@ -9,6 +9,6 @@ $TTL    3600
                             43200 )        ; Negative Cache TTL
 
         IN      NS      <%= @ns_master %>.
-<% @ns_slaves.each do |ns| -%>
-        IN      NS      <%= ns %>.
+<% @ns_slaves.each do |slave| -%>
+        IN      NS      <%= slave %>.
 <% end -%>
