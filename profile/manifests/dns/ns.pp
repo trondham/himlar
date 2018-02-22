@@ -19,8 +19,6 @@ class profile::dns::ns (
   $ns_slave_ip_addresses = {},
   $hostmaster = {},
   $ns_master = {},
-  $ns_a_records = {},
-  $ns_aaaa_records = {},
   $manual_zones = {}
   )
 {
