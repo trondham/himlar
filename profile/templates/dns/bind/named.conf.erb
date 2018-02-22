@@ -68,6 +68,9 @@ zone "<%= values["zone"] %>" IN {
     type master;
     file "<%= values["filename"] %>";
     allow-update { <%= @admin_mgmt_addr %>; };
+    <% unless @ns_slave_ip_addresses.empty? -%>
+    also-notify { <% @ns_slave_ip_addresses.each do |slave| -%><%= slave %>; <% end -%>};
+    <% end -%>
 };
 <% end -%>
 <% @reverse_zones.each do |network, values| -%>
@@ -76,6 +79,20 @@ zone "<%= values["origin"] %>" IN {
     type master;
     file "<%= values["filename"] %>";
     allow-update { <%= @admin_mgmt_addr %>; };
+    <% unless @ns_slave_ip_addresses.empty? -%>
+    also-notify { <% @ns_slave_ip_addresses.each do |slave| -%><%= slave %>; <% end -%>};
+    <% end -%>
+};
+<% end -%>
+<% @slave_zones.each do |network, values| -%>
+# Reverse (PTR) zone for <%= network %> network, <%= values["cidr"] %> (master)
+zone "<%= values["origin"] %>" IN {
+    type slave;
+    file "<%= values["filename"] %>";
+    allow-update { <%= @admin_mgmt_addr %>; };
+    <% unless @ns_master_ip_addresses.empty? -%>
+    masters { <% @ns_master_ip_addresses.each do |master| -%><%= master %>; <% end -%>};
+    <% end -%>
 };
 <% end -%>
 <% else %>
@@ -101,23 +118,6 @@ zone "<%= values["origin"] %>" IN {
     forward only;
 };
 <% end -%>
-<% end -%>
-
-<% if @host_is_ns_master %>
-# Forward zone for frontend, uh-iaas.no (MASTER)
-zone "uh-iaas.no" IN {
-    type master;
-    file "pz/uh-iaas.no";
-    allow-update { none; };
-    also-notify { <% @ns_slave_ip_addresses.each do |slave| -%><%= slave %>; <% end -%>};
-};
-<% elsif @host_is_ns_slave %>
-# Forward zone for frontend, uh-iaas.no (SLAVE)
-zone "uh-iaas.no" IN {
-    type slave;
-    file "sz/uh-iaas.no";
-    masters { <% @ns_master_ip_addresses.each do |master| -%><%= master %>; <% end -%>};
-};
 <% end -%>
 
 # Zones recommended by RFC 1912
