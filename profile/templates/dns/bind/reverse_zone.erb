@@ -9,6 +9,7 @@ $TTL    3600
                             43200 )        ; Negative Cache TTL
 
 ; Name servers:
+      NS      <%= @ns_master %>.
 <% @ns_slaves.each do |ns| -%>
       NS      <%= ns %>.
 <% end -%>
