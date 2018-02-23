@@ -58,11 +58,11 @@ profile::dns::ns::ptr_zones:
 # Secondary forward zones, for which this ns is slave
 profile::dns::ns::fw_slave_zones:
   test02_internal:
-    zone: "%{hiera('profile::dns::ns::internal_zone')}"
-    filename: "sz/%{hiera('profile::dns::ns::internal_zone')}"
+    zone: 'test02.uhdc.no'
+    filename: "sz/test02.uhdc.no"
   test02_frontend:
-    zone: "%{hiera('profile::dns::ns::public_zone')}"
-    filename: "sz/%{hiera('profile::dns::ns::public_zone')}"
+    zone: 'test.iaas.uio.no'
+    filename: "sz/test.iaas.uio.no"
 
 # Secondary reverse zones, for which this ns is slave
 profile::dns::ns::ptr_slave_zones:
