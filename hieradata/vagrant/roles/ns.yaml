@@ -65,7 +65,7 @@ profile::dns::ns::fw_slave_zones:
     filename: "sz/%{hiera('profile::dns::ns::public_zone')}"
 
 # Secondary reverse zones, for which this ns is slave
-profile::dns::ns::fw_slave_zones:
+profile::dns::ns::ptr_slave_zones:
   test02_mgmt:
     cidr: "172.28.32.0/24"
     origin: "32.28.172.in-addr.arpa"
