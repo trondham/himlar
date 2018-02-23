@@ -26,7 +26,8 @@ class profile::dns::ns (
   $reverse_zones = lookup('profile::dns::ns::ptr_zones', Hash, 'deep', {})
 
   # Our slave zones
-  $slave_zones = lookup('profile::dns::ns::slave_zones', Hash, 'deep', {})
+  $fw_slave_zones = lookup('profile::dns::ns::fw_slave_zones', Hash, 'deep', {})
+  $ptr_slave_zones = lookup('profile::dns::ns::ptr_slave_zones', Hash, 'deep', {})
 
   # Make sure that bind is installed
   package { 'bind':

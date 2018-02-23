@@ -79,21 +79,32 @@ zone "<%= values["origin"] %>" IN {
     type master;
     file "<%= values["filename"] %>";
     allow-update { <%= @admin_mgmt_addr %>; };
-    <% unless @ns_slave_ip_addresses.empty? -%>
+<% unless @ns_slave_ip_addresses.empty? -%>
     also-notify { <% @ns_slave_ip_addresses.each do |slave| -%><%= slave %>; <% end -%>};
-    <% end -%>
+<% end -%>
 };
 <% end -%>
-<% unless @slave_zones.empty? %>
-<% @slave_zones.each do |network, values| -%>
+<% unless @fw_slave_zones.empty? %>
+<% @fw_slave_zones.each do |network, values| -%>
+# Forward zone for <%= network %>, <%= values["zone"] %> (slave)
+zone "<%= values["zone"] %>" IN {
+    type slave;
+    file "<%= values["filename"] %>";
+<% unless @ns_master_ip_addresses.empty? -%>
+    masters { <% @ns_master_ip_addresses.each do |master| -%><%= master %>; <% end -%>};
+<% end -%>
+};
+<% end -%>
+<% end -%>
+<% unless @ptr_slave_zones.empty? %>
+<% @ptr_slave_zones.each do |network, values| -%>
 # Reverse (PTR) zone for <%= network %> network, <%= values["cidr"] %> (master)
 zone "<%= values["origin"] %>" IN {
     type slave;
     file "<%= values["filename"] %>";
-    allow-update { <%= @admin_mgmt_addr %>; };
-    <% unless @ns_master_ip_addresses.empty? -%>
+<% unless @ns_master_ip_addresses.empty? -%>
     masters { <% @ns_master_ip_addresses.each do |master| -%><%= master %>; <% end -%>};
-    <% end -%>
+<% end -%>
 };
 <% end -%>
 <% end -%>

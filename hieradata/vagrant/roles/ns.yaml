@@ -55,14 +55,17 @@ profile::dns::ns::ptr_zones:
     origin:   "c.f.ip6.arpa"
     filename: "pz/c.f.ip6.arpa"
 
-# Secondary zones, for which this ns is slave
-profile::dns::ns::slave_zones:
+# Secondary forward zones, for which this ns is slave
+profile::dns::ns::fw_slave_zones:
   test02_internal:
     zone: "%{hiera('profile::dns::ns::internal_zone')}"
     filename: "sz/%{hiera('profile::dns::ns::internal_zone')}"
   test02_frontend:
     zone: "%{hiera('profile::dns::ns::public_zone')}"
     filename: "sz/%{hiera('profile::dns::ns::public_zone')}"
+
+# Secondary reverse zones, for which this ns is slave
+profile::dns::ns::fw_slave_zones:
   test02_mgmt:
     cidr: "172.28.32.0/24"
     origin: "32.28.172.in-addr.arpa"
