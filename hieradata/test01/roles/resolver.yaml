@@ -1,14 +1,13 @@
 ---
 # Public and internal zones
-profile::dns::ns::internal_zone: "test02.uhdc.no"
-profile::dns::ns::public_zone:   "test.iaas.uio.no"
+profile::dns::ns::internal_zone: "test01.uhdc.no"
+profile::dns::ns::public_zone:   "test.iaas.uib.no"
 
-# Temporary: Forward everything to UiO resolvers
+# Temporary: Forward everything to UiB resolvers
 profile::dns::ns::forward_everything: true
 profile::dns::ns::forwarders:
-  - "129.240.2.40"
-  - "129.240.2.27"
-  - "129.240.2.3"
+  - "129.177.6.54"
+  - "129.177.12.31"
 
 # Forward zones. Only zones that are "internal". Requests for records
 # in these zones will be forwarded to the authoritative DNS server
@@ -22,14 +21,14 @@ profile::dns::ns::forwarders:
 # in these zones will be forwarded to the authoritative DNS server
 profile::dns::ns::ptr_zones:
   mgmt:
-    cidr: "172.28.32.0/24"
-    origin: "32.28.172.in-addr.arpa"
+    cidr: "172.28.0.0/24"
+    origin: "0.28.172.in-addr.arpa"
   transport:
-    cidr: "172.30.32.0/24"
-    origin: "32.30.172.in-addr.arpa"
+    cidr: "172.30.0.0/24"
+    origin: "0.30.172.in-addr.arpa"
   public:
-    cidr: "10.100.200.0/24"
-    origin: "200.100.10.in-addr.arpa"
+    cidr: "129.177.31.64/27"
+    origin: "31.177.129.in-addr.arpa"
   ipv6:
-    cidr: "fd34::/7"
-    origin: "4.3.d.f.ip6.arpa"
+    cidr: "2001:700:200:916::/64"
+    origin: "6.1.9.0.0.0.2.0.0.0.7.0.1.0.0.2.ip6.arpa"

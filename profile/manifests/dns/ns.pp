@@ -13,8 +13,10 @@ class profile::dns::ns (
   $public_zone = {},
   $forward_everything = false,
   $forwarders = {},
-  $manual_zone_master = false,
-  $manual_zone_slave = false
+  $ns_master_ip_addresses = {},
+  $ns_slave_ip_addresses = {},
+  $hostmaster = {},
+  $ns_master = {}
   )
 {
   # Our forward zones
@@ -22,6 +24,10 @@ class profile::dns::ns (
 
   # Our reverse zones
   $reverse_zones = lookup('profile::dns::ns::ptr_zones', Hash, 'deep', {})
+
+  # Our slave zones
+  $fw_slave_zones = lookup('profile::dns::ns::fw_slave_zones', Hash, 'deep', {})
+  $ptr_slave_zones = lookup('profile::dns::ns::ptr_slave_zones', Hash, 'deep', {})
 
   # Make sure that bind is installed
   package { 'bind':
