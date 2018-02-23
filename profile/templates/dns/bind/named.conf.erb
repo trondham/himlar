@@ -84,6 +84,7 @@ zone "<%= values["origin"] %>" IN {
 <% end -%>
 };
 <% end -%>
+
 <% unless @fw_slave_zones.empty? %>
 <% @fw_slave_zones.each do |network, values| -%>
 # Forward zone for <%= network %>, <%= values["zone"] %> (slave)
@@ -98,7 +99,7 @@ zone "<%= values["zone"] %>" IN {
 <% end -%>
 <% unless @ptr_slave_zones.empty? %>
 <% @ptr_slave_zones.each do |network, values| -%>
-# Reverse (PTR) zone for <%= network %> network, <%= values["cidr"] %> (master)
+# Reverse (PTR) zone for <%= network %> network, <%= values["cidr"] %> (slave)
 zone "<%= values["origin"] %>" IN {
     type slave;
     file "<%= values["filename"] %>";
