@@ -112,11 +112,6 @@ class profile::dns::ns (
     create_resources('profile::dns::reverse_zone', $reverse_zones)
   }
 
-  # Create the manual zones (on master/slave)
-#  if $host_is_ns_master or $host_is_ns_slave {
-#    create_resources('profile::dns::forward_zone', $manual_zones)
-#  }
-
   # Open nameserver ports in the firewall
   if $manage_firewall {
     profile::firewall::rule { '001 dns incoming tcp':
