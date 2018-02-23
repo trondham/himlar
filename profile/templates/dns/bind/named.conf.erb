@@ -68,9 +68,9 @@ zone "<%= values["zone"] %>" IN {
     type master;
     file "<%= values["filename"] %>";
     allow-update { <%= @admin_mgmt_addr %>; };
-    <% unless @ns_slave_ip_addresses.empty? -%>
+<% unless @ns_slave_ip_addresses.empty? -%>
     also-notify { <% @ns_slave_ip_addresses.each do |slave| -%><%= slave %>; <% end -%>};
-    <% end -%>
+<% end -%>
 };
 <% end -%>
 <% @reverse_zones.each do |network, values| -%>
