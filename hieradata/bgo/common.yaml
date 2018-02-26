@@ -129,10 +129,9 @@ profile::network::services::dns_records:
     "116.%{hiera('reverse_mgmt')}":    "%{::location}-compute-08.%{hiera('domain_mgmt')}"
     # public IPv4
     '250.77.39.158':  'uh-api.iaas.uib.no'
-    '252.77.39.158':  'uh-access.iaas.uib.no'
-    '254.77.39.158':  'uh-dboard.iaas.uib.no'
     '251.77.39.158':  "ns.%{hiera('domain_public')}"
     '252.77.39.158':  "resolver.%{hiera('domain_public')}"
+    '254.77.39.158':  'uh-dboard.iaas.uib.no'
     # public IPv6
     '1.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.3.8.0.0.7.0.2.0.0.0.1.0.0.2.ip6.arpa':  "ns.%{hiera('domain_public')}"
     '2.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.3.8.0.0.7.0.2.0.0.0.1.0.0.2.ip6.arpa':  "resolver.%{hiera('domain_public')}"
