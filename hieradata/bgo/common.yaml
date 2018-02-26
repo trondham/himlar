@@ -44,7 +44,7 @@ netcfg_trp_rr:
 # DNS servers
 public__address__ns:           '158.39.77.251'
 public6__address__ns:          '2001:700:2:83ff::251'
-public__address__resolver_01:  '158.39.77.251'
+public__address__resolver_01:  '158.39.77.252'
 public6__address__resolver_01: '2001:700:2:83ff::252'
 
 #
