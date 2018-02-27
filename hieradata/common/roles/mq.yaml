@@ -55,7 +55,7 @@ profile::messaging::rabbitmq::users:
   designate:
     password: "%{hiera('designate::rabbit_password')}"
   ceilometer:
-    password: "%{hiera('ceilometer::rabbit_password')}"
+    password: "%{hiera('ceilometer_rabbit_password')}"
 
 #  glance:
 #    password: "%{hiera('glance::rabbit_password')}"

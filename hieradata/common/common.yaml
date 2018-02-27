@@ -82,6 +82,12 @@ allow_from_network:
   - '77.88.71.128/26'    # Kvantel (Simula/IFI project) NAT range
   - '77.88.125.0/24'     # Kvantel (Simula/IFI project)
   - '158.39.4.0/24'      # NorNett/UNINETT (Simula/IFI project)
+  - '134.60.0.0/16'      # RT 148995
+  - '13.81.50.208/32'    # RT 148995
+  - '91.240.70.5/32'     # RT 148995
+  - '94.177.197.140/32'  # RT 148995
+  - '5.249.145.169/32'   # RT 148995
+  - '93.186.254.223/32'  # RT 148995
 
 #
 # Default interfaces
@@ -126,6 +132,8 @@ service__address__metric:         "metric.%{hiera('domain_trp')}"
 service__address__ns:             "%{hiera('netcfg_trp_netpart')}.16"
 service__address__resolver_01:    "%{hiera('netcfg_trp_netpart')}.17"
 service__address__resolver_02:    "%{hiera('netcfg_trp_netpart')}.18"
+# notification transport url
+service__transport__url:          "rabbit://ceilometer:%{hiera('ceilometer_rabbit_password')}@%{hiera('service__address__rabbitmq_01')}:5672/ceilometer"
 
 #
 # Management (proxy and logger must be IP)
@@ -167,8 +175,6 @@ endpoint__metric__public:         "https://metric.api.%{hiera('domain_public')}:
 endpoint__object__admin:          "http://object.%{hiera('domain_trp')}:8080"
 endpoint__object__internal:       "http://object.%{hiera('domain_trp')}:8080"
 endpoint__object__public:         "https://object.api.%{hiera('domain_public')}:8080"
-endpoint__telemetry__admin:       "http://telemetry.%{hiera('domain_trp')}:8777"
-endpoint__telemetry__internal:    "http://telemetry.%{hiera('domain_trp')}:8777"
 
 #
 # DNS (merge of this and location)
@@ -249,7 +255,6 @@ profile::network::services::dns_records:
     "%{::location}-access-01.%{hiera('domain_trp')}":       "%{hiera('netcfg_trp_netpart')}.56"
     "%{::location}-metric-01.%{hiera('domain_trp')}":       "%{hiera('netcfg_trp_netpart')}.96"
     # trp api services
-    "telemetry.%{hiera('domain_trp')}":                     "%{hiera('netcfg_trp_netpart')}.86"
     "image.%{hiera('domain_trp')}":                         "%{hiera('netcfg_trp_netpart')}.86"
     "volume.%{hiera('domain_trp')}":                        "%{hiera('netcfg_trp_netpart')}.86"
     "compute.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_netpart')}.86"
