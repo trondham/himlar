@@ -9,13 +9,12 @@ profile::openstack::openrc::password:     "%{hiera('designate_api_password')}"
 profile::openstack::openrc::username:     'designate'
 profile::openstack::openrc::project_name: 'services'
 
-profile::openstack::designate::mdns_transport_addr: "%{hiera('service__address__mdns')}"
-profile::openstack::designate::ns1_transport_addr:  "%{hiera('service__address__ns_01')}"
-profile::openstack::designate::ns2_transport_addr:  "%{hiera('service__address__ns_02')}"
-profile::openstack::designate::ns1_public_addr:     "%{hiera('public__address__ns_01')}"
-profile::openstack::designate::ns2_public_addr:     "%{hiera('public__address__ns_02')}"
-profile::openstack::designate::ns1_public_name:     "%{hiera('public__name__ns_01')}"
-profile::openstack::designate::ns2_public_name:     "%{hiera('public__name__ns_02')}"
+profile::openstack::designate::mdns_transport_addr:   "%{hiera('service__address__mdns')}"
+profile::openstack::designate::ns_transport_addr:     "%{hiera('service__address__ns')}"
+profile::openstack::designate::ns_public_addr:        "%{hiera('public__address__ns')}"
+profile::openstack::designate::ns_public_name:        "%{hiera('public__name__ns')}"
+profile::openstack::designate::resolver1_public_addr: "%{hiera('public__address__resolver_01')}"
+profile::openstack::designate::resolver2_mgmt_addr:   "%{hiera('mgmt__address__resolver_02')}"
 
 # Add iptables rules
 profile::openstack::designate::manage_firewall: true
@@ -36,7 +35,7 @@ profile::base::common::packages:
 sudo::purge: false
 
 # Override repo "rdo-release"
-openstack_version: 'newton'
+openstack_version: 'ocata'
 
 # Enable extra yum repo
 profile::base::yumrepo::repo_hash:
@@ -59,10 +58,8 @@ profile::openstack::designate::my_pools:
   '794ccc2c-d751-44fe-b57f-8894c9f5c842':
     nameservers:
       - '00000000-0000-0000-0000-000000000001'
-      - '00000000-0000-0000-0000-000000000002'
     targets:
       - '10000000-0000-0000-0000-000000000001'
-      - '10000000-0000-0000-0000-000000000002'
 
 #---------------------------------------------------------------------
 # Nameservers
@@ -70,22 +67,14 @@ profile::openstack::designate::my_pools:
 profile::openstack::designate::my_nameservers:
   '00000000-0000-0000-0000-000000000001':
     port: 53
-    host: "%{hiera('service__address__ns_01')}"
-  '00000000-0000-0000-0000-000000000002':
-    port: 53
-    host: "%{hiera('service__address__ns_02')}"
+    host: "%{hiera('service__address__ns')}"
 
 #---------------------------------------------------------------------
 # Pool targets
 #---------------------------------------------------------------------
 profile::openstack::designate::my_targets:
   '10000000-0000-0000-0000-000000000001':
-    options: "rndc_host: %{hiera('service__address__ns_01')}, rndc_port: 953, rndc_config_file: /etc/rndc.conf, rndc_key_file: /etc/rndc.key, port: 53, host: %{hiera('service__address__ns_01')}"
-    masters:
-      - "%{hiera('service__address__designate_api')}:5354"
-    type: 'bind9'
-  '10000000-0000-0000-0000-000000000002':
-    options: "rndc_host: %{hiera('service__address__ns_02')}, rndc_port: 953, rndc_config_file: /etc/rndc.conf, rndc_key_file: /etc/rndc.key, port: 53, host: %{hiera('service__address__ns_02')}"
+    options: "rndc_host: %{hiera('service__address__ns')}, rndc_port: 953, rndc_config_file: /etc/rndc.conf, rndc_key_file: /etc/rndc.key, port: 53, host: %{hiera('service__address__ns')}"
     masters:
       - "%{hiera('service__address__designate_api')}:5354"
     type: 'bind9'

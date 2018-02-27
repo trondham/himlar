@@ -3,38 +3,24 @@
   description: Default Bind9 Pool
   attributes: {}
   nameservers:
-    - host: <%= @ns1_public_addr %>
+    - host: <%= @resolver1_public_addr %>
       port: 53
-    - host: <%= @ns2_public_addr %>
+    - host: <%= @resolver2_mgmt_addr %>
       port: 53
   ns_records:
-    - hostname: <%= @ns1_public_name %>.
+    - hostname: <%= @ns_public_name %>.
       priority: 1
-    - hostname: <%= @ns2_public_name %>.
-      priority: 2
   targets:
     - type: bind9
-      description: Bind9 Server ns-01
+      description: Bind9 Server ns
       masters:
         - host: <%= @mdns_transport_addr %>
           port: 5354
       options:
-        rndc_host: <%= @ns1_transport_addr %>
+        rndc_host: <%= @ns_transport_addr %>
         rndc_port: 953
         rndc_config_file: /etc/rndc.conf
         rndc_key_file: /etc/rndc.key
         port: 53
-        host: <%= @ns1_transport_addr %>
-    - type: bind9
-      description: Bind9 Server ns-02
-      masters:
-        - host: <%= @mdns_transport_addr %>
-          port: 5354
-      options:
-        rndc_host: <%= @ns2_transport_addr %>
-        rndc_port: 953
-        rndc_config_file: /etc/rndc.conf
-        rndc_key_file: /etc/rndc.key
-        port: 53
-        host: <%= @ns2_transport_addr %>
+        host: <%= @ns_transport_addr %>
   also_notifies: []

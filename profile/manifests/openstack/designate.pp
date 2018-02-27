@@ -4,12 +4,11 @@ class profile::openstack::designate (
   $my_pools = {},
   $my_targets = {},
   $mdns_transport_addr = {},
-  $ns1_transport_addr = {},
-  $ns2_transport_addr = {},
-  $ns1_public_addr = {},
-  $ns2_public_addr = {},
-  $ns1_public_name = {},
-  $ns2_public_name = {},
+  $ns_transport_addr = {},
+  $ns_public_addr = {},
+  $ns_public_name = {},
+  $resolver1_public_addr = {},
+  $resolver2_mgmt_addr = {},
   $manage_firewall = false,
 )
 {
