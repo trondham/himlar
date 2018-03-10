@@ -88,6 +88,10 @@ allow_from_network:
   - '94.177.197.140/32'  # RT 148995
   - '5.249.145.169/32'   # RT 148995
   - '93.186.254.223/32'  # RT 148995
+  - '213.144.5.149/32'   # RT 148995
+  - '213.144.5.150/32'   # RT 148995
+  - '213.144.5.151/32'   # RT 148995
+  - '78.137.101.179/32'  # RT 148995
 
 #
 # Default interfaces
@@ -171,7 +175,8 @@ endpoint__designate__internal:    "http://name.%{hiera('domain_trp')}:9001"
 endpoint__designate__public:      "https://designate.api.%{hiera('domain_public')}:9001"
 endpoint__metric__admin:          "http://metric.%{hiera('domain_trp')}:8041"
 endpoint__metric__internal:       "http://metric.%{hiera('domain_trp')}:8041"
-endpoint__metric__public:         "https://metric.api.%{hiera('domain_public')}:8041"
+endpoint__metric__public:         "http://metric.%{hiera('domain_trp')}:8041"   # FIXME når klart for å åpne opp
+#endpoint__metric__public:         "https://metric.api.%{hiera('domain_public')}:8041"
 endpoint__object__admin:          "http://object.%{hiera('domain_trp')}:8080"
 endpoint__object__internal:       "http://object.%{hiera('domain_trp')}:8080"
 endpoint__object__public:         "https://object.api.%{hiera('domain_public')}:8080"

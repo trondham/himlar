@@ -4,8 +4,10 @@ include:
     - profile::openstack::dashboard
     - profile::logging::rsyslog::client
     - profile::webserver::apache
+    - profile::openstack::cache
 
 profile::base::common::packages:
+  'MySQL-python.x86_64': {}
   'bash-completion': {}
   'bash-completion-extras': {}
   'jq': {}
@@ -18,6 +20,7 @@ profile::openstack::dashboard::manage_firewall:        true
 profile::openstack::dashboard::manage_overrides:       true
 profile::openstack::dashboard::enable_pwd_retrieval:   true
 profile::openstack::dashboard::change_region_selector: true
+profile::openstack::dashboard::change_login_footer:    true
 profile::openstack::dashboard::image_upload_mode:     'direct'
 profile::webserver::apache::mods_enable:
   - status
@@ -90,6 +93,15 @@ profile::openstack::dashboard::policies:
 #    key:        'volume_extension:volume_actions:upload_image'
 #    value:      'role:admin'
 #    file_path:  '/etc/openstack-dashboard/cinder_policy.json'
+
+# Cache memory usage
+memcached::max_memory: '40%'
+
+# Session database
+profile::openstack::dashboard::database:
+  database:       'horizon'
+  password_hash:  "%{hiera('horizon_db_password')}"
+  host:           "%{hiera('service__address__mysql')}"
 
 profile::base::selinux::boolean:
   'httpd_can_network_connect':
