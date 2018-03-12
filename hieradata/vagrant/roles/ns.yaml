@@ -15,6 +15,9 @@ profile::dns::ns::fw_zones:
       'ns': "%{hiera('public__address__ns')}"
     ns_aaaa_records:
       'ns': "%{hiera('public6__address__ns')}"
+    delegations:
+      'osl': [ 'ns0.uh-iaas.no', 'ns1.uh-iaas.no', ]
+      'bgo': [ 'ns1.uh-iaas.no', 'ns0.uh-iaas.no', ]
 
 # Reverse zones, for which the name server is authoritative
 profile::dns::ns::ptr_zones:
