@@ -4,10 +4,14 @@ class profile::base::dell
 {
   if fact('dmi.product.name') =~ '^PowerEdge [RTM][1-9][1-4]0.*' {
  
+    # Install Dell yum repos
     $repo_hash = lookup('profile::base::dell::repo_hash', Hash, 'deep', {})
-    class { '::openstack_extras::repo::redhat::redhat':
-      repo_hash => $repo_hash
-    }
+    create_resources('yumrepo', $repo_hash)
+
+    # Install Dell packages
+    $packages = lookup('profile::base::dell::packages', Hash, 'deep', {})
+    create_resources('profile::base::package', $packages)
+
 
     # install dell repos
     # install dell gpg keys
