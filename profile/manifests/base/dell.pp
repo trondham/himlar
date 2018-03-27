@@ -4,13 +4,23 @@ class profile::base::dell
 {
   if fact('dmi.product.name') =~ '^PowerEdge [RTM][1-9][1-4]0.*' {
  
-    # Install Dell yum repos
+    # find Dell yum repos
     $repo_hash = lookup('profile::base::dell::repo_hash', Hash, 'deep', {})
-    create_resources('yumrepo', $repo_hash)
 
-    # Install Dell packages
+    # get Dell packages
     $packages = lookup('profile::base::dell::packages', Hash, 'deep', {})
-    create_resources('profile::base::package', $packages)
+
+    create_resources('yumrepo', $repo_hash) ->
+    create_resources('profile::base::package', $packages) ->
+    exec { "start omsa":
+      command => "/opt/dell/srvadmin/sbin/srvadmin-services.sh start",
+    } ->
+    exec { "enable snmp":
+      command => "/etc/init.d/dataeng enablesnmp",
+    } ->
+    exec { "restart snmpd":
+      command => "/sbin/systemctl -q restart snmpd.service",
+    }
 
 
     # install dell repos
