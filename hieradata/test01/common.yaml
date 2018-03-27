@@ -27,8 +27,10 @@ netcfg_trp_netmask:     '255.255.255.0'
 netcfg_trp_netmask6:    '64'
 netcfg_live_netpart:    '172.30.0'
 netcfg_live_netmask:    '255.255.255.0'
-netcfg_dns_server1:     '172.28.0.12'
-netcfg_dns_server2:     '129.177.12.31'
+#netcfg_dns_server1:     '172.28.0.12'
+#netcfg_dns_server2:     '129.177.12.31'
+netcfg_dns_server1:     '172.28.0.18'
+netcfg_dns_server2:     '172.28.0.17'
 netcfg_dns_search:      "%{hiera('domain_mgmt')} %{hiera('domain_trp')}"
 netcfg_priv_gateway:    '172.30.0.26'
 netcfg_priv_network:    '10.0.250.0/24'
@@ -53,7 +55,7 @@ profile::network::services::dns_records:
     "%{::location}-controller-04.%{hiera('domain_mgmt')}":  "%{hiera('netcfg_mgmt_netpart')}.111"
     "%{::location}-compute-04.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.112"
     # public
-    "ns.%{hiera('domain_public')}":                         '129.177.31.117'
+    "ns.%{hiera('domain_frontend')}":                       '129.177.31.117'
     "resolver.%{hiera('domain_public')}":                   '129.177.31.118'
     "api.%{hiera('domain_public')}":                        '129.177.31.122'
     "identity.api.%{hiera('domain_public')}":               '129.177.31.122'
@@ -66,7 +68,7 @@ profile::network::services::dns_records:
     "console.%{hiera('domain_public')}":                    '129.177.31.122' #125
     "dashboard.%{hiera('domain_public')}":                  '129.177.31.126'
   AAAA:
-    "ns.%{hiera('domain_public')}":       '2001:700:200:916::3f17'
+    "ns.%{hiera('domain_frontend')}":     '2001:700:200:916::3f17'
     "resolver.%{hiera('domain_public')}": '2001:700:200:916::3f18'
   PTR:
     # mgmt
@@ -116,12 +118,12 @@ profile::network::services::dns_records:
     "115.%{hiera('reverse_mgmt')}":    "%{::location}-compute-07.%{hiera('domain_mgmt')}"
     "116.%{hiera('reverse_mgmt')}":    "%{::location}-compute-08.%{hiera('domain_mgmt')}"
     # public IPv4
-    "117.%{hiera('reverse_public')}":  "ns.%{hiera('domain_public')}"
+    "117.%{hiera('reverse_public')}":  "ns.%{hiera('domain_frontend')}"
     "118.%{hiera('reverse_public')}":  "resolver.%{hiera('domain_public')}"
     "122.%{hiera('reverse_public')}":  "api.%{hiera('domain_public')}"
     "126.%{hiera('reverse_public')}":  "dashboard.%{hiera('domain_frontend')}"
     # public IPv6
-    "7.1.f.3.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "ns.%{hiera('domain_public')}"
+    "7.1.f.3.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "ns.%{hiera('domain_frontend')}"
     "8.1.f.3.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "resolver.%{hiera('domain_public')}"
 
 
@@ -129,13 +131,17 @@ profile::network::services::dns_options:
   CNAME:
     default:
       ttl: 3600
-      keyfile: "/etc/rndc-%{location}.key"
-      server: 'alfalfa.uib.no'
+      keyfile: "/etc/rndc-admin.key"
+      server: "%{hiera('netcfg_mgmt_netpart')}.16"
+#      keyfile: "/etc/rndc-%{location}.key"
+#      server: 'alfalfa.uib.no'
   A:
     default:
       ttl: 3600
-      keyfile: "/etc/rndc-%{location}.key"
-      server: 'alfalfa.uib.no'
+      keyfile: "/etc/rndc-admin.key"
+      server: "%{hiera('netcfg_mgmt_netpart')}.16"
+#      keyfile: "/etc/rndc-%{location}.key"
+#      server: 'alfalfa.uib.no'
   AAAA:
     default:
       ttl: 3600
@@ -200,8 +206,8 @@ profile::openstack::resource::subnets:
       - 'start=129.177.31.66,end=129.177.31.94'
     gateway_ip: '129.177.31.65'
     dns_nameservers:
+      - '129.177.31.118'
       - '129.177.6.54'
-      - '129.177.12.31'
     network_name: 'dualStack'
     tenant_name: 'openstack'
   private1_IPv4:
@@ -212,8 +218,8 @@ profile::openstack::resource::subnets:
       - 'start=10.0.250.10,end=10.0.250.250'
     gateway_ip: '10.0.250.1'
     dns_nameservers:
+      - '129.177.31.118'
       - '129.177.6.54'
-      - '129.177.12.31'
     network_name: 'IPv6'
     tenant_name: 'openstack'
   public1_ipv6:
@@ -224,6 +230,7 @@ profile::openstack::resource::subnets:
       - 'start=2001:700:200:916::1000,end=2001:700:200:916::3eff'
     gateway_ip: '2001:700:200:916::1'
     dns_nameservers:
+      - '2001:700:200:916::3f18'
       - '2001:700:200:6::a1f:a1fa'
     network_name: 'IPv6'
     tenant_name: 'openstack'
@@ -235,6 +242,7 @@ profile::openstack::resource::subnets:
       - 'start=2001:700:200:915::2000,end=2001:700:200:915::2eff'
     gateway_ip: '2001:700:200:915::1'
     dns_nameservers:
+      - '2001:700:200:916::3f18'
       - '2001:700:200:6::a1f:a1fa'
     network_name: 'dualStack'
     tenant_name: 'openstack'
@@ -246,7 +254,7 @@ profile::openstack::resource::subnets:
       - 'start=129.177.31.119,end=129.177.31.120'
     gateway_ip: '129.177.31.97'
     dns_nameservers:
+      - '129.177.31.118'
       - '129.177.6.54'
-      - '129.177.12.31'
     network_name: 'imagebuilder'
     tenant_name: 'imagebuilder'

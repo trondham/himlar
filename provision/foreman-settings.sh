@@ -104,7 +104,7 @@ common_config()
 
   # Sync our custom provision templates
   /sbin/foreman-rake templates:sync \
-    repo="https://github.com/norcams/community-templates.git" branch="puppet4" associate="always"
+    repo="https://github.com/norcams/community-templates.git" branch="norcams" associate="always"
   # Save template ids
   norcams_provision_id=$(/bin/hammer --csv template list --per-page 1000 | grep 'norcams Kickstart default' | cut -d, -f1)
   norcams_pxelinux_id=$(/bin/hammer --csv template list --per-page 1000 | grep 'norcams PXELinux default' | cut -d, -f1)
@@ -115,18 +115,19 @@ common_config()
 
   # Create and update OS
   /bin/hammer --csv os list --per-page 1000 | grep 'CentOS 7' || /bin/hammer os create --name CentOS --major 7 || true
-  centos_os=$(/bin/hammer --csv os list --per-page 1000 | grep 'CentOS 7' | cut -d, -f1)
-  /bin/hammer os update --id $centos_os --name CentOS --major 7\
-    --description "CentOS 7.4.1708" \
-    --family Redhat \
-    --architecture-ids 1 \
-    --medium-ids ${medium_id_2} \
-    --partition-table-ids $norcams_ptable_id
-  # Set default Kickstart and PXELinux templates and associate with os
-  /bin/hammer template update --id $norcams_provision_id --operatingsystem-ids $centos_os
-  /bin/hammer template update --id $norcams_pxelinux_id --operatingsystem-ids $centos_os
-  /bin/hammer os set-default-template --id $centos_os --config-template-id $norcams_provision_id
-  /bin/hammer os set-default-template --id $centos_os --config-template-id $norcams_pxelinux_id
+  for centos_os in $(/bin/hammer --csv os list --per-page 1000 | grep 'CentOS 7' | cut -d, -f1); do
+    /bin/hammer os update --id $centos_os --name CentOS --major 7\
+      --description "CentOS 7" \
+      --family Redhat \
+      --architecture-ids 1 \
+      --medium-ids ${medium_id_2} \
+      --partition-table-ids $norcams_ptable_id
+    # Set default Kickstart and PXELinux templates and associate with os
+    /bin/hammer template update --id $norcams_provision_id --operatingsystem-ids $centos_os
+    /bin/hammer template update --id $norcams_pxelinux_id --operatingsystem-ids $centos_os
+    /bin/hammer os set-default-template --id $centos_os --config-template-id $norcams_provision_id
+    /bin/hammer os set-default-template --id $centos_os --config-template-id $norcams_pxelinux_id
+  done
 
   # Create Puppet environment
   /bin/hammer environment create --name production || true
