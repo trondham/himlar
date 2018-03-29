@@ -21,12 +21,6 @@ designate::rabbit_hosts:
 #---------------------------------------------------------------------
 # Authentication
 #---------------------------------------------------------------------
-#designate::keystone::auth::password:     "%{hiera('designate_api_password')}"
-#designate::keystone::auth::region:       "%{location}"
-#designate::keystone::auth::public_url:   "%{hiera('endpoint__designate__public')}"
-#designate::keystone::auth::internal_url: "%{hiera('endpoint__designate__internal')}"
-#designate::keystone::auth::admin_url:    "%{hiera('endpoint__designate__admin')}"
-
 designate::keystone::authtoken::password:  "%{hiera('designate_api_password')}"
 designate::keystone::authtoken::auth_url:  "http://identity.%{hiera('domain_trp')}:35357"
 designate::keystone::authtoken::auth_uri:  "%{hiera('endpoint__designate__internal')}"
@@ -34,9 +28,6 @@ designate::keystone::authtoken::auth_uri:  "%{hiera('endpoint__designate__intern
 #---------------------------------------------------------------------
 # Central
 #---------------------------------------------------------------------
-designate::central::package_ensure:             'present'
-designate::central::enabled:                    true
-designate::central::service_ensure:             'running'
 designate::central::backend_driver:             'bind9'
 designate::central::managed_resource_email:     'iaas-core@usit.uio.no'
 designate::central::managed_resource_tenant_id: 'openstack'
@@ -45,9 +36,6 @@ designate::central::min_ttl:                    '300'
 #---------------------------------------------------------------------
 # API
 #---------------------------------------------------------------------
-designate::api::package_ensure:    'present'
-designate::api::enabled:           true
-designate::api::service_ensure:    'running'
 designate::api::auth_strategy:     'keystone'
 designate::api::keystone_host:     "identity.%{hiera('domain_trp')}"
 designate::api::keystone_port:     '35357'
@@ -62,8 +50,7 @@ designate::api::enabled_extensions_v2:
   - 'quotas'
   - 'reports'
 # needs to be '0.0.0.0' for it to bind to localhost as well
-designate::api::api_host:          "0.0.0.0"
-designate::api::api_port:          '9001'
+designate::api::listen:            "0.0.0.0:9001"
 designate::api::api_base_uri:      "\'http://%{hiera('service__address__designate_api')}:9001/\'"
 
 #---------------------------------------------------------------------
@@ -77,16 +64,16 @@ designate::db::database_max_retries: "-1"
 #---------------------------------------------------------------------
 # Pool Manager
 #---------------------------------------------------------------------
-designate::pool_manager::package_ensure: 'present'
-designate::pool_manager::enabled: true
-designate::pool_manager::service_ensure: 'running'
-designate::pool_manager::pool_id: '794ccc2c-d751-44fe-b57f-8894c9f5c842'
+#designate::pool_manager::package_ensure: 'present'
+#designate::pool_manager::enabled: true
+#designate::pool_manager::service_ensure: 'running'
+#designate::pool_manager::pool_id: '794ccc2c-d751-44fe-b57f-8894c9f5c842'
 
 #---------------------------------------------------------------------
 # Pool Manager Cache
 #---------------------------------------------------------------------
-designate::pool_manager_cache::sqlalchemy::connection: "mysql://designate:%{hiera('designate::db::mysql::password')}@%{hiera('service__address__mysql')}/designate_pool_manager"
-designate::pool_manager_cache::sqlalchemy::max_retries: "-1"
+#designate::pool_manager_cache::sqlalchemy::connection: "mysql://designate:%{hiera('designate::db::mysql::password')}@%{hiera('service__address__mysql')}/designate_pool_manager"
+#designate::pool_manager_cache::sqlalchemy::max_retries: "-1"
 #designate::pool_manager_cache::memcache::memcached_servers:
 #  - "127.0.0.1"
 
@@ -94,21 +81,25 @@ designate::pool_manager_cache::sqlalchemy::max_retries: "-1"
 #---------------------------------------------------------------------
 # mDNS
 #---------------------------------------------------------------------
-designate::mdns::package_ensure: 'present'
-designate::mdns::enabled: true
-designate::mdns::service_ensure: 'running'
-designate::mdns::host: '0.0.0.0'
+# use defaults
 
 #---------------------------------------------------------------------
 # Sink
 #---------------------------------------------------------------------
-designate::sink::package_ensure: 'present'
-designate::sink::enabled: true
-designate::sink::service_ensure: 'running'
 designate::sink::enabled_notification_handlers:
   - "nova_fixed"
 
 #---------------------------------------------------------------------
+# Producer
+#---------------------------------------------------------------------
+# use defaults
+
+#---------------------------------------------------------------------
+# Worker
+#---------------------------------------------------------------------
+# use defaults
+
+#---------------------------------------------------------------------
 # Bind9 backend
 #---------------------------------------------------------------------
-designate::backend::bind9::rndc_host: "%{hiera('service__address__ns_01')}"
+designate::backend::bind9::rndc_host: "%{hiera('service__address__ns')}"
