@@ -18,10 +18,8 @@ class profile::openstack::designate (
   include ::designate::central
   include ::designate::mdns
   include ::designate::config
-  #include ::designate::sink
-  #include ::designate::pool_manager
-  include ::designate::worker
-  include ::designate::producer
+  include ::designate::sink
+  include ::designate::pool_manager
 
   class { selinux:
     mode => 'enforcing',
