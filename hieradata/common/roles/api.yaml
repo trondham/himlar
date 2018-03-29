@@ -235,7 +235,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
   name:
     listening_service:  'bk_name'
     server_names:       ['%{::location}-name-01']
-    ipaddresses:        ["%{hiera('netcfg_trp_netpart')}.115"]
+    ipaddresses:        ["%{hiera('netcfg_trp_netpart')}.97"]
     ports:              '9001'
     options:            'check'
   console:
