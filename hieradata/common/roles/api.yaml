@@ -28,7 +28,7 @@ profile::base::network::manage_dummy:                               true
 profile::highavailability::loadbalancing::haproxy::manage_haproxy:  true
 profile::highavailability::loadbalancing::haproxy::manage_firewall: true
 profile::highavailability::loadbalancing::haproxy::firewall_ports:
-  public:    ['5000', '8041', '8774', '8776', '9292', '9696', '6082', '8080']
+  public:    ['5000', '8041', '8774', '8776', '9292', '9696', '6082', '8080', '9001']
   internal:  ['5000', '8041', '8774', '8776', '9292', '9696', '35357', '8080', '9001']
   mgmt:      ['9000']
   limited:   ['80', '443']
