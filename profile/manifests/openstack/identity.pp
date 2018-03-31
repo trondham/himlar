@@ -78,7 +78,7 @@ class profile::openstack::identity (
   }
 
   if $designate_enabled {
-    include ::designate::keystone::auth
+    include ::designate::keystone::authtoken
   }
 
   if $gnocchi_enabled {
