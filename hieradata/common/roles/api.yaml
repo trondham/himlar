@@ -66,6 +66,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
       - "volume.api.%{hiera('domain_public')}:8776":        'bk_volume'
       - "image.api.%{hiera('domain_public')}:9292":         'bk_image'
       - "object.api.%{hiera('domain_public')}:8080":        'bk_object'
+      - "designate.api.%{hiera('domain_public')}:9001":     'bk_name'
       - "status.%{hiera('domain_frontend')}":               'bk_status'
       - "console.%{hiera('domain_public')}:6082":           'bk_console'
       - "access.%{hiera('domain_frontend')}":               'bk_access'
@@ -115,6 +116,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_frontends:
       "%{::ipaddress_trp1}:9292":  [] # image
       "%{::ipaddress_trp1}:9696":  [] # neutron
       "%{::ipaddress_trp1}:8080":  [] # object
+      "%{::ipaddress_trp1}:9001":  [] # designate
     options:
       - capture:        'request header Host len 64' #for debug
       - use_backend:    '%[req.hdr(host),lower,map(/etc/haproxy/internal_domains.map)]'
