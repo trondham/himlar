@@ -87,8 +87,6 @@ profile::messaging::rabbitmq::user_permissions:
     read_permission:      '.*'
   'designate@nova':
     read_permission:      '.*'
-    configure_permission: '.*'
-    write_permission:     '.*'
   'ceilometer@ceilometer':
     configure_permission: '.*'
     write_permission:     '.*'
