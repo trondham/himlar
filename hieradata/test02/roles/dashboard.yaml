@@ -15,4 +15,4 @@ profile::base::lvm::logical_volume:
     mountpath:    "/image-upload"
 
 # Enable designate plugin
-profile::openstack::dashboard::enable_designate: true
+#profile::openstack::dashboard::enable_designate: true
