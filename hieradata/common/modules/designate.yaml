@@ -10,6 +10,7 @@ designate::use_syslog: true
 #---------------------------------------------------------------------
 # RabbitMQ
 #---------------------------------------------------------------------
+designate::default_transport_url: "rabbit://designate:%{hiera('designate::rabbit_password')}@%{hiera('service__address__rabbitmq_01')}:5672/nova"
 designate::notification_transport_url: "rabbit://designate:%{hiera('designate::rabbit_password')}@%{hiera('service__address__rabbitmq_01')}:5672/nova"
 
 #designate::rabbit_userid:       "designate"
