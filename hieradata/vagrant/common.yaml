@@ -53,11 +53,6 @@ public__address__resolver_01:  "%{hiera('netcfg_public_netpart')}.252"
 public6__address__resolver_01: "%{hiera('netcfg_public_netpart6')}::252"
 
 #
-# Endpoints (including protocole)
-#
-endpoint__designate__public:      "http://designate.api.%{hiera('domain_public')}:9001"
-
-#
 # Default interfaces
 #
 named_interfaces::config:
