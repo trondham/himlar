@@ -65,7 +65,7 @@ designate::api::api_base_uri:      "\'http://%{hiera('service__address__designat
 #---------------------------------------------------------------------
 # Database
 #---------------------------------------------------------------------
-designate::db::database_connection: "mysql\\+pymsql://designate:%{hiera('designate::db::mysql::password')}@%{hiera('service__address__mysql')}/designate"
+designate::db::database_connection: "mysql+pymysql://designate:%{hiera('designate::db::mysql::password')}@%{hiera('service__address__mysql')}/designate"
 designate::db::mysql::host: "%{hiera('service__address__mysql')}"
 designate::db::sync_db: true
 designate::db::database_max_retries: "-1"
