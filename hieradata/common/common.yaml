@@ -172,7 +172,7 @@ endpoint__network__internal:      "http://network.%{hiera('domain_trp')}:9696"
 endpoint__network__public:        "https://network.api.%{hiera('domain_public')}:9696"
 endpoint__designate__admin:       "http://name.%{hiera('domain_trp')}:9001"
 endpoint__designate__internal:    "http://name.%{hiera('domain_trp')}:9001"
-endpoint__designate__public:      "http://designate.api.%{hiera('domain_public')}:9001"
+endpoint__designate__public:      "https://designate.api.%{hiera('domain_public')}:9001"
 endpoint__metric__admin:          "http://metric.%{hiera('domain_trp')}:8041"
 endpoint__metric__internal:       "http://metric.%{hiera('domain_trp')}:8041"
 endpoint__metric__public:         "http://metric.%{hiera('domain_trp')}:8041"   # FIXME når klart for å åpne opp
