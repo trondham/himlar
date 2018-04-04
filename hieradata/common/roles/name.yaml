@@ -4,6 +4,11 @@ include:
     - profile::openstack::designate
     - profile::logging::rsyslog::client
     - profile::openstack::openrc
+    - profile::dns::rndc_key
+
+profile::dns::rndc_key::create_admin_key:    true
+profile::dns::rndc_key::create_mdns_key:     true
+profile::dns::rndc_key::host_is_bind_server: false
 
 profile::openstack::openrc::password:     "%{hiera('designate_api_password')}"
 profile::openstack::openrc::username:     'designate'
