@@ -40,7 +40,7 @@ class profile::dns::rndc_key (
       }
     }
     else {
-      file { '/etc/rndc-mdns.key':
+      file { '/etc/rndc.key':
         content => template("${module_name}/dns/bind/rndc-mdns.key.erb"),
         mode    => '0640',
         owner   => 'root',
