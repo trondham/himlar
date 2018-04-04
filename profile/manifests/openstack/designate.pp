@@ -61,14 +61,6 @@ class profile::openstack::designate (
     group        => 'named',
     require      => Package['bind'],
   }
-  file { '/etc/rndc.key':
-    source  => "puppet:///modules/${module_name}/openstack/designate/rndc.key",
-    ensure  => file,
-    mode    => '0600',
-    owner   => 'named',
-    group   => 'named',
-    require => Package['bind'],
-  }
 
   if $manage_firewall {
     profile::firewall::rule { '001 designate incoming':
