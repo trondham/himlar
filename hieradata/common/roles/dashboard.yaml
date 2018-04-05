@@ -11,6 +11,8 @@ profile::base::common::packages:
   'bash-completion': {}
   'bash-completion-extras': {}
   'jq': {}
+  'python2-designateclient': {}
+  'designate-dashboard': {}
 
 profile::base::selinux::manage_selinux:                true
 profile::base::network::manage_dummy:                  true
@@ -52,9 +54,6 @@ profile::openstack::dashboard::change_uploaddir: true
 #    
 #      python setup.py bdist_rpm
 #
-profile::base::common::packages:
-  'python2-designateclient': {}
-  'designate-dashboard': {}
 
 # Override repo "rdo-release"
 #openstack_version: 'newton'
