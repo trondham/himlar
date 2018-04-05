@@ -7,8 +7,6 @@ class profile::openstack::designate (
   $ns_transport_addr = {},
   $ns_public_addr = {},
   $ns_public_name = {},
-  $resolver1_public_addr = {},
-  $resolver2_mgmt_addr = {},
   $manage_firewall = false,
 )
 {

@@ -3,9 +3,7 @@
   description: Default Bind9 Pool
   attributes: {}
   nameservers:
-    - host: <%= @resolver1_public_addr %>
-      port: 53
-    - host: <%= @resolver2_mgmt_addr %>
+    - host: <%= @ns_public_addr %>
       port: 53
   ns_records:
     - hostname: <%= @ns_public_name %>.
