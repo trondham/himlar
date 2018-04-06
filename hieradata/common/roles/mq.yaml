@@ -109,6 +109,8 @@ profile::messaging::rabbitmq::user_permissions:
     read_permission:      '.*'
   'local@ceilometer':
     read_permission:      '.*'
+  'local@designate':
+    read_permission:      '.*'
 
 profile::messaging::rabbitmq::policy:
   ha-all@nova:
