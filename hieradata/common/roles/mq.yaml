@@ -66,6 +66,7 @@ profile::messaging::rabbitmq::vhosts:
   neutron: {}
   sensu: {}
   ceilometer: {}
+  designate: {}
 #  glance: {}
 
 profile::messaging::rabbitmq::user_permissions:
@@ -85,7 +86,9 @@ profile::messaging::rabbitmq::user_permissions:
     configure_permission: '.*'
     write_permission:     '.*'
     read_permission:      '.*'
-  'designate@ceilometer':
+  'designate@designate':
+    configure_permission: '.*'
+    write_permission:     '.*'
     read_permission:      '.*'
   'ceilometer@ceilometer':
     configure_permission: '.*'
