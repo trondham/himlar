@@ -14,7 +14,8 @@ designate::default_transport_url:
   "rabbit://designate:%{hiera('designate::rabbit_password')}@%{hiera('service__address__rabbitmq_01')}:5672,
   designate:%{hiera('designate::rabbit_password')}@%{hiera('service__address__rabbitmq_02')}:5672,
   designate:%{hiera('designate::rabbit_password')}@%{hiera('service__address__rabbitmq_02')}:5672/ceilometer"
-designate::notification_transport_url: "rabbit://designate:%{hiera('designate::rabbit_password')}@%{hiera('service__address__rabbitmq_01')}:5672/ceilometer"
+designate::notification_transport_url: "%{hiera('service__transport__url')}"
+designate::notification_transport_url: #"rabbit://designate:%{hiera('designate::rabbit_password')}@%{hiera('service__address__rabbitmq_01')}:5672/ceilometer"
 
 #designate::rabbit_userid:       "designate"
 #designate::rabbit_virtual_host: "nova"
