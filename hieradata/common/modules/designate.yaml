@@ -73,7 +73,7 @@ designate::pool_manager::pool_id: '794ccc2c-d751-44fe-b57f-8894c9f5c842'
 #---------------------------------------------------------------------
 # Pool Manager Cache
 #---------------------------------------------------------------------
-designate::pool_manager_cache::sqlalchemy::connection: "mysql://designate:%{hiera('designate::db::mysql::password')}@%{hiera('service__address__mysql')}/designate_pool_manager"
+designate::pool_manager_cache::sqlalchemy::connection: "mysql+pymysql://designate:%{hiera('designate::db::mysql::password')}@%{hiera('service__address__mysql')}/designate_pool_manager"
 designate::pool_manager_cache::sqlalchemy::max_retries: "-1"
 #designate::pool_manager_cache::memcache::memcached_servers:
 #  - "127.0.0.1"
