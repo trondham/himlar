@@ -32,7 +32,6 @@ profile::base::common::packages:
   'python2-oslo-reports': {}
   'python2-suds': {}
   'python-tooz': {}
-  'memcached': {}
   'openstack-utils': {}
 
 # Don't purge sudo stuff
