@@ -18,6 +18,7 @@ class profile::openstack::designate (
   include ::designate::config
   include ::designate::sink
   include ::designate::pool_manager
+  include ::designate::pool_manager_cache::memcache
 
   class { selinux:
     mode => 'enforcing',
