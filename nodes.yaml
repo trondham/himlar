@@ -98,7 +98,7 @@ nodesets:
       hostid:     "01"
     - role:       "resolver"
       hostid:     "02"
-    - role:       "name"
+    - role:       "dns"
     - role:       "mq"
     - role:       "api"
     - role:       "identity"
@@ -108,7 +108,7 @@ nodesets:
     - role:       "volume"
     - role:       "dashboard"
     - role:       "compute"
-      memory:     4096 
+      memory:     4096
       cpus:       2
 
 networks:

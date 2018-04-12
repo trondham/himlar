@@ -66,7 +66,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
       - "volume.api.%{hiera('domain_public')}:8776":        'bk_volume'
       - "image.api.%{hiera('domain_public')}:9292":         'bk_image'
       - "object.api.%{hiera('domain_public')}:8080":        'bk_object'
-      - "designate.api.%{hiera('domain_public')}:9001":     'bk_name'
+      - "dns.api.%{hiera('domain_public')}:9001":           'bk_dns'
       - "status.%{hiera('domain_frontend')}":               'bk_status'
       - "console.%{hiera('domain_public')}:6082":           'bk_console'
       - "access.%{hiera('domain_frontend')}":               'bk_access'
@@ -81,7 +81,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
       - "compute.%{hiera('domain_trp')}:8774":          'bk_compute'
       - "volume.%{hiera('domain_trp')}:8776":           'bk_volume'
       - "image.%{hiera('domain_trp')}:9292":            'bk_image'
-      - "name.%{hiera('domain_trp')}:9001":             'bk_name'
+      - "dns.%{hiera('domain_trp')}:9001":              'bk_dns'
       - "object.%{hiera('domain_trp')}:8080":           'bk_object'
 
 # HAproxy backends: public, internal and haproxy monitor
@@ -158,7 +158,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_backends:
     options:
       - option:       'httplog'
       - errorfile:    '503 /etc/haproxy/error.api.http'
-  bk_name:
+  bk_dns:
     options:
       - option:       'httplog'
       - errorfile:    '503 /etc/haproxy/error.api.http'
@@ -238,9 +238,9 @@ profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
     ipaddresses:        ["%{hiera('netcfg_trp_netpart')}.21"]
     ports:              '8080'
     options:            'check'
-  name:
-    listening_service:  'bk_name'
-    server_names:       ['%{::location}-name-01']
+  dns:
+    listening_service:  'bk_dns'
+    server_names:       ['%{::location}-dns-01']
     ipaddresses:        ["%{hiera('netcfg_trp_netpart')}.97"]
     ports:              '9001'
     options:            'check'
@@ -291,7 +291,7 @@ profile::base::selinux::ports:
     seltype:  'http_port_t'
     protocol: 'tcp'
     port:     6082
-  name-http:
+  dns-http:
     seltype:  'http_port_t'
     protocol: 'tcp'
     port:     9001
