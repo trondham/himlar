@@ -20,8 +20,8 @@ fi
 designate-manage pool update --file /etc/designate/pools.yaml
 
 # Tenant ID to own all managed resources - like auto-created records etc.
-OPENSTACK_TENANT_ID=$(openstack project show openstack -c id -f value)
-openstack-config --set /etc/designate/designate.conf service:central managed_resource_tenant_id $OPENSTACK_TENANT_ID
+#OPENSTACK_TENANT_ID=$(openstack project show openstack -c id -f value)
+#openstack-config --set /etc/designate/designate.conf service:central managed_resource_tenant_id $OPENSTACK_TENANT_ID
 
 # Create our zone
 openstack zone create ${ZONE_NAME}. --email support@uh-iaas.no
