@@ -46,9 +46,9 @@ profile::base::yumrepo::repo_hash:
     ensure: present
 
 # Extra config
-designate::config::designate_config:
-  handler:nova_fixed/formatv4:
-    value: "'vm-%(octet0)s-%(octet1)s-%(octet2)s-%(octet3)s.customer.%(zone)s'"
+#designate::config::designate_config:
+#  handler:nova_fixed/formatv4:
+#    value: "'vm-%(octet0)s-%(octet1)s-%(octet2)s-%(octet3)s.customer.%(zone)s'"
 #  service:api/enabled_extensions_v1:
 #    value: 'diagnostics, quotas, reports, sync, touch'
 #  service:api/enabled_extensions_v2:
