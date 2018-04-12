@@ -19,11 +19,11 @@ designate::notification_transport_url: "%{hiera('service__transport__url')}"
 #---------------------------------------------------------------------
 # Authentication
 #---------------------------------------------------------------------
-designate::keystone::auth::region: "%{hiera('location_environment')}"
-designate::keystone::auth::public_url: "%{hiera('endpoint__designate__public')}"
-designate::keystone::auth::admin_url: "%{hiera('endpoint__designate__admin')}"
+designate::keystone::auth::region:       "%{hiera('location_environment')}"
+designate::keystone::auth::public_url:   "%{hiera('endpoint__designate__public')}"
+designate::keystone::auth::admin_url:    "%{hiera('endpoint__designate__admin')}"
 designate::keystone::auth::internal_url: "%{hiera('endpoint__designate__internal')}"
-designate::keystone::auth::password:  "%{hiera('designate_api_password')}"
+designate::keystone::auth::password:     "%{hiera('designate_api_password')}"
 
 designate::keystone::authtoken::password:  "%{hiera('designate_api_password')}"
 designate::keystone::authtoken::auth_url:  "%{hiera('endpoint__identity__admin')}"
@@ -73,8 +73,6 @@ designate::pool_manager::pool_id: '794ccc2c-d751-44fe-b57f-8894c9f5c842'
 #---------------------------------------------------------------------
 # Pool Manager Cache
 #---------------------------------------------------------------------
-#designate::pool_manager_cache::sqlalchemy::connection: "mysql+pymysql://designate:%{hiera('designate::db::mysql::password')}@%{hiera('service__address__mysql')}/designate_pool_manager"
-#designate::pool_manager_cache::sqlalchemy::max_retries: "-1"
 designate::pool_manager_cache::memcache::memcached_servers:
   - "127.0.0.1"
 
