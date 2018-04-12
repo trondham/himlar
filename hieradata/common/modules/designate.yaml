@@ -35,7 +35,6 @@ designate::keystone::authtoken::memcached_servers: '127.0.0.1'
 #---------------------------------------------------------------------
 designate::central::backend_driver:             'bind9'
 designate::central::managed_resource_email:     'iaas-core@usit.uio.no'
-designate::central::managed_resource_tenant_id: 'openstack'
 designate::central::min_ttl:                    '300'
 
 #---------------------------------------------------------------------
