@@ -3,7 +3,7 @@
 # run as root!
 
 LOC=$(hostname | cut -d- -f1)
-ZONE_NAME="${LOC}.uh-iaas.no"
+ZONE_NAME="customer.${LOC}.uh-iaas.no"
 
 if [ "$LOC" = "vagrant" ]; then
     . /root/openrc
@@ -23,19 +23,11 @@ designate-manage pool update --file /etc/designate/pools.yaml
 OPENSTACK_TENANT_ID=$(openstack project show openstack -c id -f value)
 openstack-config --set /etc/designate/designate.conf service:central managed_resource_tenant_id $OPENSTACK_TENANT_ID
 
-# Create a server
-#designate server-create --name $(hostname).
-
 # Create our zone
-#designate domain-create --name ${ZONE_NAME}. --email root@${ZONE_NAME}
 openstack zone create ${ZONE_NAME}. --email support@uh-iaas.no
 
 # Get the zone ID
-#ZONE_ID=$(designate domain-list | grep $ZONE_NAME | awk '{print $2}')
 ZONE_ID=$(openstack zone show ${ZONE_NAME}. -c id -f value)
-
-# Register an A record within the zone
-#designate record-create --name dummy1.${ZONE_NAME}. --type A --data 1.1.1.1 $ZONE_ID
 
 # Configure [handler:nova_fixed] in designate.conf
 openstack-config --set /etc/designate/designate.conf handler:nova_fixed zone_id $ZONE_ID
