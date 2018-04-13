@@ -8,7 +8,7 @@ fi
 
 # Set proper path
 PATH=/usr/bin
-export $PATH
+export PATH
 
 # Our zone
 LOC=$(hostname | cut -d- -f1)
