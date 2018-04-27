@@ -152,13 +152,13 @@ profile::base::yumrepo::repo_hash:
     enabled:        1
     gpgcheck:       1
     gpgkey:         "%{hiera('yum_base_mirror')}/calico/key"
-  calico22:
+  calico26:
     ensure:         absent
-    descr:          'Calico22 Repository'
-    baseurl:        "%{hiera('yum_base_mirror')}/calico22/"
+    descr:          'Calico26 Repository'
+    baseurl:        "%{hiera('yum_base_mirror')}/calico26/"
     enabled:        1
     gpgcheck:       1
-    gpgkey:         "%{hiera('yum_base_mirror')}/calico22/key"
+    gpgkey:         "%{hiera('yum_base_mirror')}/calico26/key"
   ceph-%{hiera('ceph_version')}:
     ensure:         absent
     descr:          'Ceph packages'
@@ -220,19 +220,19 @@ profile::monitoring::sensu::agent::enable_agent: true
 profile::monitoring::sensu::agent::plugins:
   sensu-plugins-disk-checks:
     type:         package
-    pkg_version:  '2.0.1'
+    pkg_version:  '3.0.1'
   sensu-plugins-load-checks:
     type:         package
-    pkg_version:  '1.0.0'
+    pkg_version:  '4.0.2'
   sensu-plugins-memory-checks:
     type:         package
-    pkg_version:  '1.0.2'
+    pkg_version:  '3.2.0'
   sensu-plugins-vmstats:
     type:         package
     pkg_version:  '1.0.0'
   sensu-plugins-process-checks:
     type:         package
-    pkg_version:  '0.0.6'
+    pkg_version:  '3.0.2'
 
 consul::config_hash:
   'enable_syslog': true
