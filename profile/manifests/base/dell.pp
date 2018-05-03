@@ -1,9 +1,9 @@
-# 
+#
 #
 class profile::base::dell
 {
   if fact('dmi.product.name') =~ '^PowerEdge [RTM][1-9][1-4]0.*' {
- 
+
     # find Dell yum repos
     $repo_hash = lookup('profile::base::dell::repo_hash', Hash, 'deep', {})
 
