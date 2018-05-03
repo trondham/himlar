@@ -16,26 +16,26 @@ class profile::base::dell
 
     # SNMP daemon
     service { "snmpd":
-      ensure     => running,
-      enable     => true,
+      ensure => running,
+      enable => true,
     }
 
     # OMSA daemons
     service { "instsvcdrv":
-      ensure     => running,
-      enable     => true,
+      ensure => running,
+      enable => true,
     } ->
     service { "dataeng":
-      ensure     => running,
-      enable     => true,
+      ensure => running,
+      enable => true,
     } ->
     service { "dsm_om_connsvc":
-      ensure     => running,
-      enable     => true,
+      ensure => running,
+      enable => true,
     } ->
     service { "dsm_om_shrsvc":
-      ensure     => running,
-      enable     => true,
+      ensure => running,
+      enable => true,
     }
 
     # Configure snmpd.conf
