@@ -10,32 +10,40 @@ class profile::base::dell
     # get Dell packages
     $packages = lookup('profile::base::dell::packages', Hash, 'deep', {})
 
+    # Install repos and packages
     create_resources('yumrepo', $repo_hash) ->
-    create_resources('profile::base::package', $packages) ->
-    exec { "start omsa":
-      command => "/opt/dell/srvadmin/sbin/srvadmin-services.sh start",
-    } ->
-    exec { "enable snmp":
-      command => "/etc/init.d/dataeng enablesnmp",
-    } ->
-    exec { "restart snmpd":
-      command => "/sbin/systemctl -q restart snmpd.service",
+    create_resources('profile::base::package', $packages)
+
+    # SNMP daemon
+    service { "snmpd":
+      ensure     => running,
+      enable     => true,
     }
 
+    # OMSA daemons
+    service { "instsvcdrv":
+      ensure     => running,
+      enable     => true,
+    } ->
+    service { "dataeng":
+      ensure     => running,
+      enable     => true,
+    } ->
+    service { "dsm_om_connsvc":
+      ensure     => running,
+      enable     => true,
+    } ->
+    service { "dsm_om_shrsvc":
+      ensure     => running,
+      enable     => true,
+    }
 
-    # install dell repos
-    # install dell gpg keys
-    # install omsa
-    #   /usr/bin/yum -y -q install srvadmin-all
-    # install DSU
-    #   /usr/bin/yum -y -q install dell-system-update
-    # start srvadmin
-    #   /opt/dell/srvadmin/sbin/srvadmin-services.sh start
-    # skru på snmp
-    #   /etc/init.d/dataeng enablesnmp
-    # restart snmpd
-    #   systemctl -q restart snmpd.service
-    # konfigurere omsa
-    #   sette ting i /opt/dell/srvadmin/etc/srvadmin-omilcore/install.ini
+    # Configure snmpd.conf
+    exec { "enable snmp":
+      command => "/etc/init.d/dataeng enablesnmp",
+      unless  => "/bin/grep ^smuxpeer /etc/snmp/snmpd.conf",
+      notify  => Service['snmpd'],
+    }
+
   }
 }

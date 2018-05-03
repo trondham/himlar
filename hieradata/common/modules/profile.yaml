@@ -231,6 +231,7 @@ profile::base::dell::repo_hash:
 profile::base::dell::packages:
   'srvadmin-all': {}
   'dell-system-update': {}
+  'net-snmp': {}
 
 # Turn on agant and add common sensu plugins
 sensu_ssl_cachain: ''
