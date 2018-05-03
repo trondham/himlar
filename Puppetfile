@@ -21,7 +21,7 @@ mod 'firewall', :ref => '1.8.2',                    :git => github + 'puppetlabs
 mod 'apt', :ref => '4.4.1',                         :git => github + 'puppetlabs/puppetlabs-apt'
 mod 'kmod', :ref => '2.2.0',                        :git => github + 'camptocamp/puppet-kmod'
 mod 'named_interfaces', :ref => '12482fc5c3',       :git => github + 'norcams/puppet-named_interfaces'
-mod 'network', :ref => '40f84826a8',                :git => github + 'norcams/puppet-network'
+mod 'network', :ref => '0bfc7cc2bc',                :git => github + 'norcams/puppet-network'
 mod 'ipmi', :ref => 'v2.3.0',                       :git => github + 'jhoblitt/puppet-ipmi'
 mod 'lldp', :ref => '1208d86c05',                   :git => github + 'mfournier/puppet-lldp'
 # mod 'apt', :ref => '2.2.2',                         :git => github + 'puppetlabs/puppetlabs-apt'
@@ -38,9 +38,10 @@ mod 'selinux', :ref => 'v1.3.0',                    :git => github + 'voxpupuli/
 mod 'googleauthenticator', :ref => 'norcams-2.0.1', :git => github + 'norcams/puppet-googleauthenticator'
 
 #
-# profile::network::leaf
+# profile::network::leaf/torack
 #
-mod 'quagga', :ref => '4fc69a10ce',                 :git => github + 'norcams/puppet-quagga'
+mod 'quagga', :ref => '3686521523',                 :git => github + 'norcams/puppet-quagga'
+mod 'frrouting', :ref => 'ed5e24ab09',              :git => github + 'norcams/puppet-frrouting'
 
 #
 # profile::network::
@@ -87,7 +88,7 @@ mod 'theforeman/puppet', :ref => '0946aab48e',      :git => github + 'theforeman
 mod 'puppetlabs/hocon', :ref => '1.0.0',            :git => github + 'puppetlabs/puppetlabs-hocon'
 mod 'puppetlabs/puppet_authorization', :ref => '0.4.0', :git => github + 'puppetlabs/puppetlabs-puppet_authorization'
 mod 'theforeman/dns', :ref => '5.0.1',              :git => github + 'theforeman/puppet-dns'
-mod 'theforeman/dhcp', :ref => '3.1.1-norcams',     :git => github + 'norcams/puppet-dhcp.git'
+mod 'theforeman/dhcp', :ref => '3.1.2-norcams',     :git => github + 'norcams/puppet-dhcp.git'
 mod 'theforeman/foreman_proxy', :ref => '6.0.3',    :git => github + 'theforeman/puppet-foreman_proxy.git'
 mod 'theforeman/git', :ref => '3.0.0',              :git => github + 'theforeman/puppet-git'
 mod 'voxpupuli/alternatives', :ref => 'v2.0.0',     :git => github + 'voxpupuli/puppet-alternatives'
@@ -115,7 +116,7 @@ mod 'logrotate', :ref => 'v1.4.0',                  :git => github + 'yo61/puppe
 #
 # profile::monitoring
 #
-mod 'sensu', :ref => 'v2.40.0',                     :git => github + 'sensu/sensu-puppet'
+mod 'sensu', :ref => 'v2.51.0',                     :git => github + 'sensu/sensu-puppet'
 mod 'uchiwa', :ref => 'v1.0.1',                     :git => github + 'yelp/puppet-uchiwa'
 mod 'graphite', :ref => 'v7.2.0',                   :git => github + 'echocat/puppet-graphite' # fixed upstream
 mod 'redis', :ref => 'v3.2.0',                      :git => github + 'arioch/puppet-redis'
@@ -187,7 +188,7 @@ mod 'corosync', :ref => 'v5.1.0',                   :git => github + 'voxpupuli/
 #
 # Common libs
 #
-mod 'stdlib', :ref => '4.21.0',                     :git => github + 'puppetlabs/puppetlabs-stdlib'
+mod 'stdlib', :ref => '4.24.0',                     :git => github + 'puppetlabs/puppetlabs-stdlib'
 mod 'concat', :ref => '4.1.0',                      :git => github + 'puppetlabs/puppetlabs-concat'
 mod 'hash_file', :ref => '1.0.3',                   :git => github + 'fiddyspence/puppet-hash_file' # ??
 mod 'inifile', :ref => '2.0.0',                     :git => github + 'puppetlabs/puppetlabs-inifile'

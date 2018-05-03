@@ -58,7 +58,7 @@ profile::base::common::packages:
 profile::monitoring::sensu::agent::plugins:
   sensu-plugins-http:
     type:         package
-    pkg_version:  '1.0.0'
+    pkg_version:  '2.8.4'
 
 profile::monitoring::sensu::agent::plugin_gems:
   sensu-plugins-himlar:
@@ -139,7 +139,7 @@ profile::base::yumrepo::repo_hash:
   rdo-release:
     ensure: present
     exclude: 'openstack-neutron openstack-neutron-common python-neutron'
-  calico22:
+  calico26:
     ensure: present
     exclude: 'calico-dhcp-agent' #FIXME
   ceph-%{hiera('ceph_version')}:
@@ -160,5 +160,5 @@ ceph::profile::params::client_keys:
     mode: '0600'
     user: 'nova'
     group: 'nova'
-    cap_mon: 'allow r'
-    cap_osd: 'allow class-read object_prefix rbd_children, allow rwx pool=volumes, allow rwx pool=vms, allow rwx pool=images'
+    cap_mon: 'profile rbd'
+    cap_osd: 'profile rbd pool=volumes, profile rbd pool=vms, profile rbd pool=images'

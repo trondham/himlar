@@ -10,6 +10,7 @@ profile::base::common::packages:
   'bash-completion-extras': {}
   'jq': {}
 
+profile::base::selinux::manage_selinux:       false
 profile::openstack::image::registry_enabled:  true
 profile::openstack::image::manage_policy:     true
 profile::openstack::image::manage_notify:     true
@@ -32,5 +33,10 @@ ceph::profile::params::client_keys:
     mode: '0600'
     user: 'glance'
     group: 'glance'
-    cap_mon: 'allow r'
-    cap_osd: 'allow class-read object_prefix rbd_children, allow rwx pool=images'
+    cap_mon: 'profile rbd'
+    cap_osd: 'profile rbd pool=images'
+
+profile::base::selinux::boolean:
+  'glance_api_can_network':
+    ensure: 'on'
+    persistent: true

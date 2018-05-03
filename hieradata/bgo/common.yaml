@@ -35,11 +35,15 @@ netcfg_dns_search:        "%{hiera('domain_mgmt')} %{hiera('domain_trp')}"
 netcfg_priv_gateway:      '172.18.0.26'
 netcfg_priv_network:      '10.1.0.0/20'
 netcfg_pub_natgw:         '158.39.77.248'
+netcfg_anycast_dns:       '158.39.77.252'
+netcfg_anycast_dns6:      '2001:700:2:83ff::252'
 netcfg_trp_rr:
   rr1:
     peer_ipv4: '172.18.0.1'
+    peer_ipv6: 'fd00::1'
   rr2:
     peer_ipv4: '172.18.0.2'
+    peer_ipv6: 'fd00::2'
 
 # DNS servers
 public__address__ns:           '158.39.77.251'
@@ -76,7 +80,7 @@ profile::network::services::dns_records:
   PTR:
     # mgmt
     "1.%{hiera('reverse_mgmt')}":      "%{::location}-leaf-01.%{hiera('domain_mgmt')}"
-    "2.%{hiera('reverse_mgmt')}":      "%{::location}-leaf-02.%{hiera('domain_mgmt')}"
+    "2.%{hiera('reverse_mgmt')}":      "%{::location}-torack-02.%{hiera('domain_mgmt')}"
     "3.%{hiera('reverse_mgmt')}":      "%{::location}-leaf-03.%{hiera('domain_mgmt')}"
     "4.%{hiera('reverse_mgmt')}":      "%{::location}-leaf-04.%{hiera('domain_mgmt')}"
     "5.%{hiera('reverse_mgmt')}":      "%{::location}-mgmt-01.%{hiera('domain_mgmt')}"
@@ -164,6 +168,12 @@ profile::network::services::dhcp_reservation:
   bgo-leaf-04:
     mac: '00:01:e8:d8:37:24'
     ip:  '172.16.0.4'
+  bgo-torack-01:
+    mac: '14:18:77:00:78:00'
+    ip:  '172.16.0.6'
+  bgo-torack-02:
+    mac: '14:18:77:01:22:00'
+    ip:  '172.16.0.7'
   bgo-mgmt-02:
     mac: '34:17:eb:32:45:80'
     ip:  '172.16.0.5'

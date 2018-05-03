@@ -1,0 +1,49 @@
+---
+named_interfaces::config:
+  mgmt:
+    - eth0
+  trp:
+    - eth1
+  ceph:
+    - eth1
+
+profile::base::common::manage_fake_ssd: true
+
+profile::storage::fake_ssds:
+  'vdb': {}
+
+ceph::profile::params::osds:
+  '/dev/vdb':
+    ensure: present
+  '/dev/vdc':
+    ensure: present
+  '/dev/vdd':
+    ensure: present
+  '/dev/vde':
+    ensure: present
+  '/dev/vdf':
+    ensure: present
+  '/dev/vdg':
+    ensure: present
+  '/dev/vdh':
+    ensure: present
+  '/dev/vdi':
+    ensure: present
+  '/dev/vdj':
+    ensure: present
+
+profile::storage::cephpool::pools:
+  'rbd':
+    ensure: absent
+  'volumes':
+    ensure: present
+    pg_num: 256
+    pgp_num: 256
+  'images':
+    ensure: present
+    pg_num: 256
+    pgp_num: 256
+  'vms':
+    ensure: present
+    pg_num: 64
+    pgp_num: 64

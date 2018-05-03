@@ -23,13 +23,13 @@ profile::development::network::dns::manage_hosts: true
 profile::development::network::dns::use_dnsmasq:  true
 profile::base::network::manage_dummy:             true
 profile::network::nat::enable_snat:               true
-profile::network::nat::source:                    "%{::network_mgmt1}/%{::netmask_mgmt1}"
+profile::network::nat::source:                    "0.0.0.0/0"
 profile::network::nat::outiface:                  'eth1'
 
 # sensu
 profile::monitoring::sensu::agent::plugin_gems:
   sensu-plugins-openstack:
-    ensure:   '0.2.0'
+    ensure:   '1.0.0'
     provider: 'sensu_gem'
     source:   'http://download.iaas.uio.no/uh-iaas/gem'
 # nova compute metrics

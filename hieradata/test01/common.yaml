@@ -35,6 +35,8 @@ netcfg_dns_search:      "%{hiera('domain_mgmt')} %{hiera('domain_trp')}"
 netcfg_priv_gateway:    '172.30.0.26'
 netcfg_priv_network:    '10.0.250.0/24'
 netcfg_pub_natgw:       '129.177.31.121'
+netcfg_anycast_dns:     '129.177.31.118'
+netcfg_anycast_dns6:    '2001:700:200:916::3f18'
 netcfg_trp_rr:
   rr1:
     peer_ipv4: '172.30.0.1'
@@ -72,7 +74,7 @@ profile::network::services::dns_records:
     "resolver.%{hiera('domain_public')}": '2001:700:200:916::3f18'
   PTR:
     # mgmt
-    "1.%{hiera('reverse_mgmt')}":      "%{::location}-leaf-01.%{hiera('domain_mgmt')}"
+    "1.%{hiera('reverse_mgmt')}":      "%{::location}-torack-01.%{hiera('domain_mgmt')}"
     "11.%{hiera('reverse_mgmt')}":     "%{::location}-admin-01.%{hiera('domain_mgmt')}"
     "12.%{hiera('reverse_mgmt')}":     "%{::location}-proxy-01.%{hiera('domain_mgmt')}"
     "13.%{hiera('reverse_mgmt')}":     "%{::location}-logger-01.%{hiera('domain_mgmt')}"
@@ -170,12 +172,12 @@ profile::openstack::compute::hypervisor::manage_libvirt_rbd: true
 profile::openstack::image::api::backend: 'rbd'
 
 profile::network::services::dhcp_reservation:
-  test01-leaf-01:
-    mac: '00:50:56:ae:59:33'
-    ip:  '172.30.0.1'
-  test01-leaf-02:
+  test01-torack-01:
+    mac: '00:50:56:ae:c7:af'
+    ip:  '172.28.0.1'
+  test01-torack-02:
     mac: '00:50:56:ae:4b:f6'
-    ip:  '172.30.0.2'
+    ip:  '172.28.0.2'
 
 profile::openstack::resource::networks:
   dualStack:
