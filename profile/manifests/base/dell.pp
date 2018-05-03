@@ -41,7 +41,7 @@ class profile::base::dell
     # Configure snmpd.conf
     exec { "enable snmp":
       command => "/etc/init.d/dataeng enablesnmp",
-      unless  => "/bin/grep ^smuxpeer /etc/snmp/snmpd.conf",
+      unless  => "/bin/grep -q ^smuxpeer /etc/snmp/snmpd.conf",
       notify  => Service['snmpd'],
     }
 
