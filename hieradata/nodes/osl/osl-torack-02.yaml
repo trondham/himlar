@@ -1,7 +1,7 @@
 ---
 network::interfaces_hash:
   'eth0':
-    'ipaddress': '172.16.0.1/21'
+    'ipaddress': '172.16.32.2/21'
     'gateway':   "%{hiera('netcfg_mgmt_gateway')}"
     'vrf':       'mgmt'
   'mgmt':
@@ -10,27 +10,24 @@ network::interfaces_hash:
 
 profile::base::network::cumulus_interfaces:
   'bridge.100':
-    'ipv4': [ '172.18.0.1/21', ]
-    'ipv6': [ 'fd00::1/64', ]
-    'virtual_ip': '172.18.7.1/21 fd00::701/64'
+    'ipv4': [ '172.18.32.2/21', ]
+    'ipv6': [ 'fd32::2/64', ]
+    'virtual_ip': '172.18.39.1/21 fd32::3901/64'
     'virtual_mac': '00:00:5e:00:01:01'
-#  'bridge.101':
-#    'virtual_ip': '158.39.77.249/24'
-#    'virtual_mac': '00:00:5e:00:02:01'
   'peerlink.4094':
-    'ipv4': [ '172.18.228.1/24', ]
-    'ipv6': [ 'fd00:18:228::1/64', ]
+    'ipv4': [ '172.18.228.2/24', ]
+    'ipv6': [ 'fd32:18:228::2/64', ]
     'clagd_enable': true
-    'clagd_priority': '4096'
-    'clagd_peer_ip': '172.18.228.2'
+    'clagd_priority': '8192'
+    'clagd_peer_ip': '172.18.228.1'
     'clagd_sys_mac': '44:38:39:ff:bb:1c'
-  'swp48':
-    'ipv4': [ '10.78.1.4/29', ]
-    'ipv6': 'fdfd::a/124'
+  'swp54':
+    'ipv4': '129.240.25.110/30'
+    'ipv6': '2001:700:100:aa3::22/126'
 
 profile::base::network::cumulus_bridges:
   'bridge':
-    'ports': [ 'host1', 'host2', 'host3', 'host4', 'host5', 'host6', 'host7', 'host8', 'host9', 'host10', 'host11', 'host12', 'host13', 'host14', 'peerlink', 'downlink' ]
+    'ports': [ 'host1', 'host2', 'host3', 'host4', 'host5', 'host6', 'host7', 'host8', 'host9', 'host10', 'host11', 'host12', 'peerlink', 'downlink' ]
     'alias_name': 'Transport L2 if'
     'vlan_aware': 'true'
     'stp': 'true'
@@ -38,9 +35,9 @@ profile::base::network::cumulus_bridges:
 
 profile::base::network::cumulus_bonds:
   'peerlink':
-    'slaves': [ 'swp49-50', ]
+    'slaves': [ 'swp25-26', ]
   'downlink':
-    'slaves': [ 'swp51-52', ]
+    'slaves': [ 'swp27-28', ]
     'clag_id': '100'
     'pvid': '100'
   'host1':
@@ -115,18 +112,6 @@ profile::base::network::cumulus_bonds:
     'pvid': '100'
     'mstpctl_portadminedge': true
     'mstpctl_bpduguard': true
-  'host13':
-    'slaves': [ 'swp13', ]
-    'clag_id': '13'
-    'pvid': '100'
-    'mstpctl_portadminedge': true
-    'mstpctl_bpduguard': true
-  'host14':
-    'slaves': [ 'swp14', ]
-    'clag_id': '14'
-    'pvid': '100'
-    'mstpctl_portadminedge': true
-    'mstpctl_bpduguard': true
 
 frrouting::frrouting::zebra_interfaces:
   'bridge':
@@ -159,32 +144,26 @@ frrouting::frrouting::zebra_interfaces:
     - 'link-detect'
   'host12':
     - 'link-detect'
-  'host13':
-    - 'link-detect'
-  'host14':
-    - 'link-detect'
   'swp48':
     - 'link-detect'
 
 frrouting::frrouting::zebra_ip6_routes:
-  - '::/0 fdfd::1'
-  - '::/0 fd00:18:228::2 50'
-  - '2001:700:2:8300::/64 Null0'
-  - '2001:700:2:8301::/64 Null0'
-  - '2001:700:2:83ff::12/128 fd00::12'
-  - '2001:700:2:83ff::251/128 fd00::16'
+  - '::/0 2001:700:100:aa3::21'
+  - '2001:700:2:8200::/64 Null0'
+  - '2001:700:2:8201::/64 Null0'
+  - '2001:700:2:82ff::12/128 fd32::12'
+  - '2001:700:2:82ff::251/128 fd32::16'
 frrouting::frrouting::zebra_ip_routes:
-  - '0.0.0.0/0 10.78.1.1'
-  - '0.0.0.0/0 172.18.0.2 50'
+  - '0.0.0.0/0 129.240.25.109'
   - '10.0.0.0/8 Null0'
-  - '158.39.74.0/24 Null0'
-  - '158.39.77.0/24 Null0'
-  - '158.39.77.248/32 172.18.0.26'
-  - '158.39.77.249/32 172.18.0.41'
-  - '158.39.77.250/32 172.18.0.86'
-  - '158.39.77.251/32 172.18.0.16'
-  - '158.39.77.253/32 172.18.0.12'
-  - '158.39.77.254/32 172.18.0.51'
+  - '158.37.63.0/24 Null0'
+  - '158.37.63.248/32 172.18.32.26'
+  - '158.37.63.249/32 172.18.32.41'
+  - '158.37.63.250/32 172.18.32.86'
+  - '158.37.63.251/32 172.18.32.16'
+  - '158.37.63.253/32 172.18.32.12'
+  - '158.37.63.254/32 172.18.32.51'
+  - '158.39.75.0/24 Null0'
 
 frrouting::frrouting::zebra_generic_options:
   'ip':
@@ -193,13 +172,13 @@ frrouting::frrouting::zebra_generic_options:
     'forwarding'
 
 frrouting::frrouting::bgp_neighbors:
-  - "172.18.228.2 remote-as %{hiera('bgp_as')}"
-  - '172.18.228.2 soft-reconfiguration inbound'
+  - "172.31.228.1 remote-as %{hiera('bgp_as')}"
+  - '172.31.228.1 soft-reconfiguration inbound'
 
 frrouting::frrouting::bgp_as: "%{hiera('bgp_as')}"
 
 frrouting::frrouting::bgp_options:
-  - "bgp router-id %{hiera('netcfg_trp_netpart')}.1"
+  - "bgp router-id %{hiera('netcfg_trp_netpart')}.2"
   - 'bgp log-neighbor-changes'
   - 'bgp default local-preference 200'
   - 'maximum-paths ibgp 3'
@@ -207,10 +186,10 @@ frrouting::frrouting::bgp_options:
 
 frrouting::frrouting::bgp_networks:
   - '0.0.0.0/0'
-  - '172.18.0.0/21'
+  - '172.18.32.0/21'
 frrouting::frrouting::bgp_networks6:
   - '::/0'
-  - 'fd00::/64'
+  - 'fd32::/64'
 
 frrouting::frrouting::bgp_neighbor_groups:
   'rr-clients':
@@ -222,50 +201,43 @@ frrouting::frrouting::bgp_neighbor_groups:
       - 'route-map rr-client-allow in'
       - 'bfd'
     'members':
-      - '172.18.0.17'
-      - '172.18.0.18'
-      - '172.18.0.26'
-      - '172.18.0.103'
-      - '172.18.0.104'
-      - '172.18.0.105'
-      - '172.18.0.111'
-      - '172.18.0.112'
-      - '172.18.0.113'
-      - '172.18.0.115'
-      - '172.18.0.116'
-      - '172.18.0.117'
-      - '172.18.0.118'
+      - '172.18.32.17'
+      - '172.18.32.18'
+      - '172.18.32.26'
+      - '172.18.32.103'
+      - '172.18.32.104'
+      - '172.18.32.105'
+      - '172.18.32.111'
+      - '172.18.32.112'
+      - '172.18.32.113'
+      - '172.18.32.115'
+      - '172.18.32.116'
     'options6':
       - 'neighbor rr-clients route-reflector-client'
       - 'maximum-paths ibgp 3'
     'members6':
-      - 'fd00::17'
-      - 'fd00::18'
-      - 'fd00::103'
-      - 'fd00::104'
-      - 'fd00::105'
-      - 'fd00::111'
-      - 'fd00::112'
-      - 'fd00::113'
-      - 'fd00::115'
-      - 'fd00::116'
-      - 'fd00::117'
-      - 'fd00::118'
-#  'other-clients':
-#    'options':
-#    - 'peer-group'
+      - 'fd32::17'
+      - 'fd32::18'
+      - 'fd32::103'
+      - 'fd32::104'
+      - 'fd32::105'
+      - 'fd32::111'
+      - 'fd32::112'
+      - 'fd32::113'
+      - 'fd32::115'
+      - 'fd32::116'
 
 frrouting::frrouting::bgp_accesslist:
   '10':
-    - 'permit 158.39.74.0 0.0.0.255'
-    - 'permit 158.39.77.0 0.0.0.255'
-    - 'permit 10.1.0.0 0.0.15.255'
-    - 'permit 172.18.0.0 0.0.7.255'
+    - 'permit 158.37.63.0 0.0.0.255'
+    - 'permit 158.39.75.0 0.0.0.255'
+    - 'permit 10.2.0.0 0.0.15.255'
+    - 'permit 172.18.32.0 0.0.0.255'
   '20':
-    - 'deny 158.39.74.0 0.0.0.255'
-    - 'deny 158.39.77.0 0.0.0.255'
-    - 'deny 10.1.0.0 0.0.15.255'
-    - 'deny 172.18.0.0 0.0.7.255'
+    - 'deny 158.37.63.0 0.0.0.255'
+    - 'deny 158.39.75.0 0.0.0.255'
+    - 'deny 10.2.0.0 0.0.15.255'
+    - 'deny 172.18.32.0 0.0.0.255'
     - 'permit any'
 
 frrouting::frrouting::bgp_ip_prefix_list:
