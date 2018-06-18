@@ -23,6 +23,18 @@ named_interfaces::config:
   public:
     - bond0.6
 
+# Access lists
+profile::highavailability::loadbalancing::haproxy::access_list:
+  uib_vpn_net:
+    ips:
+      - 129.177.138.114/32 # uib-guest
+      - 129.177.44.0/24 # vpn-gw
+      - 129.177.46.0/24 # vpn-gw
+      - 129.177.32.0/24 # vpn-ansatt
+      - 129.177.33.0/24 # vpn-ansatt
+      - 129.177.48.0/24 # vpn-student
+      - 129.177.49.0/24 # vpn-student
+
 corosync::unicast_addresses:
   - "%{hiera('netcfg_public_netpart')}.96"
   - "%{hiera('netcfg_public_netpart')}.97"
@@ -294,10 +306,12 @@ profile::highavailability::loadbalancing::haproxy::haproxy_backends:
     mode:             'tcp'
     options:
       - balance:      'roundrobin'
+      - tcp-request:  'content reject if { src -f /etc/haproxy/uib_vpn_net.list }'
   uib-http-adm:
     mode:             'tcp'
     options:
       - balance:      'roundrobin'
+      - tcp-request:  'content reject if { src -f /etc/haproxy/uib_vpn_net.list }'
   uib-ldap-test:
     mode:             'tcp'
     options:

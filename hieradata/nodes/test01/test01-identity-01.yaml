@@ -12,3 +12,5 @@ network::interfaces_hash:
     netmask:   '255.255.255.0'
     defroute:  'no'
     mtu:       '1500'
+
+profile::openstack::identity::manage_token_rotate:        true

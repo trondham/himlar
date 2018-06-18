@@ -19,6 +19,8 @@ location_tag:         unset
 
 bgp_as:               65535
 
+gpg_receiver:         'UH-IaaS Token Distributor'
+
 netcfg_anycast_dns:   '8.8.8.8'              # Placeholder data for bird compute template
 netcfg_anycast_dns6:  '2001:4860:4860::8888' # Placeholder data for bird6 compute template
 
@@ -179,8 +181,7 @@ endpoint__designate__internal:    "http://dns.%{hiera('domain_trp')}:9001/"
 endpoint__designate__public:      "https://dns.api.%{hiera('domain_public')}:9001/"
 endpoint__metric__admin:          "http://metric.%{hiera('domain_trp')}:8041"
 endpoint__metric__internal:       "http://metric.%{hiera('domain_trp')}:8041"
-endpoint__metric__public:         "http://metric.%{hiera('domain_trp')}:8041"   # FIXME når klart for å åpne opp
-#endpoint__metric__public:         "https://metric.api.%{hiera('domain_public')}:8041"
+endpoint__metric__public:         "https://metric.api.%{hiera('domain_public')}:8041"
 endpoint__object__admin:          "http://object.%{hiera('domain_trp')}:8080"
 endpoint__object__internal:       "http://object.%{hiera('domain_trp')}:8080"
 endpoint__object__public:         "https://object.api.%{hiera('domain_public')}:8080"
@@ -202,6 +203,7 @@ profile::network::services::dns_records:
     "%{::location}-resolver-02.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_netpart')}.18"
     "%{::location}-status-01.%{hiera('domain_mgmt')}":      "%{hiera('netcfg_mgmt_netpart')}.21"
     "%{::location}-nat-linux-01.%{hiera('domain_mgmt')}":   "%{hiera('netcfg_mgmt_netpart')}.26"
+    "%{::location}-nat-linux-02.%{hiera('domain_mgmt')}":   "%{hiera('netcfg_mgmt_netpart')}.27"
     "%{::location}-mq-01.%{hiera('domain_mgmt')}":          "%{hiera('netcfg_mgmt_netpart')}.31"
     "%{::location}-image-01.%{hiera('domain_mgmt')}":       "%{hiera('netcfg_mgmt_netpart')}.36"
     "%{::location}-db-01.%{hiera('domain_mgmt')}":          "%{hiera('netcfg_mgmt_netpart')}.41"
@@ -216,6 +218,7 @@ profile::network::services::dns_records:
     "%{::location}-network-03.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.73"
     "%{::location}-telemetry-01.%{hiera('domain_mgmt')}":   "%{hiera('netcfg_mgmt_netpart')}.76"
     "%{::location}-identity-01.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_netpart')}.81"
+    "%{::location}-identity-02.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_netpart')}.82"
     "%{::location}-api-01.%{hiera('domain_mgmt')}":         "%{hiera('netcfg_mgmt_netpart')}.86"
     "%{::location}-cephmon-01.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.91"
     "%{::location}-cephmon-02.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.92"

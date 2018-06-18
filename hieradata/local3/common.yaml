@@ -7,7 +7,7 @@ location_environment: 'local3'
 location_description: 'Local development environment'
 
 domain_frontend:      'iaas.intern'
-domain_public:        'local3.iaas.intern'
+domain_public:        'iaas.intern'
 domain_trp:           'trp.local3.iaas.intern'
 domain_mgmt:          'mgmt.local3.iaas.intern'
 
@@ -82,10 +82,10 @@ profile::network::services::dns_records:
     "access.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
     "console.%{hiera('domain_public')}":                  "%{hiera('netcfg_public_netpart')}.250"
     "identity.api.%{hiera('domain_public')}":             "%{hiera('netcfg_public_netpart')}.250"
-    "image.api.%{hiera('domain_public')}":                "%{hiera('netcfg_public_netpart')}.250"
-    "network.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.250"
-    "compute.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.250"
-    "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
+    "image.api.%{hiera('domain_frontend')}":              "%{hiera('netcfg_public_netpart')}.250"
+    "network.api.%{hiera('domain_frontend')}":            "%{hiera('netcfg_public_netpart')}.250"
+    "compute.api.%{hiera('domain_frontend')}":            "%{hiera('netcfg_public_netpart')}.250"
+    "volume.api.%{hiera('domain_frontend')}":             "%{hiera('netcfg_public_netpart')}.250"
     "object.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
     "metric.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
     # mgmt
