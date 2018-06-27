@@ -13,6 +13,7 @@ profile::base::common::packages:
   'jq': {}
   'python2-designateclient': {}
   'designate-dashboard': {}
+  'openstack-selinux': {}
 
 profile::base::common::manage_cron:                    true
 profile::base::selinux::manage_selinux:                true
