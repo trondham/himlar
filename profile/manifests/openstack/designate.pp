@@ -25,16 +25,6 @@ class profile::openstack::designate (
     type => 'targeted',
   }
 
-#  if $my_nameservers {
-#    create_resources('designate::pool_nameserver', $my_nameservers)
-#  }
-#  if $my_pools {
-#    create_resources('designate::pool', $my_pools)
-#  }
-#  if $my_targets {
-#    create_resources('designate::pool_target', $my_targets)
-#  }
-
   file { '/etc/designate/pools.yaml':
     content      => template("${module_name}/openstack/designate/pools.yaml.erb"),
     mode         => '0644',

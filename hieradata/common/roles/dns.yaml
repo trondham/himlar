@@ -55,31 +55,3 @@ profile::base::yumrepo::repo_hash:
 #    value: 'diagnostics, quotas, reports, sync, touch'
 #  service:api/enabled_extensions_v2:
 #    value: 'quotas, reports'
-
-##---------------------------------------------------------------------
-## Pools
-##---------------------------------------------------------------------
-#profile::openstack::designate::my_pools:
-#  '794ccc2c-d751-44fe-b57f-8894c9f5c842':
-#    nameservers:
-#      - '00000000-0000-0000-0000-000000000001'
-#    targets:
-#      - '10000000-0000-0000-0000-000000000001'
-#
-##---------------------------------------------------------------------
-## Nameservers
-##---------------------------------------------------------------------
-#profile::openstack::designate::my_nameservers:
-#  '00000000-0000-0000-0000-000000000001':
-#    port: 53
-#    host: "%{hiera('service__address__ns')}"
-#
-##---------------------------------------------------------------------
-## Pool targets
-##---------------------------------------------------------------------
-#profile::openstack::designate::my_targets:
-#  '10000000-0000-0000-0000-000000000001':
-#    options: "rndc_host: %{hiera('service__address__ns')}, rndc_port: 953, rndc_config_file: /etc/rndc.conf, rndc_key_file: /etc/rndc.key, port: 53, host: %{hiera('service__address__ns')}"
-#    masters:
-#      - "%{hiera('service__address__designate_api')}:5354"
-#    type: 'bind9'
