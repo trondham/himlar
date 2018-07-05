@@ -33,6 +33,7 @@ profile::base::common::packages:
   'python2-suds': {}
   'python-tooz': {}
   'openstack-utils': {}
+  'openstack-selinux': {}
 
 # Don't purge sudo stuff
 sudo::purge: false
