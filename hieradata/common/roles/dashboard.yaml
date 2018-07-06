@@ -45,29 +45,6 @@ profile::base::yumrepo::repo_hash:
 # Change default image upload dir from horizon
 profile::openstack::dashboard::change_uploaddir: true
 
-# Designate plugin
-#
-#    How to create the designate-dashboard RPM package:
-#    --------------------------------------------------
-#    
-#    Install tools:
-#    
-#      yum install rpm-build
-#    
-#    Get designate-dashboard from GitHub:
-#    
-#      git clone https://github.com/openstack/designate-dashboard.git
-#      cd designate-dashboard
-#      git checkout stable/newton
-#    
-#    Build RPM:
-#    
-#      python setup.py bdist_rpm
-#
-
-# Override repo "rdo-release"
-#openstack_version: 'newton'
-
 # Sensu
 profile::monitoring::sensu::agent::plugins:
   sensu-plugins-apache:
