@@ -104,7 +104,7 @@ nodesets:
     - role:       "dashboard"
     - role:       "admin"
     - role:       "dns"
-      hostid:     "02"
+      hostid:     "01"
     - role:       "dns"
       hostid:     "02"
     - role:       "dns"
