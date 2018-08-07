@@ -29,6 +29,7 @@ puppetrun()
     --certname $certname \
     --write-catalog-summary \
     --basemodulepath /opt/himlar/modules:/etc/puppetlabs/code/modules \
+    --debug \
     ${p_args[*]} \
     /etc/puppetlabs/code/environments/production/manifests/site.pp
 }
