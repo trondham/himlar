@@ -2,7 +2,7 @@
 include:
   default:
     - profile::openstack::designate
-    - profile::openstack::cache
+#    - profile::openstack::cache
     - profile::logging::rsyslog::client
     - profile::openstack::openrc
     - profile::dns::rndc_key
@@ -14,6 +14,8 @@ profile::dns::rndc_key::host_is_bind_server: false
 profile::openstack::openrc::password:     "%{hiera('designate_api_password')}"
 profile::openstack::openrc::username:     'designate'
 profile::openstack::openrc::project_name: 'services'
+
+profile::base::selinux::manage_selinux: true
 
 profile::openstack::designate::mdns_transport_addr:
   - "%{hiera('service__address__mdns_01')}"
@@ -29,12 +31,11 @@ profile::openstack::designate::manage_firewall: true
 # 1. We want /usr/bin/openstack (not sure if it's strictly needed)
 # 2. designate-manage requires python2-oslo-reports and python2-suds
 # 3. pool-manager requires python-tooz
-# 4. we use memcache as pool manager cache
 profile::base::common::packages:
   'python-openstackclient': {}
-  'python2-oslo-reports': {}
-  'python2-suds': {}
-  'python-tooz': {}
+#  'python2-oslo-reports': {}
+#  'python2-suds': {}
+#  'python-tooz': {}
   'openstack-utils': {}
   'openstack-selinux': {}
   'patch': {}
@@ -43,7 +44,7 @@ profile::base::common::packages:
 sudo::purge: false
 
 # Override repo "rdo-release"
-openstack_version: 'pike'
+openstack_version: 'queens'
 
 # Enable extra yum repo
 profile::base::yumrepo::repo_hash:

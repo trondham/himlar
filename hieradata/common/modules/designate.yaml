@@ -67,13 +67,17 @@ designate::db::database_max_retries: "-1"
 #---------------------------------------------------------------------
 # Pool Manager
 #---------------------------------------------------------------------
-designate::pool_manager::pool_id: '794ccc2c-d751-44fe-b57f-8894c9f5c842'
+#designate::pool_manager::pool_id: '794ccc2c-d751-44fe-b57f-8894c9f5c842'
+designate::pool_manager::package_ensure: 'absent'
+designate::pool_manager::enabled: false
+designate::pool_manager::service_ensure: 'stopped'
+
 
 #---------------------------------------------------------------------
 # Pool Manager Cache
 #---------------------------------------------------------------------
-designate::pool_manager_cache::memcache::memcached_servers:
-  - "127.0.0.1"
+#designate::pool_manager_cache::memcache::memcached_servers:
+#  - "127.0.0.1"
 
 #---------------------------------------------------------------------
 # mDNS
