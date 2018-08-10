@@ -6,6 +6,8 @@ designate::db::mysql::allowed_hosts:
 
 # Logging via syslog
 designate::use_syslog: true
+
+# These are needed because the rest of UH-IaaS is running too old openstack
 designate::use_journal: true
 designate::use_json: true
 
