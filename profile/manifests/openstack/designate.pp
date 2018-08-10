@@ -17,8 +17,10 @@ class profile::openstack::designate (
   include ::designate::mdns
   include ::designate::config
   include ::designate::sink
-  include ::designate::pool_manager
-  include ::designate::pool_manager_cache::memcache
+  include ::designate::worker
+  include ::designate::producer
+#  include ::designate::pool_manager
+#  include ::designate::pool_manager_cache::memcache
 
   class { 'selinux':
     mode => 'enforcing',
