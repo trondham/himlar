@@ -8,8 +8,8 @@ designate::db::mysql::allowed_hosts:
 designate::use_syslog: true
 
 # These are needed because the rest of UH-IaaS is running too old openstack
-designate::params::use_journal: true
-designate::params::use_json: true
+designate::logging::use_journal: true
+designate::logging::use_json: true
 
 #---------------------------------------------------------------------
 # RabbitMQ
