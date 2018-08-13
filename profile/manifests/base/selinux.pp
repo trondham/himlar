@@ -3,7 +3,7 @@
 #
 class profile::base::selinux(
   $manage_selinux = false,
-  $packages = ['setroubleshoot-server', 'setools-console', 'policycoreutils', 'policycoreutils-python']
+  $packages = ['setroubleshoot-server', 'setools-console', 'policycoreutils']
 ) {
 
   if $manage_selinux {
