@@ -4,12 +4,12 @@ designate::db::mysql::allowed_hosts:
   - 'localhost'
   - '%'
 
-# Logging via syslog
-designate::use_syslog: true
-
-# These are needed because the rest of UH-IaaS is running too old openstack
+#---------------------------------------------------------------------
+# Logging
+#---------------------------------------------------------------------
+designate::logging::use_syslog:  true
 designate::logging::use_journal: true
-designate::logging::use_json: true
+designate::logging::use_json:    true
 
 #---------------------------------------------------------------------
 # RabbitMQ
