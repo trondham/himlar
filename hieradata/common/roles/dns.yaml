@@ -2,7 +2,7 @@
 include:
   default:
     - profile::openstack::designate
-#    - profile::openstack::cache
+    - profile::openstack::cache
     - profile::logging::rsyslog::client
     - profile::openstack::openrc
     - profile::dns::rndc_key
