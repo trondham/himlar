@@ -9,7 +9,7 @@ designate::db::mysql::allowed_hosts:
 #---------------------------------------------------------------------
 designate::logging::use_syslog:  true
 designate::logging::use_journal: true
-designate::logging::use_json:    true
+designate::logging::use_json:    false
 
 #---------------------------------------------------------------------
 # RabbitMQ
