@@ -58,8 +58,10 @@ designate::api::enabled_extensions_v2:
   - 'quotas'
   - 'reports'
 # needs to be '0.0.0.0' for it to bind to localhost as well
-designate::api::listen:            "0.0.0.0:9001"
-designate::api::api_base_uri:      "%{hiera('endpoint__designate__internal')}"
+designate::api::listen:             "0.0.0.0:9001"
+designate::api::api_base_uri:       "%{hiera('endpoint__designate__internal')}"
+# suggested by https://docs.openstack.org/designate/latest/admin/ha.html#designate-api
+designate::api::enable_host_header: true
 
 #---------------------------------------------------------------------
 # Database
