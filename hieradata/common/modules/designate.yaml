@@ -61,7 +61,7 @@ designate::api::enabled_extensions_v2:
 designate::api::listen:             "0.0.0.0:9001"
 designate::api::api_base_uri:       "%{hiera('endpoint__designate__internal')}"
 # suggested by https://docs.openstack.org/designate/latest/admin/ha.html#designate-api
-designate::api::enable_host_header: true
+designate::api::enable_host_header: false
 
 #---------------------------------------------------------------------
 # Database
