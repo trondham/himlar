@@ -56,8 +56,6 @@ designate::api::enabled_extensions_v2:
 # needs to be '0.0.0.0' for it to bind to localhost as well
 designate::api::listen:             "0.0.0.0:9001"
 designate::api::api_base_uri:       "%{hiera('endpoint__designate__internal')}"
-# suggested by https://docs.openstack.org/designate/latest/admin/ha.html#designate-api
-designate::api::enable_host_header: true
 
 #---------------------------------------------------------------------
 # Database
@@ -70,17 +68,12 @@ designate::db::database_max_retries: "-1"
 #---------------------------------------------------------------------
 # Pool Manager
 #---------------------------------------------------------------------
-#designate::pool_manager::pool_id: '794ccc2c-d751-44fe-b57f-8894c9f5c842'
-designate::pool_manager::package_ensure: 'absent'
-designate::pool_manager::enabled: false
-designate::pool_manager::service_ensure: 'stopped'
-
+# pool manager is deprecated
 
 #---------------------------------------------------------------------
 # Pool Manager Cache
 #---------------------------------------------------------------------
-#designate::pool_manager_cache::memcache::memcached_servers:
-#  - "127.0.0.1"
+# pool manager is deprecated
 
 #---------------------------------------------------------------------
 # mDNS
