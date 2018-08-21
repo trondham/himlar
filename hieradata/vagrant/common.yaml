@@ -41,6 +41,14 @@ netcfg_trp_rr:
   rr1:
     peer_ipv4: '172.31.8.1'
 
+mx_records:
+  'uninett-no.mx1.staysecuregroup.com':
+    priority: '10'
+    ttl: '600'
+  'uninett-no.mx2.staysecuregroup.net':
+    priority: '10'
+    ttl: '600'
+
 profile::openstack::volume::api::enable_testbackend:     'true'
 
 #

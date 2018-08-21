@@ -8,11 +8,33 @@ $TTL    3600
                             604800         ; Expire
                             43200 )        ; Negative Cache TTL
 
+; Name servers:
         IN      NS      <%= @ns_master %>.
 <% @ns_slaves.each do |slave| -%>
         IN      NS      <%= slave %>.
 <% end -%>
 
+
+<% unless @delegations.empty? -%>
+;
+; Glue records:
+<% @delegations.each do |subdomain,nslist| -%>
+<% nslist.each do |ns| -%>
+<%= subdomain %>   NS   <%= ns %>.
+<% end -%>
+<% end -%>
+<% end -%>
+
+<% unless @mx_records.empty? -%>
+;
+; Mail exchangers:
+<% @mx_records.each do |mx,ttl,priority| -%>
+        <%= ttl %>     MX     <%= priority %> <%= mx %>.
+<% end -%>
+<% end -%>
+
+;
+; Domain data:
 <% unless @ns_a_records.empty? -%>
 <% @ns_a_records.each do |nsname,ip| -%>
 <%= nsname %>      IN      A             <%= ip %>
@@ -21,13 +43,5 @@ $TTL    3600
 <% unless @ns_aaaa_records.empty? -%>
 <% @ns_aaaa_records.each do |nsname,ip| -%>
 <%= nsname %>      IN      AAAA          <%= ip %>
-<% end -%>
-<% end -%>
-
-<% unless @delegations.empty? -%>
-<% @delegations.each do |subdomain,nslist| -%>
-<% nslist.each do |ns| -%>
-<%= subdomain %>   NS   <%= ns %>.
-<% end -%>
 <% end -%>
 <% end -%>
