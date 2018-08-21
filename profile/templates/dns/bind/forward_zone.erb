@@ -28,8 +28,10 @@ $TTL    3600
 <% unless @mx_records.empty? -%>
 ;
 ; Mail exchangers:
-<% @mx_records.each do |mx,ttl,priority| -%>
+<% @mx_records.each do |domain,mx| -%>
+<% domain.each do |ttl,priority| -%>
         <%= ttl %>     MX     <%= priority %> <%= mx %>.
+<% end -%>
 <% end -%>
 <% end -%>
 
