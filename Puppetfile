@@ -121,7 +121,7 @@ mod 'sensu', :ref => 'v2.51.0',                     :git => github + 'sensu/sens
 mod 'uchiwa', :ref => 'v1.0.1',                     :git => github + 'yelp/puppet-uchiwa'
 mod 'graphite', :ref => 'v7.2.0',                   :git => github + 'echocat/puppet-graphite' # fixed upstream
 mod 'redis', :ref => 'v3.2.0',                      :git => github + 'arioch/puppet-redis'
-mod 'grafana', :ref => 'v4.0.3',                    :git => github + 'voxpupuli/puppet-grafana'
+mod 'grafana', :ref => 'v4.5.0',                    :git => github + 'voxpupuli/puppet-grafana'
 mod 'statsd', :ref => '3.1.0',                      :git => github + 'justindowning/puppet-statsd'
 mod 'netdata', :ref => '249cf19',                   :git => github + 'dmcanally/denver-netdata'
 
@@ -180,7 +180,7 @@ mod 'libvirt', :ref => '5f55fb66db',                :git => github + 'norcams/pu
 #
 # ceph
 #
-mod 'ceph', :ref => 'd652d54f6f',                   :git => github + 'norcams/puppet-ceph'
+mod 'ceph', :ref => '43863d13fc',                   :git => github + 'norcams/puppet-ceph'
 
 #
 # ha
