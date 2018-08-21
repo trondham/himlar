@@ -6,6 +6,16 @@ profile::dns::ns::public_zone:   "vagrant.iaas.intern"
 # Name servers in zone file
 profile::dns::ns::ns_master: "ns.%{hiera('profile::dns::ns::public_zone')}"
 
+profile::dns::ns::mx_records:
+  "%{hiera('domain_frontend')}":
+    'uninett-no.mx1.staysecuregroup.com':
+      priority: '10'
+      ttl: '600'
+    'uninett-no.mx2.staysecuregroup.net':
+      priority: '10'
+      ttl: '600'
+
+
 # Forward zones, for which the name server is authoritative
 profile::dns::ns::fw_zones:
   internal:
