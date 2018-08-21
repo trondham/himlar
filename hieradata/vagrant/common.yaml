@@ -96,6 +96,11 @@ sudo::configs:
     content: 'vagrant ALL=(ALL) NOPASSWD:ALL'
 
 profile::network::services::dns_options:
+  MX:
+    default:
+      ttl: 3600
+      keyfile: "/etc/rndc-admin.key"
+      server: "%{hiera('netcfg_mgmt_netpart')}.16"
   CNAME:
     default:
       ttl: 3600
