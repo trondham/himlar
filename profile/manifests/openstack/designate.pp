@@ -19,13 +19,6 @@ class profile::openstack::designate (
   include ::designate::sink
   include ::designate::worker
   include ::designate::producer
-#  include ::designate::pool_manager
-#  include ::designate::pool_manager_cache::memcache
-
-#  class { 'selinux':
-#    mode => 'enforcing',
-#    type => 'targeted',
-#  }
 
   file { '/etc/designate/pools.yaml':
     content      => template("${module_name}/openstack/designate/pools.yaml.erb"),
