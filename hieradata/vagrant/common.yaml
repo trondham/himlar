@@ -127,7 +127,7 @@ profile::network::services::dns_options:
 #
 profile::network::services::dns_records:
   MX:
-    "%{hiera('domain_frontend')}": [ '10 tux.uio.no.', '20 uninett-no.mx2.staysecuregroup.net.' ]
+    "%{hiera('domain_frontend')}": [ '10 uninett-no.mx1.staysecuregroup.com.', '20 uninett-no.mx2.staysecuregroup.net.' ]
   A:
     "access.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
     "console.%{hiera('domain_public')}":                  "%{hiera('netcfg_public_netpart')}.250"
