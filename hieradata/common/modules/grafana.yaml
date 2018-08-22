@@ -28,7 +28,7 @@ grafana::provisioning_datasources:
   datasources:
     - name:         'graphite'
       type:         'graphite'
-      url:          "http://%{::ipaddress_mgmt1}"
+      url:          "http://%{hiera('mgmt__address__monitor')}"
       access:       'proxy'
       isDefault:    true
       orgId:        1
