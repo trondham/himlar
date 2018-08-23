@@ -11,12 +11,15 @@ profile::dns::rndc_key::create_admin_key:    false
 profile::dns::rndc_key::create_mdns_key:     true
 profile::dns::rndc_key::host_is_bind_server: false
 
+# Username and password for the designate service
 profile::openstack::openrc::password:     "%{hiera('designate_api_password')}"
 profile::openstack::openrc::username:     'designate'
 profile::openstack::openrc::project_name: 'services'
 
+# Set SELinux enforcing
 profile::base::selinux::manage_selinux: true
 
+# Various address definitions
 profile::openstack::designate::mdns_transport_addr:
   - "%{hiera('service__address__mdns_01')}"
   - "%{hiera('service__address__mdns_02')}"
@@ -45,3 +48,6 @@ openstack_version: 'queens'
 profile::base::yumrepo::repo_hash:
   rdo-release:
     ensure: present
+
+# Make sure that memcached doesn't too much memory
+memcached::max_memory: '20%'
