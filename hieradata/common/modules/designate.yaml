@@ -81,10 +81,10 @@ designate::db::database_max_retries: "-1"
 # use defaults
 
 #---------------------------------------------------------------------
-# Sink
+# Sink (not used atm)
 #---------------------------------------------------------------------
-designate::sink::enabled_notification_handlers:
-  - "nova_fixed"
+#designate::sink::enabled_notification_handlers:
+#  - "nova_fixed"
 
 #---------------------------------------------------------------------
 # Producer

@@ -16,7 +16,7 @@ class profile::openstack::designate (
   include ::designate::central
   include ::designate::mdns
   include ::designate::config
-  include ::designate::sink
+#  include ::designate::sink
   include ::designate::worker
   include ::designate::producer
 
