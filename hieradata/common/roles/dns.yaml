@@ -22,8 +22,6 @@ profile::base::selinux::manage_selinux: true
 # Various address definitions
 profile::openstack::designate::mdns_transport_addr:
   - "%{hiera('service__address__mdns_01')}"
-  - "%{hiera('service__address__mdns_02')}"
-  - "%{hiera('service__address__mdns_03')}"
 profile::openstack::designate::ns_transport_addr:  "%{hiera('service__address__ns')}"
 profile::openstack::designate::ns_public_addr:     "%{hiera('public__address__ns')}"
 profile::openstack::designate::ns_public_name:     "%{hiera('public__name__ns')}"
