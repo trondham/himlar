@@ -5,12 +5,8 @@ include:
     - profile::openstack::resource::imagebuilder
     - profile::openstack::resource::dataporten
     - profile::openstack::resource::users
-    - profile::openstack::openrc
-    - profile::application::himlarcli
     - profile::logging::rsyslog::client
-#    - profile::openstack::cache
-  bootstrap:
-    - profile::openstack::openrc
+    - profile::openstack::cache
 
 profile::base::common::packages:
   'bash-completion': {}
@@ -100,21 +96,24 @@ profile::openstack::resource::users::users:
     enabled:  true
     email:    'status@localhost'
     password: "%{hiera('status_metric_password')}"
-    domain:   "%{hiera('keystone__internal__domain')}"
+    domain:   "%{hiera('keystone__default__domain')}"
   monitor:
     enabled:  true
     email:    'monitor@localhost'
     password: "%{hiera('monitor_metric_password')}"
+    domain:   "%{hiera('keystone__default__domain')}"
   access:
     enabled:  true
     email:    'access@localhost'
     password: "%{hiera('access_api_password')}"
+    domain:   "%{hiera('keystone__default__domain')}"
+
 profile::openstack::resource::users::user_roles:
-  'status@services':
+  "status@%{hiera('keystone__service__project')}":
     roles:    'user'
-  'monitor@services':
-    roles:    'user'
-  'access@services':
+  "monitor@%{hiera('keystone__service__project')}":
+    roles:    'admin'
+  "access@%{hiera('keystone__service__project')}":
     roles:    'admin_view'
 
 # Enable extra yum repo
