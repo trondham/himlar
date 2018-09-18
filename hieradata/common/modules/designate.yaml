@@ -128,3 +128,6 @@ designate::backend::bind9::rndc_host: "%{hiera('service__address__ns')}"
 #    value: "'vm-%(octet0)s-%(octet1)s-%(octet2)s-%(octet3)s.%(zone)s'"
 #  handler:nova_fixed/formatv6:
 #    value: "'vm-%(octet0)s-%(octet1)s-%(octet2)s-%(octet3)s.%(zone)s-%(octet4)s-%(octet5)s-%(octet6)s-%(octet7)s.%(zone)s'"
+designate::config::designate_config:
+  DEFAULT/supported_record_type:
+    value: A,AAAA,CNAME,MX,SRV,TXT,SPF,NS,SSHFP,SOA
