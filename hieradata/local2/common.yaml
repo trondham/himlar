@@ -11,6 +11,7 @@ domain_frontend:      'iaas.intern'
 domain_public:        'local2.iaas.intern'
 domain_trp:           'trp.local2.iaas.intern'
 domain_mgmt:          'mgmt.local2.iaas.intern'
+reverse_mgmt:         '5.31.172.in-addr.arpa'
 
 # These should only be used to configure network in nodes!
 netcfg_trp_netpart:     '172.31.13'
@@ -55,6 +56,11 @@ profile::network::services::dns_options:
       keyfile: "/etc/rndc.key"
       server: "%{hiera('netcfg_mgmt_netpart')}.11"
   A:
+    default:
+      ttl: 600
+      keyfile: "/etc/rndc.key"
+      server: "%{hiera('netcfg_mgmt_netpart')}.11"
+  PTR:
     default:
       ttl: 600
       keyfile: "/etc/rndc.key"
@@ -152,6 +158,10 @@ nova::db::mysql_api::password:                      'nova_api_pass'
 nova::db::mysql_placement::password:                'nova_placement_pass'
 nova::api::neutron_metadata_proxy_shared_secret:    'a_secret'
 nova_rabbit_password:                              'nova_quest'
+
+# designate.yaml
+designate::db::mysql::password:                     'designate_pass'
+designate::rabbit_password:                         'designate_guest'
 
 # imagebuilder
 imagebuilder_password:                              'imagebuilder_pass'
