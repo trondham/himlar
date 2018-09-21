@@ -73,7 +73,7 @@ done
 # Default value is to NOT provision from Puppetfile
 # We provison Puppetfile if /etc/puppet/modules is empty, if HIMLAR_PUPPETFILE
 # is set to 'deploy' or if puppetmodules.sh is given the 'deploy' parameter
-if [ -z "$etc_puppet_modules" -o $HIMLAR_PUPPETFILE == "deploy" ]; then
+if [ -z "$etc_puppet_modules" ] || [ $HIMLAR_PUPPETFILE == "deploy" ]; then
     provision_from_puppetfile
 fi
 
