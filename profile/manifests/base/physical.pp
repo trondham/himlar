@@ -4,7 +4,6 @@ class profile::base::physical
 {
   include ::lldp
   include ::ipmi
-  include ::dell
 
   # Configure 82599ES SFP+ interface module options
   if $::lspci_has['intel82599sfp'] and 'ixgbe' in $::kernel_modules {
