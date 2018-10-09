@@ -45,7 +45,7 @@ class profile::base::dell
       notify  => Service['snmpd'],
     }
 
-    profile::firewall::rule { 'SNMP':
+    profile::firewall::rule { '001 allow SNMP':
       port   => 161,
       extras => $snmp_settings,
     }
