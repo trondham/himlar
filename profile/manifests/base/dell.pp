@@ -1,4 +1,12 @@
+# This class is included from common.pp if is_virtual is false
+# and manufacturer is Dell
 #
+# The class does the following:
+#   - Installs the Dell yum repos
+#   - Installs Dell Openmanage packages
+#   - Installs SNMP daemon (net-snmp)
+#   - Opens up the SNMP port (161/UDP) in the firewall
+#   - Ensures that Openmanage and SNMP services are running
 #
 class profile::base::dell
 {
@@ -45,6 +53,7 @@ class profile::base::dell
       notify  => Service['snmpd'],
     }
 
+    # Open the SNMP port (161/UDP) in the firewall
     profile::firewall::rule { '001 allow SNMP':
       port   => 161,
       proto  => 'udp',
