@@ -109,7 +109,7 @@ class profile::base::common (
 
   if $include_physical and ($::is_virtual == false) {
     include ::profile::base::physical
-    if fact('dmi.product.name') =~ '^PowerEdge [RTM][1-9][1-4]0.*' {
+    if fact('manufacturer') == 'Dell Inc.' {
       include ::profile::base::dell
     }
   }
