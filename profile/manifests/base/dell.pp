@@ -47,6 +47,7 @@ class profile::base::dell
 
     profile::firewall::rule { '001 allow SNMP':
       port   => 161,
+      proto  => 'udp',
       extras => $snmp_settings,
     }
 
