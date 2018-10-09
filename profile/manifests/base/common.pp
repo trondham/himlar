@@ -109,6 +109,9 @@ class profile::base::common (
 
   if $include_physical and ($::is_virtual == false) {
     include ::profile::base::physical
+    if fact('dmi.product.name') =~ '^PowerEdge [RTM][1-9][1-4]0.*' {
+      include ::profile::base::dell
+    }
   }
 
   if $include_virtual and ($::is_virtual == true) {
