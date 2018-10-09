@@ -14,6 +14,12 @@ class profile::base::dell
     create_resources('yumrepo', $repo_hash) ->
     create_resources('profile::base::package', $packages)
 
+    # SNMP daemon
+    service { "snmpd":
+      ensure  => running,
+      enable  => true,
+    }
+
     # OMSA daemons
     service { "instsvcdrv":
       ensure => running,
@@ -37,13 +43,6 @@ class profile::base::dell
       command => "/etc/init.d/dataeng enablesnmp",
       unless  => "/bin/grep -q ^smuxpeer /etc/snmp/snmpd.conf",
       notify  => Service['snmpd'],
-    }
-
-    # SNMP daemon
-    service { "snmpd":
-      ensure  => running,
-      enable  => true,
-      require => Package['net-snmp']
     }
 
   }
