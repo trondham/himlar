@@ -1,4 +1,10 @@
 ---
+# All extra identity nodes will need the the openrc file in bootstrap
+# If we bootstrap the keystone database from this node this must be removed first!
+include:
+  bootstrap:
+    - profile::openstack::openrc
+
 network::interfaces_hash:
   'eth0':
     ipaddress: '172.16.0.81'
@@ -13,3 +19,5 @@ network::interfaces_hash:
     ipaddress: '172.18.0.81'
     netmask:   '255.255.248.0'
     defroute:  'no'
+
+profile::openstack::identity::manage_token_rotate:        true

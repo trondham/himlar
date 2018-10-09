@@ -11,16 +11,10 @@ profile::storage::fake_ssds:
   'sdb': {}
   'sdc': {}
 
-ceph::profile::params::osds:
-  '/dev/sdb':
-    ensure: present
-  '/dev/sdc':
-    ensure: present
-  '/dev/sdd':
-    ensure: present
-  '/dev/sde':
-    ensure: present
-  '/dev/sdf':
-    ensure: present
-  '/dev/sdg':
-    ensure: present
+profile::storage::cephosd::osds:
+  '/dev/sdb': {}
+  '/dev/sdc': {}
+  '/dev/sdd': {}
+  '/dev/sde': {}
+  '/dev/sdf': {}
+  '/dev/sdg': {}

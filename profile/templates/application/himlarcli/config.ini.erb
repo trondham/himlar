@@ -21,6 +21,9 @@ username=<%= @mq_username %>
 password=<%= @mq_password %>
 vhost=<%= @mq_vhost %>
 
+[db]
+database_uri=<%= @database_uri %>
+
 [statsd]
 server=<%= @statsd_server %>
 port = 8125
@@ -31,6 +34,26 @@ db=db/state.db
 [mail]
 smtp=<%= @smtp %>
 from_addr=<%= @from_addr %>
+
+[slack]
+url=<%= @slack_webhook_url %>
+channel=<%= @slack_channel %>
+user=<%= @slack_user %>
+
+[twitter]
+api_key=<%= @twitter_api_key %>
+api_secret_key=<%= @twitter_api_secret_key %>
+access_token=<%= @twitter_access_token %>
+access_secret_token=<%= @twitter_secret_token %>
+
+[status]
+url=<%= @status_url %>
+token=<%= @status_token %>
+
+[sensu]
+url=<%= @sensu_url %>
+username=<%= @sensu_username %>
+password=<%= @sensu_password %>
 
 [ldap]
 server=<%= @ldap_server %>

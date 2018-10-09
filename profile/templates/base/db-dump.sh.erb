@@ -30,7 +30,7 @@ DEBUG=""
 # default empty -> MUST be provided through argument
 DB_SERVER=""                                # db node to backup, MUST be provided via an argument
 
-REPO_DIR="<%= @repodir %>"                  # top level internal repo directory (which is sync'ed between osl and bgo)
+REPO_DIR="<%= @secretsdir %>"               # top level internal repo directory (which is sync'ed between osl and bgo)
 BACKUP_DIR="${REPO_DIR}/dumps"              # directory to save retrieved db dumps in
 DUMP_DIR="<%= @dumpdir %>"                  # directory for db dumps on db node
 DB_DUMP_SCRIPT="<%= @db_dump_script %>"     # name of backup script on db node
@@ -124,7 +124,7 @@ if [ $? -eq 0 ]; then
 
     chown -R ${OWNER}:${GROUP} ${BACKUP_DIR}/${DB_SERVER}
     find ${BACKUP_DIR}/${DB_SERVER} -type f ! -perm -g+rw -exec chmod g+rw {} \;
-    find ${BACKUP_DIR}/${DB_SERVER} -type d ! -perm -g+rwx -exec chmod g+rwx {} \;
+    find ${BACKUP_DIR}/${DB_SERVER} -type d ! -perm -g+rwxs -exec chmod g+rwxs {} \;
     $DEBUG cleanup $AGELIMIT                                                # remove expired files
 else
     echo "Could not connect to $DB_SERVER - is this a db node?"

@@ -47,7 +47,7 @@ mod 'frrouting', :ref => 'ed5e24ab09',              :git => github + 'norcams/pu
 # profile::network::
 #
 mod 'bird', :ref => '1.1.0',                        :git => github + 'sbadia/puppet-bird'
-mod 'calico', :ref => 'fc4e5c95cf',                 :git => github + 'norcams/puppet-calico'
+mod 'calico', :ref => '1285bfe91a',                 :git => github + 'norcams/puppet-calico'
 mod 'dnsmasq', :ref => 'v1.3.1',                    :git => github + 'saz/puppet-dnsmasq'
 mod 'ipcalc', :ref => '2.2.0',                      :git => github + 'inkblot/puppet-ipcalc'
 mod 'tinyproxy', :ref => 'ef4a8b0bb2',              :git => github + 'earsdown/puppet-tinyproxy'
@@ -71,7 +71,7 @@ mod 'consul', :ref => 'v3.1.2',                     :git => github + 'solarkenne
 #
 # profile::application::dpapp
 #
-mod 'dpapp', :ref => '1.3',                      :git => github + 'norcams/puppet-dpapp'
+mod 'dpapp', :ref => '1.4',                         :git => github + 'norcams/puppet-dpapp'
 
 #
 # profile::application::git
@@ -88,7 +88,7 @@ mod 'theforeman/puppet', :ref => '0946aab48e',      :git => github + 'theforeman
 mod 'puppetlabs/hocon', :ref => '1.0.0',            :git => github + 'puppetlabs/puppetlabs-hocon'
 mod 'puppetlabs/puppet_authorization', :ref => '0.4.0', :git => github + 'puppetlabs/puppetlabs-puppet_authorization'
 mod 'theforeman/dns', :ref => '5.0.1',              :git => github + 'theforeman/puppet-dns'
-mod 'theforeman/dhcp', :ref => '3.1.2-norcams',     :git => github + 'norcams/puppet-dhcp.git'
+mod 'theforeman/dhcp', :ref => '3.1.4-norcams',     :git => github + 'norcams/puppet-dhcp.git'
 mod 'theforeman/foreman_proxy', :ref => '6.0.3',    :git => github + 'theforeman/puppet-foreman_proxy.git'
 mod 'theforeman/git', :ref => '3.0.0',              :git => github + 'theforeman/puppet-git'
 mod 'voxpupuli/alternatives', :ref => 'v2.0.0',     :git => github + 'voxpupuli/puppet-alternatives'
@@ -111,7 +111,8 @@ mod 'logstash', :ref => '5.3.0',                    :git => github + 'elastic/pu
 mod 'datacat', :ref => '0.6.2',                     :git => github + 'richardc/puppet-datacat'
 mod 'elasticsearch', :ref => '5.5.0',               :git => github + 'elastic/puppet-elasticsearch'
 mod 'file_concat', :ref => '1.0.1',                 :git => github + 'electrical/puppet-lib-file_concat'
-mod 'logrotate', :ref => 'v1.4.0',                  :git => github + 'yo61/puppet-logrotate' # deprecated
+#mod 'logrotate', :ref => 'v1.4.0',                  :git => github + 'yo61/puppet-logrotate' # deprecated
+mod 'logrotate', :ref => 'v3.2.1',        		    :git => github + 'voxpupuli/puppet-logrotate'
 
 #
 # profile::monitoring
@@ -120,8 +121,9 @@ mod 'sensu', :ref => 'v2.51.0',                     :git => github + 'sensu/sens
 mod 'uchiwa', :ref => 'v1.0.1',                     :git => github + 'yelp/puppet-uchiwa'
 mod 'graphite', :ref => 'v7.2.0',                   :git => github + 'echocat/puppet-graphite' # fixed upstream
 mod 'redis', :ref => 'v3.2.0',                      :git => github + 'arioch/puppet-redis'
-mod 'grafana', :ref => 'v4.0.3',                    :git => github + 'voxpupuli/puppet-grafana'
+mod 'grafana', :ref => 'v4.5.0',                    :git => github + 'voxpupuli/puppet-grafana'
 mod 'statsd', :ref => '3.1.0',                      :git => github + 'justindowning/puppet-statsd'
+mod 'netdata', :ref => '249cf19',                   :git => github + 'dmcanally/denver-netdata'
 
 #
 # profile::webserver::apache
@@ -136,8 +138,8 @@ mod 'postgresql', :ref => '5.2.0',                  :git => github + 'puppetlabs
 #
 # profile::database::mariadb
 #
-# mod 'mariadbrepo', ref => '0.2.1',                  :git => github + 'Mylezeem/puppet-mariadbrepo'
-# mod 'staging', :ref => '1.0.4',                     :git => github + 'nanliu/puppet-staging' why this fork?
+# mod 'mariadbrepo', ref => '0.2.1',                :git => github + 'Mylezeem/puppet-mariadbrepo'
+# mod 'staging', :ref => '1.0.4',                   :git => github + 'nanliu/puppet-staging' why this fork?
 mod 'staging', :ref => 'v3.0.0',                    :git => github + 'voxpupuli/puppet-staging'
 mod 'mysql', :ref => '5.1.0',                       :git => github + 'puppetlabs/puppetlabs-mysql'
 mod 'galera_arbitrator', :ref => '1.0.4',           :git => github + 'jadestorm/puppet-galera_arbitrator'
@@ -152,19 +154,20 @@ mod 'archive', :ref => 'v2.2.0',                    :git => github + 'voxpupuli/
 #
 # profile::openstack::*
 #
-mod 'glance', :ref => '9.6.0',                      :git => github + 'openstack/puppet-glance'
-mod 'cinder', :ref => '9.5.0',                      :git => github + 'openstack/puppet-cinder'
-mod 'neutron', :ref => '9.5.0',                     :git => github + 'openstack/puppet-neutron'
-mod 'nova', :ref => '9.6.0',                        :git => github + 'openstack/puppet-nova'
-mod 'horizon', :ref => '9.6.0',                     :git => github + 'openstack/puppet-horizon'
-mod 'keystone', :ref => 'norcams/newton',           :git => github + 'norcams/puppet-keystone'
+mod 'glance', :ref => '10.4.0',                     :git => github + 'openstack/puppet-glance'
+mod 'cinder', :ref => '10.4.0',                     :git => github + 'openstack/puppet-cinder'
+mod 'neutron', :ref => '10.4.0',                    :git => github + 'openstack/puppet-neutron'
+mod 'nova', :ref => '10.5.0',                       :git => github + 'openstack/puppet-nova'
+mod 'horizon', :ref => '10.6.0',                    :git => github + 'openstack/puppet-horizon'
+mod 'keystone', :ref => 'norcams/ocata',            :git => github + 'norcams/puppet-keystone'
 mod 'gnocchi', :ref => '10.4.0',                    :git => github + 'openstack/puppet-gnocchi'
 mod 'swift', :ref => 'norcams/ocata',               :git => github + 'norcams/puppet-swift'
 mod 'ceilometer', :ref => '10.4.0',                 :git => github + 'openstack/puppet-ceilometer'
+mod 'designate', :ref => '12.4.0',                  :git => github + 'openstack/puppet-designate'
 
-mod 'oslo', :ref => '9.5.0',                        :git => github + 'openstack/puppet-oslo'
-mod 'openstacklib', :ref => '10.5.0',               :git => github + 'openstack/puppet-openstacklib'
-mod 'openstack_extras', :ref => '9.5.0',            :git => github + 'openstack/puppet-openstack_extras'
+mod 'oslo', :ref => '12.4.0',                       :git => github + 'openstack/puppet-oslo'
+mod 'openstacklib', :ref => '11.5.0',               :git => github + 'openstack/puppet-openstacklib'
+mod 'openstack_extras', :ref => '10.4.0',           :git => github + 'openstack/puppet-openstack_extras'
 mod 'sysctl', :ref => 'v0.0.11',                    :git => github + 'duritong/puppet-sysctl'
 mod 'memcached', :ref => 'v3.0.2',                  :git => github + 'saz/puppet-memcached'
 mod 'rsync', :ref => '0.4.0',                       :git => github + 'puppetlabs/puppetlabs-rsync'
@@ -177,7 +180,7 @@ mod 'libvirt', :ref => '5f55fb66db',                :git => github + 'norcams/pu
 #
 # ceph
 #
-mod 'ceph', :ref => 'd652d54f6f',                   :git => github + 'norcams/puppet-ceph'
+mod 'ceph', :ref => '43863d13fc',                   :git => github + 'norcams/puppet-ceph'
 
 #
 # ha

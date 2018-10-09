@@ -1,0 +1,58 @@
+---
+include:
+  default:
+    - profile::webserver::apache
+    - profile::application::report
+
+profile::base::selinux::manage_selinux:       true
+profile::base::selinux::boolean:
+  'httpd_can_network_connect':
+    ensure: 'on'
+    persistent: true
+
+profile::webserver::apache::manage_firewall:  true
+profile::webserver::apache::firewall_ports:   80
+
+profile::base::common::packages:
+  'gcc': {}
+  'bash-completion': {}
+  'bash-completion-extras': {}
+  'python-virtualenv':  {}
+
+apache::default_mods:   false
+profile::webserver::apache::mods_enable:
+  - wsgi
+  - dir
+  - alias
+
+profile::application::report::package_url:  'http://download.iaas.uio.no/uh-iaas/yumrepo/report-app-1.2.2-1.el7.x86_64.rpm'
+profile::application::report::database_uri: "mysql+pymysql://report:%{hiera('report_db_password')}@%{hiera('service__address__db_global')}/report"
+profile::application::report::debug:        true
+
+profile::webserver::apache::vhosts:
+  report-app:
+    vhost_name:         "%{hostname}.%{hiera('domain_trp')}"
+    servername:         "%{hostname}.%{hiera('domain_trp')}"
+    serveraliases:
+     - "%{hiera('public__address__report')}"
+     - "report-%{::location}.%{hiera('domain_frontend')}"
+    port:               '80'
+    manage_docroot:     false
+    docroot:            '/var/www/html'
+    wsgi_application_group:  '%%{}{GLOBAL}'
+    wsgi_pass_authorization: 'on'
+    wsgi_daemon_process:     'report-app'
+    wsgi_daemon_process_options:
+      threads:      '4'
+      python-path:  "/opt/report-app:/opt/report-app/lib/python2.7/site-packages"
+    wsgi_script_aliases:
+      '/':   "/opt/report-app/flask.wsgi"
+    aliases:
+      - alias:            '/downloads'
+        path:             '/opt/report-utils'
+    directories:
+      - path:             '/opt/report-app/'
+        require:          'all granted'
+        custom_fragment:  'WSGIProcessGroup report-app'
+      - path:             '/opt/report-utils'
+        require:          'all granted'

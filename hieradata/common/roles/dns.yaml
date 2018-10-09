@@ -1,0 +1,53 @@
+---
+include:
+  default:
+    - profile::openstack::designate
+    - profile::openstack::cache
+    - profile::logging::rsyslog::client
+    - profile::openstack::openrc
+    - profile::dns::rndc_key
+
+profile::dns::rndc_key::create_admin_key:    false
+profile::dns::rndc_key::create_mdns_key:     true
+profile::dns::rndc_key::host_is_bind_server: false
+
+# Username and password for the designate service
+profile::openstack::openrc::password:     "%{hiera('designate_api_password')}"
+profile::openstack::openrc::username:     'designate'
+profile::openstack::openrc::project_name: 'services'
+
+# Set SELinux enforcing
+profile::base::selinux::manage_selinux: true
+
+# Various address definitions
+profile::openstack::designate::mdns_transport_addr:
+  - "%{hiera('service__address__mdns_01')}"
+#  - "%{hiera('service__address__mdns_02')}"
+#  - "%{hiera('service__address__mdns_03')}"
+profile::openstack::designate::ns_transport_addr:  "%{hiera('service__address__ns')}"
+profile::openstack::designate::ns_public_addr:     "%{hiera('public__ip__ns')}"
+profile::openstack::designate::ns_public_name:     "%{hiera('public__name__ns')}"
+
+# Add iptables rules
+profile::openstack::designate::manage_firewall: true
+
+# Some extra packages we want installed
+profile::base::common::packages:
+  'python2-openstackclient': {}
+  'openstack-utils': {}
+  'openstack-selinux': {}
+  'patch': {}
+
+# Don't purge sudo stuff
+sudo::purge: false
+
+# Override repo "rdo-release"
+openstack_version: 'queens'
+
+# Enable extra yum repo
+profile::base::yumrepo::repo_hash:
+  rdo-release:
+    ensure: present
+
+# Make sure that memcached doesn't too much memory
+memcached::max_memory: '20%'

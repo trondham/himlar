@@ -7,12 +7,17 @@ class profile::base::login (
   $ensure                   = 'present',
   $agelimit                 = '14',
   $db_servers               = {},
-  $repodir                  = '/opt/repo/secrets',
+  $repodir                  = '/opt/repo',
+  $secretsdir               = "${repodir}/secrets",
   $dump_owner               = '',
   $dump_group               = '',
-  $repo_incoming_dir        = '/tmp/repo-incoming',
+  $repo_incoming_dir        = '/var/lib/repo-incoming',
   $repo_server              = 'iaas-repo.uio.no',
-  $yumrepo_path             = '/var/www/html/uh-iaas/yumrepo/'
+  $yumrepo_path             = '/var/www/html/uh-iaas/yumrepo/',
+  $gpg_receiver             = 'UH-IaaS Token Distributor',
+  $manage_firewall          = false,
+  $manage_dnsmasq           = false,
+  $ports                    = [ 53, ],
 ) {
 
 
@@ -42,6 +47,22 @@ class profile::base::login (
     module  => 'password-auth',
   }
 
+  file { 'create-gpg.sh':
+    ensure  => $ensure,
+    path    => '/usr/local/sbin/create-gpg.sh',
+    mode    => '0755',
+    owner   => 'root',
+    group   => 'root',
+    content => template("${module_name}/base/create-gpg.sh.erb"),
+  }
+
+  file { [ $repodir, $secretsdir, ]:
+      ensure => 'directory',
+      mode   => '2775',
+      owner  => 'root',
+      group  => 'wheel',
+    }
+
   if $manage_db_backup  {
     $dumpdir        = lookup('profile::database::mariadb::backuptopdir', String, 'first', '')
     $db_dump_script = lookup('profile::database::mariadb::backupscript', String, 'first', '')
@@ -60,7 +81,7 @@ class profile::base::login (
     file { 'db-dump-dir':
       ensure => 'directory',
       path   => '/opt/repo/secrets/dumps',
-      mode   => '0775',
+      mode   => '2775',
       owner  => $dump_owner,
       group  => $dump_group,
     }
@@ -102,5 +123,22 @@ class profile::base::login (
       group  => wheel
     }
   }
+
+  if $manage_firewall and $manage_dnsmasq {
+    profile::firewall::rule { '335 management dns accept tcp':
+      dport  => $ports,
+      extras => {
+        iniface => $::interface_mgmt1,
+      },
+    }
+    profile::firewall::rule { '336 management dns accept udp':
+      dport  => $ports,
+      proto  => 'udp',
+      extras => {
+        iniface => $::interface_mgmt1,
+      },
+    }
+  }
+
 
 }

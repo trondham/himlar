@@ -12,9 +12,11 @@ class profile::openstack::dashboard(
   $change_uploaddir     = false,
   $custom_uploaddir     = '/image-upload',
   $enable_pwd_retrieval = false,
+  $enable_designate     = false,
   $image_upload_mode    = undef,
   $change_region_selector = false,
   $change_login_footer  = false,
+  $keystone_admin_roles = undef,
   ) {
 
   if $manage_dashboard {
@@ -37,8 +39,12 @@ class profile::openstack::dashboard(
     }
   }
 
+  $policy_defaults = {
+    notify  => Service['httpd'],
+    require => Class['horizon']
+  }
   $policies = lookup('profile::openstack::dashboard::policies', Hash, 'deep', {})
-  create_resources('openstacklib::policy::base', $policies, { require => Class['horizon']})
+  create_resources('openstacklib::policy::base', $policies, $policy_defaults)
 
   if $manage_firewall {
     profile::firewall::rule { '235 public openstack-dashboard accept tcp':
@@ -62,6 +68,25 @@ class profile::openstack::dashboard(
     }
   }
 
+  # Designate plugin
+  if $enable_designate {
+    file { '/usr/share/openstack-dashboard/openstack_dashboard/local/enabled/_1710_project_dns_panel_group.py':
+      ensure => present,
+      source => 'file:///usr/lib/python2.7/site-packages/designatedashboard/enabled/_1710_project_dns_panel_group.py',
+      notify => Service['httpd']
+    }
+    file { '/usr/share/openstack-dashboard/openstack_dashboard/local/enabled/_1721_dns_zones_panel.py':
+      ensure => present,
+      source => 'file:///usr/lib/python2.7/site-packages/designatedashboard/enabled/_1721_dns_zones_panel.py',
+      notify => Service['httpd']
+    }
+#    file { '/usr/share/openstack-dashboard/openstack_dashboard/local/enabled/_1722_dns_reversedns_panel.py':
+#      ensure => present,
+#      source => 'file:///usr/lib/python2.7/site-packages/designatedashboard/enabled/_1722_dns_reversedns_panel.py',
+#      notify => Service['httpd']
+#    }
+  }
+
   if $change_region_selector {
     file_line { 'clear_file_content':
       ensure            => absent,
@@ -70,13 +95,17 @@ class profile::openstack::dashboard(
       match_for_absence => true,
       multiple          => true,
       replace           => false,
+      require           => Class['horizon'],
+      notify            => Service['httpd']
     }
   }
 
   if $change_login_footer {
     file { '/usr/share/openstack-dashboard/openstack_dashboard/templates/_login_footer.html':
-      ensure => present,
-      source => "puppet:///modules/${module_name}/openstack/horizon/_login_footer.html",
+      ensure  => present,
+      source  => "puppet:///modules/${module_name}/openstack/horizon/_login_footer.html",
+      require => Class['horizon'],
+      notify  => Service['httpd']
     }
   }
 }

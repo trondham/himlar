@@ -11,6 +11,8 @@ etcd::proxy: "off"
 etcd::initial_cluster_state: 'new'
 etcd::initial_cluster_token: 'etcd-cluster'
 
+profile::application::etcd::install_bootstrap_script: true
+
 calico::controller: true
 
 profile::openstack::network::manage_quotas: true
@@ -20,6 +22,8 @@ profile::base::common::packages:
   'bash-completion-extras': {}
   'jq': {}
   'gcc-c++': {}
+  'openstack-selinux': {}
+  'python-etcd3gw': {}
 
 profile::openstack::openrc::password:     "%{hiera('neutron_api_password')}"
 profile::openstack::openrc::username:     'neutron'
@@ -63,5 +67,8 @@ sudo::purge: false
 profile::base::yumrepo::repo_hash:
   rdo-release:
     ensure: present
-  calico26:
+  calico31:
     ensure: present
+  epel: # should be absent when using RDO, but whitelist can also work
+    ensure:   present
+    includepkgs: 'htop bash-completion-extras'

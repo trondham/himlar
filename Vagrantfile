@@ -1,6 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# This is needed for vagrant version < 2.0.2
+Vagrant::DEFAULT_SERVER_URL.replace('https://vagrantcloud.com')
+
 require 'yaml'
 
 unless defined? settings
@@ -61,7 +64,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         ip = settings['networks'][net]['net'] + ".#{i+11}"
         auto_config = settings['networks'][net]['auto_config']
         forwarding = settings['networks'][net]['forwarding']
-        box.vm.network :private_network, ip: ip, libvirt__dhcp_enabled: auto_config, auto_config: auto_config, forwarding: forwarding
+        box.vm.network :private_network, ip: ip, libvirt__dhcp_enabled: auto_config, auto_config: auto_config, libvirt__forward_mode: forwarding
       end
 
       # Pass environment variables to the provisioning scripts
@@ -71,7 +74,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       box.vm.provision :shell, :path => 'provision/puppetbootstrap.sh', args: args
       box.vm.provision :shell, :path => 'provision/puppetmodules.sh', args: args
       box.vm.provision :shell, :path => 'provision/puppetrun.sh', args: args
-
       box.vm.provider :libvirt do |libvirt|
         libvirt.driver = 'kvm'
         libvirt.nested = true
@@ -89,6 +91,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
+  config.ssh.insert_key = false
   config.vm.synced_folder '.', '/vagrant', disabled: true
   config.vm.synced_folder '.', '/opt/himlar', type: 'rsync',
     rsync__exclude: [ '.git/', '.vagrant/' ]

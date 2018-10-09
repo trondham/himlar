@@ -4,6 +4,9 @@ include:
     - profile::highavailability::loadbalancing::haproxy
     - profile::logging::rsyslog::client
 
+# FIXME Temp hack to block access to test01, all others will allow all connections
+block_api_connection:   'connection accept'
+
 profile::base::common::packages:
   'bash-completion': {}
   'bash-completion-extras': {}
@@ -28,8 +31,8 @@ profile::base::network::manage_dummy:                               true
 profile::highavailability::loadbalancing::haproxy::manage_haproxy:  true
 profile::highavailability::loadbalancing::haproxy::manage_firewall: true
 profile::highavailability::loadbalancing::haproxy::firewall_ports:
-  public:    ['5000', '8041', '8774', '8776', '9292', '9696', '6082', '8080']
-  internal:  ['5000', '8041', '8774', '8776', '9292', '9696', '35357', '8080']
+  public:    ['5000', '8041', '8774', '8776', '9292', '9696', '6082', '8080', '8778', '9001']
+  internal:  ['5000', '8041', '8774', '8776', '9292', '9696', '35357', '8080', '8778', '9001']
   mgmt:      ['9000']
   limited:   ['80', '443']
 
@@ -53,6 +56,11 @@ haproxy::defaults_options:
     - 'server 3m'
     - 'queue 1m'
 
+# Access lists
+profile::highavailability::loadbalancing::haproxy::access_list:
+  testing_network:
+    ips:  "%{alias('allow_from_testing_network')}"
+
 # Domain mapping to backend
 profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
   public_domains:
@@ -63,13 +71,19 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
       - "network.api.%{hiera('domain_public')}:9696":       'bk_network'
       - "metric.api.%{hiera('domain_public')}:8041":        'bk_metric'
       - "compute.api.%{hiera('domain_public')}:8774":       'bk_compute'
+      - "placement.api.%{hiera('domain_public')}:8778":     'bk_placement'
       - "volume.api.%{hiera('domain_public')}:8776":        'bk_volume'
       - "image.api.%{hiera('domain_public')}:9292":         'bk_image'
       - "object.api.%{hiera('domain_public')}:8080":        'bk_object'
+      - "dns.api.%{hiera('domain_public')}:9001":           'bk_dns'
       - "status.%{hiera('domain_frontend')}":               'bk_status'
+      - "status-%{::location}.%{hiera('domain_frontend')}": 'bk_status'
+      - "request.%{hiera('domain_frontend')}":              'bk_request'
       - "console.%{hiera('domain_public')}:6082":           'bk_console'
       - "access.%{hiera('domain_frontend')}":               'bk_access'
       - "access-%{::location}.%{hiera('domain_frontend')}": 'bk_access'
+      - "report.%{hiera('domain_frontend')}":               'bk_report'
+      - "report-%{::location}.%{hiera('domain_frontend')}": 'bk_report'
   internal_domains:
     ensure: present
     mappings:
@@ -78,8 +92,10 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
       - "network.%{hiera('domain_trp')}:9696":          'bk_network'
       - "metric.%{hiera('domain_trp')}:8041":           'bk_metric'
       - "compute.%{hiera('domain_trp')}:8774":          'bk_compute'
+      - "placement.%{hiera('domain_trp')}:8778":        'bk_placement'
       - "volume.%{hiera('domain_trp')}:8776":           'bk_volume'
       - "image.%{hiera('domain_trp')}:9292":            'bk_image'
+      - "dns.%{hiera('domain_trp')}:9001":              'bk_dns'
       - "object.%{hiera('domain_trp')}:8080":           'bk_object'
 
 # HAproxy backends: public, internal and haproxy monitor
@@ -89,10 +105,12 @@ profile::highavailability::loadbalancing::haproxy::haproxy_frontends:
       "%{::ipaddress_public1}:5000":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}", 'crt', "%{hiera('api_ssl_pem')}"]
       "%{::ipaddress_public1}:8041":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
       "%{::ipaddress_public1}:8080":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
+      "%{::ipaddress_public1}:8778":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
       "%{::ipaddress_public1}:8774":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
       "%{::ipaddress_public1}:8776":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
       "%{::ipaddress_public1}:9292":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
       "%{::ipaddress_public1}:9696":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
+      "%{::ipaddress_public1}:9001":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
       "%{::ipaddress_public1}:443":   ['ssl', 'crt', "%{hiera('status_ssl_pem')}"]
       "%{::ipaddress_public1}:80":    []
       "%{::ipaddress_public1}:6082":  ['ssl', 'crt', "%{hiera('console_ssl_pem')}"]
@@ -101,7 +119,11 @@ profile::highavailability::loadbalancing::haproxy::haproxy_frontends:
       - http-request:
         - 'add-header X-Forwarded-Proto https if { ssl_fc }'
         - 'set-header X-Forwarded-Port %[dst_port]'
-      - redirect:       'scheme https if !{ ssl_fc }' # redirect all to https (only port 80)
+      - acl:            'is_request hdr_beg(host) -i request'
+      - redirect:       'scheme https if !{ ssl_fc } !is_request' # redirect all to https (only port 80)
+      - tcp-request:    "%{hiera('block_api_connection')}" # should only block in test01
+      # Uncomment this to restrict access to testing network only
+      #- use_backend:    'bk_maintenance unless { src -f /etc/haproxy/testing_network.list }'
       - use_backend:    '%[req.hdr(host),lower,map(/etc/haproxy/public_domains.map)]'
   frontend_internal:
     bind:
@@ -113,6 +135,8 @@ profile::highavailability::loadbalancing::haproxy::haproxy_frontends:
       "%{::ipaddress_trp1}:9292":  [] # image
       "%{::ipaddress_trp1}:9696":  [] # neutron
       "%{::ipaddress_trp1}:8080":  [] # object
+      "%{::ipaddress_trp1}:9001":  [] # designate
+      "%{::ipaddress_trp1}:8778":  [] # placement
     options:
       - capture:        'request header Host len 64' #for debug
       - use_backend:    '%[req.hdr(host),lower,map(/etc/haproxy/internal_domains.map)]'
@@ -142,6 +166,12 @@ profile::highavailability::loadbalancing::haproxy::haproxy_backends:
     options:
       - option:       'httplog'
       - errorfile:    '503 /etc/haproxy/error.api.http'
+      - balance:      'roundrobin'
+  bk_placement:
+    options:
+      - option:       'httplog'
+      - errorfile:    '503 /etc/haproxy/error.api.http'
+      - balance:      'roundrobin'
   bk_volume:
     options:
       - option:       'httplog'
@@ -154,6 +184,11 @@ profile::highavailability::loadbalancing::haproxy::haproxy_backends:
     options:
       - option:       'httplog'
       - errorfile:    '503 /etc/haproxy/error.api.http'
+  bk_dns:
+    options:
+      - option:       'httplog'
+      - errorfile:    '503 /etc/haproxy/error.api.http'
+      - balance:      'roundrobin'
   bk_object:
     options:
       - option:
@@ -169,20 +204,36 @@ profile::highavailability::loadbalancing::haproxy::haproxy_backends:
   bk_access:
     options:
       - option:       'httplog'
+  bk_report:
+    options:
+      - option:       'httplog'
+  bk_request:
+    options:
+      redirect:         'location https://skjema.uio.no/iaas-project'
+  bk_maintenance:
+    options:
+      - option:       'httplog'
+      - errorfile:    '503 /etc/haproxy/error.maintenance.http'
 
 # Servers for backends. This will be merged and can should be overridden i location
 profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
   identity:
     listening_service:  'bk_identity'
-    ports:              5000
-    server_names:       ['%{::location}-identity-01']
-    ipaddresses:        ["%{hiera('netcfg_trp_netpart')}.81"]
+    server_names:       #['%{::location}-identity-01']
+      - "%{::location}-identity-01"
+      - "%{::location}-identity-02"
+      - "%{::location}-identity-03"
+    ipaddresses:        #["%{hiera('netcfg_trp_netpart')}.81"]
+      - "%{hiera('netcfg_trp_netpart')}.81"
+      - "%{hiera('netcfg_trp_netpart')}.82"
+      - "%{hiera('netcfg_trp_netpart')}.83"
+    ports:              '5000'
     options:            'check'
   network:
     listening_service:  'bk_network'
-    ports:              9696
     server_names:       ['%{::location}-network-01']
     ipaddresses:        ["%{hiera('netcfg_trp_netpart')}.71"]
+    ports:              '9696'
     options:            'check'
   metric:
     listening_service:  'bk_metric'
@@ -196,10 +247,20 @@ profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
     ipaddresses:        ["%{hiera('netcfg_trp_netpart')}.66"]
     ports:              '8774'
     options:            'check'
+  placement:
+    listening_service:  'bk_placement'
+    server_names:       ['%{::location}-novactrl-01']
+    ipaddresses:        ["%{hiera('netcfg_trp_netpart')}.66"]
+    ports:              '8778'
+    options:            'check'
   volume:
     listening_service:  'bk_volume'
-    server_names:       ['%{::location}-volume-01']
-    ipaddresses:        ["%{hiera('netcfg_trp_netpart')}.46"]
+    server_names:
+      - "%{::location}-volume-01"
+      - "%{::location}-volume-02"
+    ipaddresses:
+      - "%{hiera('netcfg_trp_netpart')}.46"
+      - "%{hiera('netcfg_trp_netpart')}.47"
     ports:              '8776'
     options:            'check'
   image:
@@ -230,6 +291,12 @@ profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
     ipaddresses:        ["%{hiera('netcfg_trp_netpart')}.21"]
     ports:              '8080'
     options:            'check'
+  dns:
+    listening_service:  'bk_dns'
+    server_names:       ['%{::location}-dns-01']
+    ipaddresses:        ["%{hiera('netcfg_trp_netpart')}.34"]
+    ports:              '9001'
+    options:            'check'
   console:
     listening_service:  'bk_console'
     server_names:       ['%{::location}-console-01']
@@ -240,6 +307,12 @@ profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
     listening_service:  'bk_access'
     server_names:       ['%{::location}-access-01']
     ipaddresses:        ["%{hiera('netcfg_trp_netpart')}.56"]
+    ports:              '80'
+    options:            'check'
+  report:
+    listening_service:  'bk_report'
+    server_names:       ['%{::location}-report-01']
+    ipaddresses:        ["%{hiera('netcfg_trp_netpart')}.22"]
     ports:              '80'
     options:            'check'
 
@@ -273,19 +346,31 @@ profile::base::selinux::ports:
     seltype:  'http_port_t'
     protocol: 'tcp'
     port:     8080
+  placement-http:
+    seltype:  'http_port_t'
+    protocol: 'tcp'
+    port:     8778
   console-http:
     seltype:  'http_port_t'
     protocol: 'tcp'
     port:     6082
+  dns-http:
+    seltype:  'http_port_t'
+    protocol: 'tcp'
+    port:     9001
 
 # Errorpage for api, not used for status!
 profile::highavailability::loadbalancing::haproxy::haproxy_errorpage:
+  'maintenance':
+    code:     503
+    header:   'Scheduled maintenance'
+    content:  'Unavailable due to scheduled maintenance. Be right back.'
+    url:      'https://twitter.com/uhiaas'
   'api':
     code:     503
     header:   'Be Right Back'
     content:  'The API are down at the moment'
     url:      "https://status.%{hiera('domain_frontend')}"
-
   'console':
     code:     503
     header:   'Be Right Back'

@@ -5,10 +5,9 @@ include:
     - profile::openstack::openrc
     - profile::logging::rsyslog::client
 
-openstack_version: 'ocata'
-
 profile::base::common::packages:
   'python-openstackclient': {}
+  'openstack-selinux': {}
 
 profile::openstack::metric::manage_firewall:  true
 profile::openstack::metric::manage_wsgi:      true
@@ -23,3 +22,6 @@ profile::openstack::openrc::project_name:     'services'
 profile::base::yumrepo::repo_hash:
   rdo-release:
     ensure: present
+  epel: # should be absent when using RDO, but whitelist can also work
+    ensure:   present
+    includepkgs: 'htop bash-completion-extras'

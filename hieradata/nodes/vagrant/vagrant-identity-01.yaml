@@ -10,3 +10,5 @@ network::interfaces_hash:
     mtu:       '1500'
     ipaddress: "%{hiera('netcfg_trp_netpart')}.81"
     netmask:   "%{hiera('netcfg_trp_netmask')}"
+
+profile::openstack::identity::manage_token_rotate:        true

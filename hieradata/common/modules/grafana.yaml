@@ -1,6 +1,6 @@
 ---
-grafana::install_method:        package
-grafana::package_source:        'https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-4.2.0-1.x86_64.rpm'
+grafana::install_method:        'repo'
+grafana::version:               '5.2.2'
 grafana::manage_package_repo:   false
 grafana::cfg:
   app_mode: 'production'
@@ -14,5 +14,36 @@ grafana::cfg:
     enable:         true
     org_name:       'norcams'
   users:
-    allow_sign_up:    false
-    allow_org_create: false
+    allow_sign_up:      false
+    allow_org_create:   false
+    auto_assign_org:    true
+    auto_assign_org_id: 1
+
+grafana::plugins:
+  gnocchixyz-gnocchi-datasource:
+    ensure: present
+
+grafana::provisioning_datasources:
+  apiVersion: 1
+  datasources:
+    - name:         'graphite'
+      type:         'graphite'
+      url:          "http://%{hiera('mgmt__address__monitor')}"
+      access:       'proxy'
+      isDefault:    true
+      orgId:        1
+      version:      1
+      jsonData:
+        graphiteVersion: "0.9"
+    - name:         'metric'
+      type:         'gnocchixyz-gnocchi-datasource'
+      url:          "https://api.%{hiera('domain_frontend')}:5000"
+      access:       'proxy'
+      orgId:        1
+      version:      1
+      jsonData:
+        mode:               'keystone'
+        password:           "%{hiera('grafana_openstack_password')}"
+        username:           "%{hiera('grafana_openstack_user')}"
+        domain:             'default'
+        project:            'services'

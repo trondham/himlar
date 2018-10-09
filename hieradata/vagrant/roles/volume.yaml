@@ -1,0 +1,11 @@
+---
+cinder::backends::enabled_backends:
+  - lvm
+
+profile::openstack::volume::type:
+  lvm:
+    visibility: "public"
+
+cinder::config::cinder_config:
+  lvm/volume_group:
+    value: 'cinder-volumes'

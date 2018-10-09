@@ -1,18 +1,27 @@
 ---
 network::interfaces_hash:
-  'eth0':
+  'em1':
     dns1:      "%{hiera('netcfg_peerdns1')}"
     dns2:      "%{hiera('netcfg_peerdns2')}"
     domain:    "%{domain}"
     defroute:  'no'
     peerdns:   'yes'
     onboot:    'yes'
-    ipaddress: "%{hiera('netcfg_netpart_mgmt')}.104"
-    netmask:   "%{hiera('netcfg_netmask_mgmt')}"
-    gateway:   "%{hiera('netcfg_gateway_mgmt')}"
-  'eth0.912':
-    defroute:  'no'
+    ipaddress: "%{hiera('netcfg_mgmt_netpart')}.104"
+    netmask:   "%{hiera('netcfg_mgmt_netmask')}"
+    gateway:   "%{hiera('netcfg_mgmt_gateway')}"
+  'em1.912':
+    defroute:  'yes'
     onboot:    'yes'
-    ipaddress: "%{hiera('netcfg_netpart_trp')}.104"
-    netmask:   "%{hiera('netcfg_netmask_trp')}"
+    ipaddress: "%{hiera('netcfg_trp_netpart')}.104"
+    netmask:   "%{hiera('netcfg_trp_netmask')}"
+    gateway:   "%{hiera('netcfg_trp_gateway')}"
     vlan:      "yes"
+
+named_interfaces::config:
+  mgmt:
+    - em1
+  trp:
+    - em1.912
+  live:
+    - em1.912

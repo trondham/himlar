@@ -2,7 +2,7 @@
 keystone::db::mysql::allowed_hosts:
   - "%{hiera('netcfg_trp_netpart')}.%"
 
-keystone::database_connection:            "mysql://keystone:%{hiera('keystone::db::mysql::password')}@db01.%{hiera('domain_trp')}/keystone"
+keystone::database_connection:            "mysql://keystone:%{hiera('keystone::db::mysql::password')}@%{hiera('service__address__db_global')}/keystone"
 keystone::service_name:                   'httpd'
 keystone::admin_password:                 "%{hiera('keystone_admin_password')}"
 keystone::public_bind_host:               "%{ipaddress_trp1}"
@@ -10,17 +10,26 @@ keystone::admin_bind_host:                "%{ipaddress_trp1}"
 keystone::admin_endpoint:                 "%{hiera('endpoint__identity__admin')}"
 keystone::enable_proxy_headers_parsing:   true
 keystone::purge_config:                   true
+keystone::enable_bootstrap:               true
+
+# cache
+keystone::cache_enabled:                   true
+keystone::memcache_servers:               '127.0.0.1:11211'
+keystone::cache_backend:                  'oslo_cache.memcache_pool'
 
 # notification
 keystone::notification_driver:            'messagingv2'
 keystone::notification_format:            'cadf'
 keystone::default_transport_url:          "%{hiera('service__transport__url')}"
 
-# token (FIXME: setup and rotate should only be run on one identity server!)
-#keystone::token_provider:                 'fernet'
-#keystone::enable_fernet_setup:            true
-#keystone::cron::fernet_rotate::minute:    '15'
-#keystone::cron::fernet_rotate::hour:      '3'
+keystone::token_provider:                 'fernet'
+keystone::fernet_max_active_keys:         '3'
+keystone::cron::fernet_rotate::minute:    '15'
+keystone::cron::fernet_rotate::hour:      '3'
+keystone::credential_key_repository:      '/etc/keystone/credential-keys'
+keystone::fernet_key_repository:          '/etc/keystone/fernet-keys'
+keystone::enable_fernet_setup:            true
+keystone::enable_credential_setup:        true
 
 # httpd
 keystone::wsgi::apache::ssl:              false
@@ -28,10 +37,11 @@ keystone::wsgi::apache::bind_host:        "%{ipaddress_trp1}"
 keystone::wsgi::apache::admin_bind_host:  "%{ipaddress_trp1}"
 
 # roles
-keystone::roles::admin::email:            'support@uh-iaas.no'
-keystone::roles::admin::password:         "%{hiera('keystone_admin_password')}"
-keystone::roles::admin::admin_tenant:     'openstack'
-keystone::roles::admin::service_tenant:   'services'
+keystone::roles::admin::email:                  'support@uh-iaas.no'
+keystone::roles::admin::password:               "%{hiera('keystone_admin_password')}"
+keystone::roles::admin::admin_tenant:           "%{hiera('keystone__admin__project')}"
+keystone::roles::admin::service_tenant:         "%{hiera('keystone__service__project')}"
+keystone::roles::admin::service_project_domain: "%{hiera('keystone__default__domain')}"
 
 # endpoints
 keystone::endpoint::region:               "%{location}"
@@ -51,6 +61,18 @@ keystone::federation::openidc::openidc_provider_metadata_url: 'https://auth.data
 keystone::federation::openidc::openidc_client_id:             '00000000-0000-0000-0000-000000000000'
 keystone::federation::openidc::openidc_client_secret:         '00000000-0000-0000-0000-000000000000'
 #keystone::federation::openidc::module_plugin:                 'keystone.auth.openidc'
+
+# override default policy
+keystone::policy::policies:
+  identity:get_user:
+    key:    'identity:get_user'
+    value:  'rule:admin_required or role:admin_view'
+  identity:list_users:
+    key:    'identity:list_users'
+    value:  'rule:admin_required or role:admin_view'
+  identity:list_domains:
+    key:    'identity:list_domains'
+    value:  'rule:admin_required or role:admin_view'
 
 # cron
 keystone::cron::token_flush::maxdelay:    1800 # sek = 30 min

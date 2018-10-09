@@ -1,7 +1,9 @@
 # Class: profile::storage::cephosd
 #
 #
-class profile::storage::cephosd {
+class profile::storage::cephosd(
+  $create_osds = false,
+) {
   include ::ceph::profile::osd
 
   service { 'ceph-osd':
@@ -23,5 +25,11 @@ class profile::storage::cephosd {
     command     => '/bin/systemctl start -l ceph-osd.target',
     require     => File['/var/lib/ceph-configured'],
     refreshonly => true,
+  }
+
+  # Create lvm osds
+  if $create_osds {
+    $osd_devices = lookup('profile::storage::cephosd::osds', Hash, 'deep', {})
+    create_resources('profile::storage::create_lvm_osd', $osd_devices)
   }
 }

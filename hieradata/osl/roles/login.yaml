@@ -1,6 +1,6 @@
 ---
 profile::network::services::manage_dhcp:  false
-profile::network::services::manage_nat:   true
+profile::firewall::pre::manage_ipv6_ssh:  true
 
 openstack_extras::repo::redhat::redhat::purge_unmanaged: false
 
@@ -34,24 +34,30 @@ himlar_bootstrap::tftp_install:
 profile::application::git::settings:
   hostname: "osl"
 
+named_interfaces::config:
+  mgmt:
+    - em4
+  public:
+    - em1
+
 # Db backup
 profile::base::login::db_servers:
-  osl-db-01:
+  osl-db-global-01:
     hour:     '*'
     minute:   '20'
-    command:  '/usr/local/sbin/db-dump.sh osl-db-01 >/dev/null'
-  osl-db-02:
+    command:  '/usr/local/sbin/db-dump.sh osl-db-global-01 >/dev/null'
+  osl-db-regional-01:
     hour:     '*'
     minute:   '30'
-    command:  '/usr/local/sbin/db-dump.sh osl-db-02 >/dev/null'
-  test02-db-01:
+    command:  '/usr/local/sbin/db-dump.sh osl-db-regional-01 >/dev/null'
+  test02-db-global-01:
     hour:     '*'
     minute:   '20'
-    command:  '/usr/local/sbin/db-dump.sh test02-db-01 >/dev/null'
-  test02-db-02:
+    command:  '/usr/local/sbin/db-dump.sh test02-db-global-01 >/dev/null'
+  test02-db-regional-01:
     hour:     '*'
     minute:   '30'
-    command:  '/usr/local/sbin/db-dump.sh test02-db-02 >/dev/null'
+    command:  '/usr/local/sbin/db-dump.sh test02-db-regional-01 >/dev/null'
 
 ssh::server::options:
   # No 2FA possible with gitolite

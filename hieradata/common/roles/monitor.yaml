@@ -17,27 +17,20 @@ profile::monitoring::statsd::manage_firewall:  true
 profile::monitoring::statsd::firewall_extras:
   source: "%{::network_mgmt1}/%{::netmask_mgmt1}"
 
-profile::monitoring::grafana::datasource:
-  graphite:
-    grafana_url:        "http://%{::ipaddress_mgmt1}:8080"
-    grafana_user:       'admin'
-    grafana_password:   "%{hiera('grafana_admin_password')}"
-    type:               'graphite'
-    url:                "http://%{::ipaddress_mgmt1}"
-    access_mode:        'proxy'
-    is_default:          true
+grafana_openstack_user: 'monitor'
+grafana_openstack_password: "%{hiera('monitor_metric_password')}"
 
-profile::monitoring::grafana::dashboard:
-  'Compute Hosts':
-    grafana_url:        "http://%{::ipaddress_mgmt1}:8080"
-    grafana_user:       'admin'
-    grafana_password:   "%{hiera('grafana_admin_password')}"
-    content:            'instances.json'
-  'API':
-    grafana_url:        "http://%{::ipaddress_mgmt1}:8080"
-    grafana_user:       'admin'
-    grafana_password:   "%{hiera('grafana_admin_password')}"
-    content:            'api.json'
+grafana::provisioning_dashboards:
+  apiVersion: 1
+  providers:
+    - name: 'default'
+      orgId: 1
+      folder: ''
+      type: file
+      disableDeletion: true
+      options:
+        path: '/var/lib/grafana/dashboards'
+        puppetsource: 'puppet:///modules/profile/monitoring/grafana/dashboard'
 
 # Sensu server
 sensu::server:              true
@@ -67,13 +60,22 @@ profile::monitoring::sensu::server::handlers:
   slack:
     type:         'pipe'
     command:      'cat'
+    filters:
+      - normal
+      - infrequent
 
 profile::monitoring::sensu::server::filters:
-  normal:
+  normal: # for slack only: will only work on interval 60
     negate: true
     attributes:
       check:
         interval: 60
+      occurrences: "eval: value != 2 && value % 10 != 0"
+  infrequent: # for slack only: will only work on interval 300
+    negate: true
+    attributes:
+      check:
+        interval: 300
       occurrences: "eval: value != 1 && value % 10 != 0"
 
 # api watch
@@ -81,6 +83,7 @@ profile::base::common::packages:
   'gcc-c++':                {}
   'make':                   {}
   'python-openstackclient': {}
+  'openstack-selinux':      {}
 
 profile::monitoring::sensu::agent::plugins:
   sensu-plugins-http:
@@ -172,8 +175,22 @@ logrotate::rules:
     sharedscripts:  true
     missingok:      true
     compress:       true
+  syslog:
+    path:           ['/var/log/cron', '/var/log/maillog', '/var/log/messages', '/var/log/secure', '/var/log/spooler']
+    rotate:         10
+    rotate_every:   daily
+    postrotate:     '/bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true'
+    dateext:        true
+    sharedscripts:  true
+    missingok:      true
+    compress:       true
 
 # Enable extra yum repo for openstack client
 profile::base::yumrepo::repo_hash:
   rdo-release:
     ensure: present
+  grafana:
+    ensure: present
+  epel: # should be absent when using RDO, but whitelist can also work
+    ensure:   present
+    includepkgs: 'htop bash-completion-extras statsd python2-pip'

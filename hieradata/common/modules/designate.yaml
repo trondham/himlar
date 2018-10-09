@@ -1,0 +1,125 @@
+---
+# Configuration for Designate (DNS)
+#
+# Uses puppet-designate:
+#   https://github.com/openstack/puppet-designate
+#
+# UH-IaaS internal documentation:
+#   https://iaas.readthedocs.io/en/latest/team/operations/designate.html
+
+#---------------------------------------------------------------------
+# Logging (manifests/logging.pp)
+#   - runs on the DNS node
+#---------------------------------------------------------------------
+designate::logging::use_syslog:  true
+designate::logging::use_journal: true
+designate::logging::use_json:    false
+
+#---------------------------------------------------------------------
+# RabbitMQ (manifests/init.pp)
+#   - runs on the DNS node
+#---------------------------------------------------------------------
+designate::default_transport_url:       "%{hiera('service__transport__url')}"
+designate::notification_transport_url:  "%{hiera('service__transport__url')}"
+
+#---------------------------------------------------------------------
+# Authentication (manifests/keystone/auth.pp)
+#   - runs on the IDENTITY node
+#---------------------------------------------------------------------
+designate::keystone::auth::region:       "%{hiera('location_environment')}"
+designate::keystone::auth::public_url:   "%{hiera('endpoint__designate__public')}"
+designate::keystone::auth::admin_url:    "%{hiera('endpoint__designate__admin')}"
+designate::keystone::auth::internal_url: "%{hiera('endpoint__designate__internal')}"
+designate::keystone::auth::password:     "%{hiera('designate_api_password')}"
+
+#---------------------------------------------------------------------
+# Authentication tokens (manifests/keystone/authtoken.pp)
+#   - runs on the DNS node
+#---------------------------------------------------------------------
+designate::keystone::authtoken::password:          "%{hiera('designate_api_password')}"
+designate::keystone::authtoken::auth_url:          "%{hiera('endpoint__identity__admin')}"
+designate::keystone::authtoken::auth_uri:          "%{hiera('endpoint__identity__public')}"
+designate::keystone::authtoken::memcached_servers: '127.0.0.1'
+
+#---------------------------------------------------------------------
+# Central (manifests/central.pp)
+#   - runs on the DNS node
+#---------------------------------------------------------------------
+designate::central::backend_driver:             'bind9'
+designate::central::managed_resource_email:     'iaas-core@usit.uio.no'
+designate::central::min_ttl:                    '300'
+
+#---------------------------------------------------------------------
+# API (manifests/api.pp)
+#   - runs on the DNS node
+#---------------------------------------------------------------------
+designate::api::auth_strategy:     'keystone'
+designate::api::keystone_host:     "identity.%{hiera('domain_trp')}"
+designate::api::keystone_port:     '35357'
+designate::api::keystone_protocol: 'http'
+designate::api::keystone_tenant:   'services'
+designate::api::keystone_user:     'designate'
+designate::api::keystone_password: "%{hiera('designate_api_password')}"
+designate::api::enable_api_v1:     false
+designate::api::enable_api_v2:     true
+designate::api::enabled_extensions_v2:
+  - 'quotas'
+  - 'reports'
+# needs to be '0.0.0.0' for it to bind to localhost as well
+designate::api::listen:             "0.0.0.0:9001"
+designate::api::api_base_uri:       "%{hiera('endpoint__designate__public')}"
+
+#---------------------------------------------------------------------
+# Database (manifests/db.pp)
+#   - runs on the DNS node
+#---------------------------------------------------------------------
+designate::db::database_connection: "mysql+pymysql://designate:%{hiera('designate::db::mysql::password')}@%{hiera('service__address__db_global')}/designate"
+designate::db::sync_db: true
+designate::db::database_max_retries: "-1"
+
+#---------------------------------------------------------------------
+# Database MySQL (manifests/db/mysql.pp)
+#   - runs on the DB node
+#---------------------------------------------------------------------
+designate::db::mysql::user:   "designate"
+designate::db::mysql::dbname: "designate"
+designate::db::mysql::allowed_hosts:
+  - "%{hiera('netcfg_trp_netpart')}.%"
+
+#---------------------------------------------------------------------
+# Bind9 backend (manifests/backend/bind9.pp)
+#   - runs on the DNS node
+#---------------------------------------------------------------------
+designate::backend::bind9::rndc_host: "%{hiera('service__address__ns')}"
+
+#---------------------------------------------------------------------
+# mDNS (manifests/mdns.pp)
+#   - runs on the DNS node
+#---------------------------------------------------------------------
+# use defaults
+
+#---------------------------------------------------------------------
+# Producer (manifests/producer.pp)
+#   - runs on the DNS node
+#---------------------------------------------------------------------
+# use defaults
+
+#---------------------------------------------------------------------
+# Worker (manifests/worker.pp)
+#   - runs on the DNS node
+#---------------------------------------------------------------------
+# use defaults
+
+#---------------------------------------------------------------------
+# Sink [NOT USED] (manifests/sink.pp)
+#---------------------------------------------------------------------
+#designate::sink::enabled_notification_handlers:
+#  - "nova_fixed"
+
+#---------------------------------------------------------------------
+# Extra config (manifests/config.pp)
+#   - runs on the DNS node
+#---------------------------------------------------------------------
+designate::config::designate_config:
+  DEFAULT/supported_record_type:
+    value: 'A,AAAA,CNAME,MX,SRV,TXT,SPF,NS,SSHFP,SOA'

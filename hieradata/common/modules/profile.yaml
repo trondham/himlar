@@ -29,6 +29,9 @@ profile::base::common::packages:
   'vim-enhanced': {}
   'bind-utils': {}
   'nano': {}
+  'yum-utils': {}
+  'strace': {}
+  'lsof': {}
 
 # SSH only from mgmt
 profile::firewall::pre::ssh_settings:
@@ -36,15 +39,6 @@ profile::firewall::pre::ssh_settings:
 
 profile::logging::rsyslog::client::manage_rsyslog:         true
 profile::openstack::compute::hypervisor::manage_telemetry: false
-
-profile::openstack::database::sql::keystone_enabled: true
-profile::openstack::database::sql::glance_enabled:   true
-profile::openstack::database::sql::nova_enabled:     true
-profile::openstack::database::sql::neutron_enabled:  true
-profile::openstack::database::sql::cinder_enabled:   true
-profile::openstack::database::sql::gnocchi_enabled:  true
-profile::openstack::database::sql::heat_enabled:     false
-profile::openstack::database::sql::trove_enabled:    false
 
 # for db backup system (used by both login and mariadb profile)
 profile::database::mariadb::backuptopdir:        '/var/db/dumps'
@@ -65,21 +59,34 @@ profile::openstack::network::l2_driver: calico
 
 profile::database::mariadb::manage_repo: false
 
-profile::application::himlarcli::username:          'admin'
-profile::application::himlarcli::auth_url:          "%{hiera('public__address__api')}"
-profile::application::himlarcli::password:          "%{hiera('keystone_admin_password')}"
-profile::application::himlarcli::region_name:       "%{::location}"
-profile::application::himlarcli::tenant_name:       'openstack'
-profile::application::himlarcli::default_domain:    'default'
-profile::application::himlarcli::domain:            "%{::domain}"
-profile::application::himlarcli::foreman_url:       "https://%{::location}-admin-01.%{::domain}"
-profile::application::himlarcli::foreman_user:      'admin'
-profile::application::himlarcli::foreman_password:  "%{hiera('foreman::admin_password')}"
-profile::application::himlarcli::statsd_server:     "%{hiera('mgmt__address__monitor')}"
-profile::application::himlarcli::mq_host:           "%{hiera('service__address__rabbitmq_01')}"
-profile::application::himlarcli::mq_username:       'himlarcli'
-profile::application::himlarcli::mq_password:        "%{hiera('himlarcli_rabbit_password')}"
-profile::application::himlarcli::mq_vhost:          'himlarcli'
+profile::application::himlarcli::username:               'admin'
+profile::application::himlarcli::auth_url:               "%{hiera('public__address__api')}"
+profile::application::himlarcli::password:               "%{hiera('keystone_admin_password')}"
+profile::application::himlarcli::region_name:            "%{::location}"
+profile::application::himlarcli::tenant_name:            'openstack'
+profile::application::himlarcli::default_domain:         'default'
+profile::application::himlarcli::domain:                 "%{::domain}"
+profile::application::himlarcli::foreman_url:            "https://%{::location}-admin-01.%{::domain}"
+profile::application::himlarcli::foreman_user:           'admin'
+profile::application::himlarcli::foreman_password:       "%{hiera('foreman::admin_password')}"
+profile::application::himlarcli::statsd_server:          "%{hiera('mgmt__address__monitor')}"
+profile::application::himlarcli::database_uri:           "mysql+pymysql://report:%{hiera('report_db_password')}@%{hiera('service__address__db_global')}/report"
+profile::application::himlarcli::mq_host:                "%{hiera('service__address__rabbitmq_01')}"
+profile::application::himlarcli::mq_username:            'himlarcli'
+profile::application::himlarcli::mq_password:             "%{hiera('himlarcli_rabbit_password')}"
+profile::application::himlarcli::mq_vhost:               'himlarcli'
+profile::application::himlarcli::slack_webhook_url:      "%{hiera('himlarcli_slack_webhook')}"
+profile::application::himlarcli::slack_user:             'iaas-status'
+profile::application::himlarcli::slack_channel:          '#devtest'
+profile::application::himlarcli::twitter_api_key:        "%{hiera('himlarcli_twitter_apikey')}"
+profile::application::himlarcli::twitter_api_secret_key: "%{hiera('himlarcli_twitter_secretkey')}"
+profile::application::himlarcli::twitter_access_token:   "%{hiera('himlarcli_twitter_accesstoken')}"
+profile::application::himlarcli::twitter_secret_token:   "%{hiera('himlarcli_twitter_secrettoken')}"
+profile::application::himlarcli::status_url:             "https://report.%{hiera('domain_frontend')}/api/v1/status"
+profile::application::himlarcli::status_token:           "%{hiera('himlarcli_status_token')}"
+profile::application::himlarcli::sensu_url:              "http://%{hiera('mgmt__address__monitor')}:4567"
+profile::application::himlarcli::sensu_username:         'sensu'
+profile::application::himlarcli::sensu_password:         "%{hiera('sensu_api_password')}"
 
 profile::openstack::openrc::auth_url:     "%{hiera('public__address__api')}"
 profile::openstack::openrc::password:     "%{hiera('keystone_admin_password')}"
@@ -112,16 +119,11 @@ profile::base::yumrepo::repo_hash:
     baseurl:        "%{hiera('yum_base_mirror')}/puppetlabs-PC1/"
     gpgkey:         "%{hiera('yum_base_mirror')}/puppetlabs-PC1/RPM-GPG-KEY-puppet"
     gpgcheck:       1
-  puppetlabs-deps:
-    descr:          Puppetlabs Dependencies Yum Repo
-    baseurl:        "%{hiera('yum_base_mirror')}/puppetlabs-deps/"
-    gpgkey:         "%{hiera('yum_base_mirror')}/puppetlabs-deps/RPM-GPG-KEY-puppetlabs"
-    gpgcheck:       1
   epel:
     descr:          "Extra Packages for Enterprise Linux %{operatingsystemmajrelease} - $basearch"
     baseurl:        "%{hiera('yum_base_mirror')}/epel"
     gpgkey:         'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7'
-    exclude:        'zeromq python2-uritemplate python2-google-api-client' # FIXME epel version conflicts with rdo
+    exclude:        'zeromq python2-uritemplate python2-google-api-client' # FIXME when using RDO use whitelist includepkgs for EPEL!
   uh-iaas:
     descr:          'UH-IaaS repo'
     baseurl:        "%{hiera('yum_base_mirror')}/uh-iaas/"
@@ -145,6 +147,7 @@ profile::base::yumrepo::repo_hash:
     enabled:        1
     gpgcheck:       1
     gpgkey:         'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-Cloud'
+    #exclude:        'mariadb*' FIXME: this should be added after adding mariadb repo to all roles connecting to db
   calico:
     ensure:         absent
     descr:          'Calico Repository'
@@ -152,13 +155,13 @@ profile::base::yumrepo::repo_hash:
     enabled:        1
     gpgcheck:       1
     gpgkey:         "%{hiera('yum_base_mirror')}/calico/key"
-  calico26:
+  calico31:
     ensure:         absent
-    descr:          'Calico26 Repository'
-    baseurl:        "%{hiera('yum_base_mirror')}/calico26/"
+    descr:          'Calico31 Repository'
+    baseurl:        "%{hiera('yum_base_mirror')}/calico31/"
     enabled:        1
     gpgcheck:       1
-    gpgkey:         "%{hiera('yum_base_mirror')}/calico26/key"
+    gpgkey:         "%{hiera('yum_base_mirror')}/calico31/key"
   ceph-%{hiera('ceph_version')}:
     ensure:         absent
     descr:          'Ceph packages'
@@ -213,6 +216,13 @@ profile::base::yumrepo::repo_hash:
     baseurl:        "%{hiera('yum_base_mirror')}/mariadb"
     gpgkey:         "%{hiera('yum_base_mirror')}/mariadb/RPM-GPG-KEY-MariaDB"
     gpgcheck:       '1'
+  grafana:
+    ensure:         absent
+    descr:          'MariaDB 10.1 repo'
+    baseurl:        "%{hiera('yum_base_mirror')}/grafana"
+    gpgkey:         "%{hiera('yum_base_mirror')}/grafana/RPM-GPG-KEY-grafana"
+    enabled:        1
+    gpgcheck:       1
 
 profile::base::dell::repo_hash:
   dell-system-update_dependent:
@@ -272,3 +282,16 @@ profile::openstack::dashboard::policies:
     file_path:  '/etc/openstack-dashboard/nova_policy.json'
     key:        'compute_extension:shelve'
     value:      'role:admin'
+
+# logrotate
+profile::logging::logrotate::manage_logrotate:      true
+logrotate::rules:
+  syslog:
+    path:           ['/var/log/cron', '/var/log/maillog', '/var/log/messages', '/var/log/secure', '/var/log/spooler']
+    rotate:         10
+    rotate_every:   daily
+    postrotate:     '/bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true'
+    dateext:        true
+    sharedscripts:  true
+    missingok:      true
+    compress:       true

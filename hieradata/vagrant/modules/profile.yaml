@@ -1,4 +1,6 @@
 ---
+profile::logging::rsyslog::client::manage_rsyslog:  false
+
 profile::development::network::dns::manage_hosts: true
 
 profile::application::openssl::catrust::ca_cert: '/opt/himlar/provision/ca/intermediate/certs/ca-chain.cert.pem'
@@ -13,10 +15,15 @@ profile::openstack::openrc::cacert:           '/opt/himlar/provision/ca/intermed
 # Use newest test repositories
 yum_base_mirror:    'https://download.iaas.uio.no/uh-iaas/test'
 
-#sensu_ssl_cachain:  '-C /opt/himlar/provision/ca/intermediate/certs/ca-chain.cert.pem'
+# Enable insecure ssl checks
 sensu_ssl_cachain:  '-k'
 
 # no proxy for vagrant environments
 profile::network::yum_proxy::yum_proxy: ''
 
-profile::openstack::identity::swift_enabled:      true
+profile::openstack::identity::swift_enabled:          false
+
+# Enable designate in vagrant
+profile::openstack::identity::designate_enabled:      true
+profile::openstack::database::sql::designate_enabled: true
+profile::openstack::dashboard::enable_designate:      true

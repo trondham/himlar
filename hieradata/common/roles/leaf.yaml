@@ -21,6 +21,7 @@ profile::network::leaf::manage_quagga:            true
 profile::network::leaf::manage_acls:              true
 profile::base::network::cumulus_ifs:              true
 network::config_file_per_interface:               true
+profile::logging::logrotate::manage_logrotate:    false
 
 quagga::zebra:              true
 quagga::bgpd:               true
@@ -62,6 +63,7 @@ openstack_extras::repo::debian::debian::source_hash:
 profile::base::common::packages:
   'vim-enhanced': { 'ensure': 'absent', }
   'bind-utils': { 'ensure': 'absent', }
+  'yum-utils': { 'ensure': 'absent', }
   'libaugeas-ruby1.9.1': {}
   'augeas-tools': {}
   'cl-mgmtvrf': {}

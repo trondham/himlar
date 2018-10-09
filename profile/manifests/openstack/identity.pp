@@ -7,6 +7,7 @@ class profile::openstack::identity (
   $nova_enabled             = false,
   $swift_enabled            = false,
   $trove_enabled            = false,
+  $designate_enabled        = false,
   $gnocchi_enabled          = false,
   $roles_extra              = [],
   $manage_firewall          = true,
@@ -16,23 +17,62 @@ class profile::openstack::identity (
   $manage_openidc           = false,
   $trusted_dashboard        = undef,
   $disable_admin_token_auth = false,
+  $token_rotation_sync      = false,
   $manage_token_rotate      = false,
-  $keystone_config          = {}
+  $token_db                 = 'token_keys',
+  $keystone_config          = {},
+  $cron_master              = {},
+  $cron_slave               = {},
+  $fernet_active_keys       = 3,
+  $credential_active_keys   = 2,
+  $fernet_key_repo          = '',
+  $credential_key_repo      = '',
+  $dbpw                     = '',
+  $db_host                  = '',
+  $gpg_receiver             = '',
+  $manage_policy            = false,
 ) {
 
   include ::keystone
   include ::keystone::config
   include ::keystone::roles::admin
   include ::keystone::endpoint
-  include ::keystone::cron::token_flush # FIXME: remove after change to fernet
   include ::keystone::wsgi::apache
+  include ::profile::openstack::openrc
 
-  if $manage_token_rotate {
-    include ::keystone::cron::fernet_rotate
+  # this system is part of a master/slave token cluster?
+  if $token_rotation_sync {
+
+    # this system is the token master?
+    if $manage_token_rotate {
+      # cron job to rotate the fernet tokens
+      include ::keystone::cron::fernet_rotate
+
+      # cron jobs related to master token handling
+      create_resources('cron', $cron_master)
+
+    } else  {
+      # cron job to retrieve keys from database
+      create_resources('cron', $cron_slave)
+    }
+    file { '/usr/local/sbin/token_dist.sh':
+      ensure  => present,
+      mode    => '0750',
+      owner   => 'root',
+      group   => 'root',
+      content => template("${module_name}/openstack/keystone/token_dist.erb")
+    }
+
   }
+
+  if $manage_policy {
+    include ::keystone::policy
+  }
+
   if $disable_admin_token_auth {
     include ::keystone::disable_admin_token_auth
   }
+
   if $manage_openidc {
     include ::keystone::federation::openidc
     if $trusted_dashboard {
@@ -58,6 +98,7 @@ class profile::openstack::identity (
 
   if $nova_enabled {
     include ::nova::keystone::auth
+    include ::nova::keystone::auth_placement
   }
 
   if $neutron_enabled {
@@ -74,6 +115,10 @@ class profile::openstack::identity (
 
   if $trove_enabled {
     include ::trove::keystone::auth
+  }
+
+  if $designate_enabled {
+    include ::designate::keystone::auth
   }
 
   if $gnocchi_enabled {

@@ -6,8 +6,17 @@ nova::keystone::auth::public_url_v3:    "%{hiera('endpoint__compute__internal')}
 # use qemu in libvirt in vagrant
 nova::compute::libvirt::libvirt_virt_type: qemu
 
+nova::compute::reserved_host_memory:             '512'
+
 # verbose logging in vagrant
 nova::verbose:   true
 
 # Do not use placeholder AZ
 nova::availability_zone::default_availability_zone:           "%{::location}-default-1"
+
+nova::wsgi::apache_placement::threads:  1
+nova::wsgi::apache_placement::workers:  1
+
+nova::wsgi::apache_api::threads: 1
+nova::wsgi::apache_api::workers: 1
+

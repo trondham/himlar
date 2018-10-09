@@ -1,11 +1,12 @@
 class profile::dns::ns (
   $allowed_nets = undef,
+  $allowed_transfer_nets = undef,
   $check_named_health = false,
   $enable_bird = false,
   $enable_bird6 = false,
-  $my_mgmt_addr = {},
-  $my_transport_addr = {},
-  #$mdns_transport_addr = {},
+  $my_mgmt_addr = $::ipaddress_mgmt1,
+  $my_transport_addr = $::ipaddress_trp1,
+  $mdns_transport_addr = {},
   $admin_mgmt_addr = {},
   $ns_mgmt_addr = {},
   $ns_transport_addr = {},
@@ -211,6 +212,20 @@ class profile::dns::ns (
       mode     => '0755',
       path     => "/opt/named-checks/named_health.sh",
       content  => template("${module_name}/dns/bind/named_check.erb"),
+    }
+    file { 'named_check_service':
+      ensure   => present,
+      owner    => root,
+      group    => root,
+      mode     => '0644',
+      path     => "/etc/systemd/system/named_health.service",
+      content  => template("${module_name}/dns/bind/named_check_service.erb"),
+    } ~>
+    service { 'named_health.service':
+      ensure      => running,
+      enable      => true,
+      hasrestart  => true,
+      hasstatus   => true,
     }
   }
 }

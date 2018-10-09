@@ -42,6 +42,8 @@ profile::openstack::openrc::username:         'imagebuilder'
 profile::openstack::openrc::project_name:     'imagebuilder'
 profile::openstack::openrc::password:         "%{hiera('imagebuilder_password')}"
 
+
+profile::application::builder::package_url: 'https://download.iaas.uio.no/uh-iaas/yumrepo/imagebuilder-0.1-33.el7.x86_64.rpm'
 profile::application::builder::ipv6:          true
 profile::application::builder::flavor:        'img.zerodisk'
 profile::application::builder::template_dir:  '/etc/imagebuilder'
@@ -66,11 +68,11 @@ profile::application::builder::images:
     'min_ram':          768
     'min_disk':         8
     'username':         'centos'
-  'fedora_27':
-    'image_name':       'IMAGEBUILDER Fedora 27'
-    'url':              'https://www.mirrorservice.org/sites/dl.fedoraproject.org/pub/fedora/linux/releases/27/CloudImages/x86_64/images/'
-    'latest':           'Fedora-Cloud-Base-27-1.6.x86_64.qcow2'
-    'checksum_file':    'Fedora-CloudImages-27-1.6-x86_64-CHECKSUM'
+  'fedora_28':
+    'image_name':       'IMAGEBUILDER Fedora 28'
+    'url':              'https://www.mirrorservice.org/sites/dl.fedoraproject.org/pub/fedora/linux/releases/28/Cloud/x86_64/images/'
+    'latest':           'Fedora-Cloud-Base-28-1.1.x86_64.qcow2'
+    'checksum_file':    'Fedora-Cloud-28-1.1-x86_64-CHECKSUM'
     'checksum':         'sha256'
     'min_ram':          768
     'min_disk':         3
@@ -84,10 +86,10 @@ profile::application::builder::images:
     'min_ram':          768
     'min_disk':         3
     'username':         'ubuntu'
-  'ubuntu_1710':
-    'image_name':       'IMAGEBUILDER Ubuntu 17.10'
-    'url':              'https://cloud-images.ubuntu.com/artful/current/'
-    'latest':           'artful-server-cloudimg-amd64.img'
+  'ubuntu_1804':
+    'image_name':       'IMAGEBUILDER Ubuntu 18.04 LTS'
+    'url':              'https://cloud-images.ubuntu.com/bionic/current/'
+    'latest':           'bionic-server-cloudimg-amd64.img'
     'checksum_file':    'SHA256SUMS'
     'checksum':         'sha256'
     'min_ram':          768

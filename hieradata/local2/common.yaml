@@ -11,6 +11,9 @@ domain_frontend:      'iaas.intern'
 domain_public:        'local2.iaas.intern'
 domain_trp:           'trp.local2.iaas.intern'
 domain_mgmt:          'mgmt.local2.iaas.intern'
+reverse_mgmt:         '5.31.172.in-addr.arpa'
+reverse_trp:          '13.31.172.in-addr.arpa'
+reverse_public:       '13.168.192.in-addr.arpa'
 
 # These should only be used to configure network in nodes!
 netcfg_trp_netpart:     '172.31.13'
@@ -19,6 +22,8 @@ netcfg_trp_gateway:     '172.31.13.1'
 netcfg_trp_gateway6:    'fd00::1'
 netcfg_trp_netpart6:    'fd00'
 netcfg_trp_netmask6:    '64'
+netcfg_public_netpart6: 'fd01'
+netcfg_public_netmask6: '64'
 netcfg_live_netpart:    '172.31.13'
 netcfg_live_netmask:    '255.255.255.0'
 netcfg_mgmt_netpart:    '172.31.5'
@@ -37,6 +42,8 @@ netcfg_trp_rr:
   rr1:
     peer_ipv4: '172.31.13.1'
 
+profile::openstack::volume::api::enable_testbackend:     'true'
+
 # We need to allow both trafic from mgmt (nat via login) and public net
 
 allow_from_network:
@@ -45,6 +52,11 @@ allow_from_network:
   - '192.168.122.0/24'
   - '192.168.12.0/24'
   - '192.168.113.0/24'
+
+public__ip__ns:             "%{hiera('netcfg_public_netpart')}.251"
+public__ipv6__ns:           "%{hiera('netcfg_public_netpart6')}::251"
+public__ip__resolver:       "%{hiera('netcfg_public_netpart')}.252"
+public__ipv6__resolver:     "%{hiera('netcfg_public_netpart6')}::251"
 
 profile::network::services::dns_options:
   CNAME:
@@ -77,6 +89,7 @@ profile::network::services::dns_records:
     "image.api.%{hiera('domain_public')}":                "%{hiera('netcfg_public_netpart')}.250"
     "network.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.250"
     "compute.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.250"
+    "placement.api.%{hiera('domain_public')}":            "%{hiera('netcfg_public_netpart')}.250"
     "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
     # mgmt
     "%{::location}-login-01.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.10"
@@ -108,16 +121,20 @@ cinder_api_password:                                'cinder_pass'
 glance_api_password:                                'glance_pass'
 neutron_api_password:                               'neutron_pass'
 nova_api_password:                                  'nova_pass'
+nova_placement_password:                            'nova_pass'
 gnocchi_api_password:                               'gnocchi'
 ceilometer_api_password:                            'ceilometer_pass'
+access_api_password:                                'access_pass'
 
 # rabbitmq
 rabbitmq::default_pass:                             'guest'
 rabbitmq::erlang_cookie:                            'Himlardev667'
+access_rabbit_password:                             'access_pass'
+himlarcli_rabbit_password:                          'himlarcli'
 
 # cinder.yaml
 cinder::db::mysql::password:                        'cinder_pass'
-cinder::rabbit_password:                            'cinder_guest'
+cinder_rabbit_password:                             'cinder_guest'
 
 # foreman.yaml
 foreman::admin_password:                            'changeme'
@@ -140,15 +157,20 @@ rbd_volumes_rbd_secret_uuid:                        'AQBypF1V2JYiChAA2qYbjM6jbXJ
 mysql::server::root_password:                       'test123'
 
 # neutron.yaml
-neutron::rabbit_password:                           'neutron_guest'
+neutron_rabbit_password:                            'neutron_guest'
 neutron::db::mysql::password:                       'neutron_pass'
 neutron::agents::metadata::shared_secret:           'a_secret'
 
 # nova.yaml
 nova::db::mysql::password:                          'nova_pass'
 nova::db::mysql_api::password:                      'nova_api_pass'
+nova::db::mysql_placement::password:                'nova_placement_pass'
 nova::api::neutron_metadata_proxy_shared_secret:    'a_secret'
-nova::rabbit_password:                              'nova_quest'
+nova_rabbit_password:                              'nova_quest'
+
+# designate.yaml
+designate::db::mysql::password:                     'designate_pass'
+designate::rabbit_password:                         'designate_guest'
 
 # imagebuilder
 imagebuilder_password:                              'imagebuilder_pass'
@@ -163,12 +185,14 @@ local_rabbit_password:                              'local'
 
 # telemetry/metrics
 gnocchi::db::mysql::password:                       'gnocchi_pass'
-ceilometer::db::mysql::password:		                'ceilometer_pass'
+ceilometer::db::mysql::password:                    'ceilometer_pass'
 ceilometer::telemetry_secret:                       'ceilometer'
-ceilometer::rabbit_password:                        'ceilometer'
+ceilometer_rabbit_password:                         'ceilometer'
+status_metric_password:                             'status_pass'
+monitor_metric_password:                            'monitor_pass'
 
-# himlarcli
-himlarcli_rabbit_password:                          'himlarcli'
+# report
+report_db_password:                                 'report_pass'
 
 # The root user password
 #accounts::root_user::password:                      '$6$qVzsC5fQMqdF4gKw$.zFAu9LtxSAaPgbtZul/ZXUXpBgjaVJbQ.CIMo9eo5TslU8KU1SO/tjRZbh1hFM6RB55QFEzJlF5ejAgglk50.'

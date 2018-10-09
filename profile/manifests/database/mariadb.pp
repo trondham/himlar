@@ -18,6 +18,7 @@ class profile::database::mariadb (
   $manage_repo     = true,
   $manage_firewall = true,
   $firewall_extras = {},
+  $packages        = [],
 
   $backupuser         = '',
   $backuppassword     = '',
@@ -27,7 +28,7 @@ class profile::database::mariadb (
   $backupdirowner     = 'root',
   $backupdirgroup     = 'root',
   $backupcompress     = true,
-  $backuprotate       = 7,
+  $backuprotate       = 5,
   $maxallowedpacket   = 1024,
   $ignore_events      = true,
   $delete_before_dump = false,
@@ -45,6 +46,11 @@ class profile::database::mariadb (
 
   if $manage_repo {
     include ::mariadbrepo
+  }
+
+  package { $packages:
+    ensure => installed,
+    before => Class['mysql::server']
   }
 
   include ::mysql::server

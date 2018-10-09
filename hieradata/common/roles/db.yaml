@@ -10,20 +10,11 @@ db_ssl_key:       '/etc/mysql/server-key.pem'
 db_ssl_cert:      '/etc/mysql/server-cert.pem'
 db_ssl_ca:        '/etc/mysql/cacert.pem'
 
-# Galera options
 profile::base::common::packages:
-  'bzip2':                  {}
-  'rsync':                  {}
-  'socat':                  {}
-  'MariaDB-backup':         {}
+  'MySQL-python':           {}
   'bash-completion':        {}
   'bash-completion-extras': {}
   'jq': {}
-
-profile::database::galera::wsrep_sst_secure_rsync:
-  ca:   "%{hiera('db_ssl_ca')}"
-  key:  "%{hiera('db_ssl_key')}"
-  cert: "%{hiera('db_ssl_cert')}"
 
 # Default values are no cluster and no tls
 # ONLY TURN ON CLUSTER ON INDIVIDUAL NODES!
@@ -40,9 +31,6 @@ profile::monitoring::sensu::agent::plugins:
   sensu-plugins-mysql:
     type:         package
     pkg_version:  '2.3.0'
-  sensu-plugins-percona:
-    type:         package
-    pkg_version:  '1.1.0'
 
 profile::monitoring::sensu::agent::checks:
   'metrics-mysql-graphite':
@@ -71,18 +59,21 @@ logrotate::rules:
     missingok:      true
     rotate_every:   daily
     compress:       true
+  syslog:
+    path:           ['/var/log/cron', '/var/log/maillog', '/var/log/messages', '/var/log/secure', '/var/log/spooler']
+    rotate:         10
+    rotate_every:   daily
+    postrotate:     '/bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true'
+    dateext:        true
+    sharedscripts:  true
+    missingok:      true
+    compress:       true
 
-profile::openstack::database::sql::extra_databases:
-  horizon: # Session database
-    password:       "%{hiera('horizon_db_password')}"
-    user:           'horizon'
-    host:           "%{hiera('netcfg_trp_netpart')}.51"
 
 # Enable extra yum repo
 profile::base::yumrepo::repo_hash:
   mariadb:
     ensure: present
-
 
 # for backup
 

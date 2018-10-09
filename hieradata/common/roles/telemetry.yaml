@@ -4,12 +4,13 @@ include:
     - profile::openstack::openrc
     - profile::openstack::telemetry
 
-openstack_version: 'ocata' #FIXME
-
 # Enable extra yum repo
 profile::base::yumrepo::repo_hash:
   rdo-release:
     ensure: present
+  epel: # should be absent when using RDO, but whitelist can also work
+    ensure:   present
+    includepkgs: 'htop bash-completion-extras'
 
 # telemetry runs the central polling
 ceilometer::agent::polling::central_namespace:            true
@@ -26,6 +27,7 @@ profile::base::common::packages:
   'python2-pecan':          {}
   'python2-wsme':           {}
   'python2-swiftclient':    {}
+  'openstack-selinux':      {}
 
 profile::openstack::openrc::password:                   "%{hiera('ceilometer_api_password')}"
 profile::openstack::openrc::username:                   'ceilometer'
