@@ -16,8 +16,9 @@ class profile::base::dell
 
     # SNMP daemon
     service { "snmpd":
-      ensure => running,
-      enable => true,
+      ensure  => running,
+      enable  => true,
+      require => Package['net-snmp']
     }
 
     # OMSA daemons
