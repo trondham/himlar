@@ -11,7 +11,7 @@ class profile::base::dell
     $packages = lookup('profile::base::dell::packages', Hash, 'deep', {})
 
     # Install repos and packages
-    create_resources('yumrepo', $repo_hash) ->
+    create_resources('yumrepo', $repo_hash)
     create_resources('profile::base::package', $packages)
 
     # SNMP daemon
