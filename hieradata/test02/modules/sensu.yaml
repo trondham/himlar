@@ -1,5 +1,5 @@
 ---
-sensu::checks:
+profile::monitoring::sensu::agent::checks:
   'check-openmanage':
     command:      "/usr/lib64/nagios/plugins/check_openmanage -H %{::location}-controller-01.%{hiera('domain_mgmt')}"
     interval:     60
