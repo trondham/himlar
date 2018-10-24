@@ -6,11 +6,16 @@ include:
 location_environment: 'local1'
 location_description: 'Local development environment'
 
+# Disable management of Dell hardware
+profile::base::common::manage_dell_hardware: false
+
 domain_frontend:      'iaas.intern'
 domain_public:        'local1.iaas.intern'
 domain_trp:           'trp.local1.iaas.intern'
 domain_mgmt:          'mgmt.local1.iaas.intern'
 reverse_mgmt:         '4.31.172.in-addr.arpa'
+reverse_trp:          '12.31.172.in-addr.arpa'
+reverse_public:       '12.168.192.in-addr.arpa'
 
 # These should only be used to configure network in nodes!
 netcfg_trp_netpart:     '172.31.12'
@@ -26,6 +31,8 @@ netcfg_mgmt_netmask:    '255.255.255.0'
 netcfg_mgmt_gateway:    '172.31.4.10'
 netcfg_public_netmask:  '255.255.255.0'
 netcfg_public_netpart:  '192.168.12'
+netcfg_public_netpart6: 'fd01'
+netcfg_public_netmask6: '64'
 netcfg_dns_server1:     '172.31.4.11'
 #netcfg_dns_server1:     '8.8.8.8'
 netcfg_dns_server2:     '8.8.8.8'
@@ -47,6 +54,11 @@ allow_from_network:
   - '192.168.122.0/24'
   - '192.168.12.0/24'
   - '192.168.112.0/24'
+
+public__ip__ns:             "%{hiera('netcfg_public_netpart')}.251"
+public__ipv6__ns:           "%{hiera('netcfg_public_netpart6')}::251"
+public__ip__resolver:       "%{hiera('netcfg_public_netpart')}.252"
+public__ipv6__resolver:     "%{hiera('netcfg_public_netpart6')}::251"
 
 profile::network::services::dns_options:
   CNAME:
@@ -83,6 +95,8 @@ profile::network::services::dns_records:
     "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
     "object.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
     "metric.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
+    "dns.api.%{hiera('domain_public')}":                  "%{hiera('netcfg_public_netpart')}.250"
+    "ns.%{hiera('domain_public')}":                       "%{hiera('netcfg_public_netpart')}.251"
     # mgmt
     "%{::location}-login-01.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.10"
     # local2
@@ -91,6 +105,7 @@ profile::network::services::dns_records:
     'network.api.local2.iaas.intern':                     '192.168.13.250'
     'compute.api.local2.iaas.intern':                     '192.168.13.250'
     'volume.api.local2.iaas.intern':                      '192.168.13.250'
+    'ns.local2.iaas.intern':                              '192.168.13.250'
 #
 ## Secret data which for other environments are stored ooutside of this data tree
 #
@@ -122,6 +137,7 @@ nova_placement_password:                            'nova_pass'
 gnocchi_api_password:                               'gnocchi'
 ceilometer_api_password:                            'ceilometer_pass'
 access_api_password:                                'access_pass'
+designate_api_password:                             'designate_pass'
 
 # rabbitmq
 rabbitmq::default_pass:                             'guest'
@@ -198,6 +214,10 @@ report_db_password:                                 'report_pass'
 
 # The root user password
 #accounts::root_user::password:                      '$6$qVzsC5fQMqdF4gKw$.zFAu9LtxSAaPgbtZul/ZXUXpBgjaVJbQ.CIMo9eo5TslU8KU1SO/tjRZbh1hFM6RB55QFEzJlF5ejAgglk50.'
+
+# rndc keys
+profile::dns::rndc_key::rndc_secret_admin: '5n5fC0m42JovwO9PJMTQYaNP7j5UcRjmL0Lsq4JXz8eZIrGILt/5Lo+MVzdr31GbYn9C/fPEe1Nvbjs8NgTG6w=='
+profile::dns::rndc_key::rndc_secret_mdns:  'CIGrQ5sAnoaQhRiDSXX+WUGg9Z0tiphT4BCKbp9A1ceOUr5hqAPiqNp/UHoApIXmIAgni+v90swVPmDfETsLdQ=='
 
 profile::openstack::resource::networks:
   public:

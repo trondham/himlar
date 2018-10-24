@@ -11,7 +11,7 @@ class profile::base::login (
   $secretsdir               = "${repodir}/secrets",
   $dump_owner               = '',
   $dump_group               = '',
-  $repo_incoming_dir        = '/tmp/repo-incoming',
+  $repo_incoming_dir        = '/var/lib/repo-incoming',
   $repo_server              = 'iaas-repo.uio.no',
   $yumrepo_path             = '/var/www/html/uh-iaas/yumrepo/',
   $gpg_receiver             = 'UH-IaaS Token Distributor',
@@ -86,6 +86,14 @@ class profile::base::login (
       group  => $dump_group,
     }
 
+  }
+
+  file { '/usr/local/sbin/get-oob-ip':
+    ensure => present,
+    mode   => '0755',
+    owner  => root,
+    group  => root,
+    source => "puppet:///modules/${module_name}/base/get-oob-ip"
   }
 
   if $manage_repo_incoming_dir {
