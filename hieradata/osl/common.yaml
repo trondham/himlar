@@ -6,8 +6,9 @@ include:
 location_environment:     'prod'
 location_description:     'Production environment in Oslo'
 
-# Disable management of Dell hardware
-profile::base::common::manage_dell_hardware: false
+# Disable management of Dell repos and software
+profile::base::dell::manage_repos:      false
+profile::base::dell::manage_openmanage: false
 
 domain_frontend:          'uh-iaas.no'
 domain_public:            'osl.uh-iaas.no'
@@ -27,6 +28,8 @@ netcfg_trp_netpart:       '172.18.32'
 netcfg_trp_netpart6:      'fd32'
 netcfg_trp_netmask:       '255.255.248.0'
 netcfg_trp_netmask6:      '64'
+netcfg_ceph_netpart:      '172.20.32'
+netcfg_ceph_netmask:      '255.255.248.0'
 netcfg_live_netpart:      '172.22.32'
 netcfg_live_netmask:      '255.255.248.0'
 #netcfg_dns_server1:       '129.240.2.3'
