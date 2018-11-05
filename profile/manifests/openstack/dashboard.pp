@@ -10,6 +10,7 @@ class profile::openstack::dashboard(
   $database             = {},
   $override_template    = "${module_name}/openstack/horizon/local_settings.erb",
   $site_branding        = 'UH-IaaS',
+  $image_visibility     = 'private',
   $change_uploaddir     = false,
   $custom_uploaddir     = '/image-upload',
   $enable_pwd_retrieval = false,
@@ -63,9 +64,10 @@ class profile::openstack::dashboard(
 
   if $manage_overrides {
     file { '/usr/share/openstack-dashboard/openstack_dashboard/overrides.py':
-      ensure => present,
-      source => "puppet:///modules/${module_name}/openstack/horizon/overrides.py",
-      notify => Service['httpd']
+      ensure  => present,
+      source  => "puppet:///modules/${module_name}/openstack/horizon/overrides.py",
+      notify  => Service['httpd'],
+      require => Class['horizon']
     }
   }
 
