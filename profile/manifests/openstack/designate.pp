@@ -4,10 +4,8 @@ class profile::openstack::designate (
   $my_pools = {},
   $my_targets = {},
   $mdns_transport_addr = {},
-  $ns_transport_addr = {},
-  $ns_public_addr = {},
-  $ns_public_name = {},
   $manage_firewall = false,
+  $bind_servers = lookup('profile::openstack::designate::bind_servers', Hash, 'first', {})
 )
 {
   include ::designate
