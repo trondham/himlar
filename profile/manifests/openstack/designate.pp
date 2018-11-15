@@ -3,7 +3,7 @@ class profile::openstack::designate (
   $my_nameservers = {},
   $my_pools = {},
   $my_targets = {},
-  $mdns_transport_addr = {},
+  $mdns_transport_addr = [ '127.0.0.0', '127.0.0.2' ],
   $manage_firewall = false,
   $bind_servers = lookup('profile::openstack::designate::bind_servers', Hash, 'first', {})
 )
