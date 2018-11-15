@@ -14,8 +14,8 @@
 <% end -%>
   targets:
 <% @bind_servers.each do |ns_name,values| -%>
-    - type: bind9
-      description: Bind9 Server <%= ns_name %>
+    - description: Bind9 Server <%= ns_name %>
+      type: bind9
       masters:
 <% @mdns_transport_addr.each do |addr| -%>
         - host: <%= addr %>
