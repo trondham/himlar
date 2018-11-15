@@ -17,7 +17,7 @@
     - description: Bind9 Server <%= ns_name %>
       type: bind9
       masters:
-<% @mdns_transport_addr.each do |addr| -%>
+<% values["mdns_addr"].each do |addr| -%>
         - host: <%= addr %>
           port: 5354
 <% end -%>
