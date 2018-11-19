@@ -46,7 +46,11 @@ class profile::openstack::designate (
       port   => 9001,
       proto  => 'tcp'
     }
-    profile::firewall::rule { '002 designate mdns incoming':
+    profile::firewall::rule { '002 TCP designate mdns incoming':
+      port   => 5354,
+      proto  => 'tcp'
+    }
+    profile::firewall::rule { '003 UDP designate mdns incoming':
       port   => 5354,
       proto  => 'tcp'
     }
