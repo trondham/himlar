@@ -7,11 +7,9 @@ profile::openstack::designate::bind_servers:
     ns_public_name:    "%{hiera('public__name__ns')}"
     mdns_addr:
       - "%{hiera('service__address__mdns_01')}"
-      - '8.8.8.8'
   'bgo-01':
-    ns_transport_addr: '172.18.0.16'
+    ns_transport_addr: '172.18.8.200'
     ns_public_addr:    '158.39.77.251'
-    ns_public_name:    'ns2.uh-iaas.no'
+    ns_public_name:    'ns2.vagrant.iaas.intern'
     mdns_addr:
       - "%{hiera('service__address__mdns_01')}"
-      - '8.8.8.8'
