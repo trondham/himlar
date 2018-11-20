@@ -1,10 +1,10 @@
 class profile::openstack::designate (
+  $manage_firewall = false,
   $my_zones = {},
   $my_nameservers = {},
   $my_pools = {},
   $my_targets = {},
   $mdns_transport_addr = lookup('profile::dns::ns::mdns_transport_addr', Array, 'deep', []),
-  $manage_firewall = false,
   $bind_servers = lookup('profile::openstack::designate::bind_servers', Hash, 'first', {})
 )
 {
