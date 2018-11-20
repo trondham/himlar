@@ -1,10 +1,6 @@
 class profile::openstack::designate (
   $manage_firewall = false,
-  $my_zones = {},
-  $my_nameservers = {},
-  $my_pools = {},
-  $my_targets = {},
-  $bind_servers = lookup('profile::openstack::designate::bind_servers', Hash, 'first', {})
+  $bind_servers = {}
 )
 {
   include ::designate
@@ -15,6 +11,8 @@ class profile::openstack::designate (
   include ::designate::config
   include ::designate::worker
   include ::designate::producer
+
+  $bind_servers = lookup('profile::openstack::designate::bind_servers', Hash, 'first', {})
 
   file { '/etc/designate/pools.yaml':
     content      => template("${module_name}/openstack/designate/pools.yaml.erb"),
