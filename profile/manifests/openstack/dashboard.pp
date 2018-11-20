@@ -103,7 +103,7 @@ class profile::openstack::dashboard(
   else {
     tidy { 'delete-designate-plugin-stuff':
       path    => '/usr/share/openstack-dashboard/openstack_dashboard/local/enabled',
-      recurse => false,
+      recurse => 1,
       matches => [ '_1710_project_dns_panel_group.py*', '_1720_project_dns_panel.py*', '_1721_dns_zones_panel.py*' ],
       rmdirs  => false,
       require => Class['horizon'],
@@ -113,7 +113,7 @@ class profile::openstack::dashboard(
   # We don't want the Designate reverse DNS panel in any case
   tidy { 'delete-designate-reversedns-panel':
     path    => '/usr/share/openstack-dashboard/openstack_dashboard/local/enabled',
-    recurse => false,
+    recurse => 1,
     matches => [ '_1722_dns_reversedns_panel.py*' ],
     rmdirs  => false,
     require => Class['horizon'],
