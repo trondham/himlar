@@ -6,6 +6,8 @@ class profile::dns::ns (
   $enable_bird6 = false,
   $my_mgmt_addr = $::ipaddress_mgmt1,
   $my_transport_addr = $::ipaddress_trp1,
+  $my_public_addr6 = $::ipaddress6_public1,
+  $use_public_ipv6 = false,
   $mdns_transport_addr = {},
   $admin_mgmt_addr = {},
   $ns_mgmt_addr = {},
