@@ -2,16 +2,16 @@
 # Various address definitions
 profile::openstack::designate::bind_servers:
   'osl-01':
-    ns_transport_addr: "%{hiera('service__address__ns')}"
-    ns_public_addr:    "%{hiera('public__ip__ns')}"
-    ns_public_name:    "%{hiera('public__name__ns')}"
+    ns_rndc_addr:    "%{hiera('service__address__ns')}"
+    ns_public_addr:  "%{hiera('public__ip__ns')}"
+    ns_public_name:  "%{hiera('public__name__ns')}"
     mdns_addr:
       - "%{hiera('service__address__mdns_01')}"
       - '172.31.8.35'
   'bgo-01':
-    ns_transport_addr: '172.31.8.200'
-    ns_public_addr:    '192.168.0.252'
-    ns_public_name:    'ns2.vagrant.iaas.intern'
+    ns_rndc_addr:    '172.31.8.200'
+    ns_public_addr:  '192.168.0.252'
+    ns_public_name:  'ns2.vagrant.iaas.intern'
     mdns_addr:
       - "%{hiera('service__address__mdns_01')}"
       - '172.31.8.35'
