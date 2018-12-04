@@ -135,7 +135,7 @@ class profile::dns::ns (
 
   # Open nameserver ports in the firewall
   if $manage_firewall {
-    $hiera_rndc_sources_ipv6 = lookup('rndc_sources_ipv6', Array, 'unique', undef)
+    $hiera_rndc_sources_ipv6 = lookup('profile::dns::ns::rndc_sources_ipv6', Array, 'unique', undef)
     $source_ipv6 = $rndc_sources_ipv6? {
       undef   => $hiera_rndc_sources_ipv6,
       ''      => $hiera_rndc_sources_ipv6,
