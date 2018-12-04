@@ -7,6 +7,10 @@ profile::dns::ns::use_public_ip: true
 profile::dns::ns::mdns_public_addr:
   - '2001:700:200:917::3f34'
 
+# DNS server firewall configuration
+profile::dns::ns::firewall_extras_ipv6:
+  source: "2001:700:200:917::3f34/128"
+
 # Master server for master-slave configuration
 #profile::dns::ns::ns_master_ip_addresses:
 #  - '192.168.0.251'         # ns.test.iaas.uio.no IPv4

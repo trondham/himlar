@@ -153,10 +153,16 @@ class profile::dns::ns (
       proto    => 'udp',
       provider => 'ip6tables'
     }
-    profile::firewall::rule { '003 rndc incoming - bind only':
+    profile::firewall::rule { '003 rndc incoming':
       dport  => 953,
       proto  => 'tcp',
       extras => $firewall_extras
+    }
+    profile::firewall::rule { '003 rndc incoming IPv6':
+      dport    => 953,
+      proto    => 'tcp',
+      provider => 'ip6tables',
+      extras   => $firewall_extras_ipv6
     }
   }
 
