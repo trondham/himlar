@@ -6,4 +6,4 @@ profile::openstack::designate::bind_servers:
     ns_public_addr:  '2001:700:200:917::3f17'
     ns_public_name:  'ns1.uh-iaas.no'
     mdns_addr:
-      - '2001:700:200:917::3f1a'
+      - '2001:700:200:917::3f34'

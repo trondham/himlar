@@ -22,13 +22,13 @@ network::interfaces_hash:
 ￼   defroute:  'yes'
 ￼ 'dummy0':
 ￼   ipv6init:  'yes'
-￼   ipv6addr:  '2001:700:200:917::3f17/128'
+￼   ipv6addr:  '2001:700:200:917::3f34/128'
 ￼   defroute:  'no'
 profile::base::network::routes:
   'eth1':
     'ipaddress': [ '::', ]
     'netmask':   [ '0', ]
     'gateway':   [ "%{hiera('netcfg_trp_gateway6')}", ]
-    'source':    [ '2001:700:200:917::3f17', ]
+    'source':    [ '2001:700:200:917::3f34', ]
     'table':     [ 'main', ]
     'family':    [ 'inet6', ]
