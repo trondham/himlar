@@ -50,7 +50,7 @@ mistral::keystone::authtoken::region_name:       "%{::location}"
 #---------------------------------------------------------------------
 mistral::db::database_connection: "mysql+pymysql://mistral:%{hiera('mistral::db::mysql::password')}@%{hiera('service__address__db_global')}/mistral"
 mistral::db::sync_db: true
-mistral::db::database_max_retries: "-1"
+#mistral::db::database_max_retries: "-1"
 
 #---------------------------------------------------------------------
 # Database MySQL (manifests/db/mysql.pp)
