@@ -48,9 +48,9 @@ mistral::keystone::authtoken::region_name:       "%{::location}"
 # Database (manifests/db.pp)
 #   - runs on the WORKFLOW node
 #---------------------------------------------------------------------
-mistral::db::database_connection: "mysql+pymysql://mistral:%{hiera('mistral::db::mysql::password')}@%{hiera('service__address__db_global')}/mistral"
+mistral::db::database_connection: "mysql+pymysql://mistral:%{hiera('mistral::db::mysql::password')}@%{hiera('service__address__db_regional')}/mistral"
 mistral::db::sync_db: true
-#mistral::db::database_max_retries: "-1"
+mistral::db::database_max_retries: "-1"
 
 #---------------------------------------------------------------------
 # Database MySQL (manifests/db/mysql.pp)
