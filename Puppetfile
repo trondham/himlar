@@ -164,6 +164,7 @@ mod 'keystone', :ref => 'norcams/pike',             :git => github + 'norcams/pu
 mod 'swift', :ref => 'norcams/ocata',               :git => github + 'norcams/puppet-swift'
 mod 'ceilometer', :ref => '10.4.0',                 :git => github + 'openstack/puppet-ceilometer'
 mod 'designate', :ref => '12.4.0',                  :git => github + 'openstack/puppet-designate'
+mod 'mistral', :ref => '12.4.0',                    :git => github + 'openstack/puppet-mistral'
 
 mod 'oslo', :ref => '12.4.0',                       :git => github + 'openstack/puppet-oslo'
 mod 'openstacklib', :ref => '11.5.0',               :git => github + 'openstack/puppet-openstacklib'
