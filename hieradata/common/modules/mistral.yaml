@@ -1,7 +1,7 @@
 ---
 # Configuration for Mistral (Workflow service)
 #
-# Uses puppet-designate:
+# Uses puppet-mistral:
 #   https://github.com/openstack/puppet-mistral
 
 #---------------------------------------------------------------------
@@ -33,18 +33,6 @@ mistral::keystone::authtoken::memcached_servers: '127.0.0.1'
 mistral::keystone::authtoken::region_name:       "%{::location}"
 
 #---------------------------------------------------------------------
-# Engine (manifests/engine.pp)
-#   - runs on the WORKFLOW node
-#---------------------------------------------------------------------
-# use defaults
-
-#---------------------------------------------------------------------
-# API (manifests/api.pp)
-#   - runs on the WORKFLOW node
-#---------------------------------------------------------------------
-# use defaults
-
-#---------------------------------------------------------------------
 # Database (manifests/db.pp)
 #   - runs on the WORKFLOW node
 #---------------------------------------------------------------------
@@ -60,6 +48,18 @@ mistral::db::mysql::user:   "mistral"
 mistral::db::mysql::dbname: "mistral"
 mistral::db::mysql::allowed_hosts:
   - "%{hiera('netcfg_trp_netpart')}.%"
+
+#---------------------------------------------------------------------
+# API (manifests/api.pp)
+#   - runs on the WORKFLOW node
+#---------------------------------------------------------------------
+# use defaults
+
+#---------------------------------------------------------------------
+# Engine (manifests/engine.pp)
+#   - runs on the WORKFLOW node
+#---------------------------------------------------------------------
+# use defaults
 
 #---------------------------------------------------------------------
 # Executor (manifests/executor.pp)
