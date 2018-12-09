@@ -1,6 +1,7 @@
 ---
 include:
   default:
+    - profile::openstack::mistral
     - profile::openstack::cache
     - profile::logging::rsyslog::client
     - profile::openstack::openrc
