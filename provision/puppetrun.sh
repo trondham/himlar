@@ -30,6 +30,7 @@ puppetrun()
     --write-catalog-summary \
     --basemodulepath /opt/himlar/modules:/etc/puppetlabs/code/modules \
     ${p_args[*]} \
+    --debug \
     /etc/puppetlabs/code/environments/production/manifests/site.pp
 }
 
