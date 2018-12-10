@@ -221,6 +221,9 @@ endpoint__network__public:        "https://network.api.%{hiera('domain_public')}
 endpoint__designate__admin:       "http://dns.%{hiera('domain_trp')}:9001/"
 endpoint__designate__internal:    "http://dns.%{hiera('domain_trp')}:9001/"
 endpoint__designate__public:      "https://dns.api.%{hiera('domain_public')}:9001/"
+endpoint__mistral__admin:         "http://workflow.%{hiera('domain_trp')}:8989/"
+endpoint__mistral__internal:      "http://workflow.%{hiera('domain_trp')}:8989/"
+endpoint__mistral__public:        "https://workflow.api.%{hiera('domain_public')}:8989/"
 endpoint__metric__admin:          "http://metric.%{hiera('domain_trp')}:8041"
 endpoint__metric__internal:       "http://metric.%{hiera('domain_trp')}:8041"
 endpoint__metric__public:         "https://metric.api.%{hiera('domain_public')}:8041"
@@ -307,6 +310,7 @@ profile::network::services::dns_records:
     "%{::location}-object-05.%{hiera('domain_mgmt')}":      "%{hiera('netcfg_mgmt_netpart')}.123"
     "%{::location}-storage-06.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.124"
     "%{::location}-storage-07.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_netpart')}.125"
+    "%{::location}-workflow-01.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_netpart')}.200"
     # mgmt nodes
     "foreman.%{hiera('domain_mgmt')}":                      "%{hiera('netcfg_mgmt_netpart')}.11"
     "puppet.%{hiera('domain_mgmt')}":                       "%{hiera('netcfg_mgmt_netpart')}.11"
@@ -332,6 +336,7 @@ profile::network::services::dns_records:
     "identity.%{hiera('domain_trp')}":                      "%{hiera('netcfg_trp_netpart')}.86"
     "object.%{hiera('domain_trp')}":                        "%{hiera('netcfg_trp_netpart')}.86"
     "metric.%{hiera('domain_trp')}":                        "%{hiera('netcfg_trp_netpart')}.86"
+    "workflow.%{hiera('domain_trp')}":                      "%{hiera('netcfg_trp_netpart')}.86"
   PTR:
     # mgmt
     "1.%{hiera('reverse_mgmt')}":      "%{::location}-torack-01.%{hiera('domain_mgmt')}"
@@ -403,6 +408,7 @@ profile::network::services::dns_records:
     "123.%{hiera('reverse_mgmt')}":    "%{::location}-object-05.%{hiera('domain_mgmt')}"
     "124.%{hiera('reverse_mgmt')}":    "%{::location}-storage-06.%{hiera('domain_mgmt')}"
     "125.%{hiera('reverse_mgmt')}":    "%{::location}-storage-07.%{hiera('domain_mgmt')}"
+    "200.%{hiera('reverse_mgmt')}":    "%{::location}-workflow-01.%{hiera('domain_mgmt')}"
 
 #
 # Network configuration data
