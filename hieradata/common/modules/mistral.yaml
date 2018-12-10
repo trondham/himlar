@@ -6,7 +6,7 @@
 
 #---------------------------------------------------------------------
 # Logging (manifests/logging.pp)
-#   - runs on the DNS node
+#   - runs on the WORKFLOW node
 #---------------------------------------------------------------------
 mistral::logging::use_syslog:  true
 mistral::logging::use_journal: true
