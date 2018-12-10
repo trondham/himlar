@@ -11,11 +11,7 @@ class profile::openstack::mistral (
 
   if $manage_firewall {
     profile::firewall::rule { '001 mistral incoming':
-      port   => 9001,
-      proto  => 'tcp'
-    }
-    profile::firewall::rule { '002 TCP mistral mdns incoming':
-      port   => 5354,
+      port   => 8989,
       proto  => 'tcp'
     }
   }
