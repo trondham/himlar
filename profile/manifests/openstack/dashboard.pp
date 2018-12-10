@@ -15,6 +15,7 @@ class profile::openstack::dashboard(
   $custom_uploaddir     = '/image-upload',
   $enable_pwd_retrieval = false,
   $enable_designate     = false,
+  $enable_mistral       = false,
   $image_upload_mode    = undef,
   $change_region_selector = false,
   $change_login_footer  = false,
@@ -83,6 +84,13 @@ class profile::openstack::dashboard(
   if $enable_designate {
     $designate_packages = lookup('profile::openstack::dashboard::designate_packages', Hash, 'deep', {})
     create_resources('profile::base::package', $designate_packages)
+  }
+
+  # Mistral: Install the Mistral plugin (RPM packages) for Horizon
+  # if "enable_mistral" is set to true
+  if $enable_mistral {
+    $mistral_packages = lookup('profile::openstack::dashboard::mistral_packages', Hash, 'deep', {})
+    create_resources('profile::base::package', $mistral_packages)
   }
 
   if $change_region_selector {
