@@ -38,6 +38,10 @@ class profile::openstack::dashboard(
 
     file { '/etc/systemd/system/httpd.service.d':
       ensure => 'directory',
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
+      seltype => 'systemd_unit_file_t',
     }
     file { '/etc/systemd/system/httpd.service.d/limits.conf':
       ensure  => present,
