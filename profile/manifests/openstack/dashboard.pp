@@ -19,6 +19,7 @@ class profile::openstack::dashboard(
   $change_region_selector = false,
   $change_login_footer  = false,
   $keystone_admin_roles = undef,
+  $manage_systemd_unit  = false,
   ) {
 
   if $manage_dashboard {
@@ -28,6 +29,28 @@ class profile::openstack::dashboard(
       content => template($override_template),
       order   => '99',
       notify  => Service['httpd']
+    }
+  }
+
+  if $manage_systemd_unit {
+
+    include ::profile::base::systemd::daemon_reload
+
+    file { '/etc/systemd/system/httpd.service.d':
+      ensure => 'directory',
+    }
+    file { '/etc/systemd/system/httpd.service.d/limits.conf':
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      seltype => 'systemd_unit_file_t',
+      source  => "puppet:///modules/${module_name}/openstack/horizon/httpd-systemd-limits.conf",
+      require => File['/etc/systemd/system/httpd.service.d'],
+      notify  => [
+        Class['profile::base::systemd::daemon_reload'],
+        Service['httpd'],
+      ],
     }
   }
 
