@@ -1,6 +1,7 @@
 # Class to reload systemd
 class profile::base::systemd::daemon_reload {
-  exec { '/bin/echo /usr/bin/systemctl daemon-reload':
+  exec { 'puppet_sucks':
+    command     => '/usr/bin/systemctl daemon-reload',
     refreshonly => true,
   }
 }
