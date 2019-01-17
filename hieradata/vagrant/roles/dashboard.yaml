@@ -16,3 +16,6 @@ apache::log_level:                              warn
 profile::openstack::dashboard::site_branding: 'dev-iaas'
 
 profile::openstack::dashboard::manage_systemd_unit: true
+profile::openstack::dashboard::httpd_systemd_extras:
+  'Service':
+    'LimitNOFILE': 10000
