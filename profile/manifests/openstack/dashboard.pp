@@ -36,6 +36,8 @@ class profile::openstack::dashboard(
 
     include ::profile::base::systemd::daemon_reload
 
+    $httpd_systemd_extras = lookup('profile::openstack::dashboard::httpd_systemd_extras', Hash, 'deep', {})
+
     file { '/etc/systemd/system/httpd.service.d':
       ensure => 'directory',
       owner   => 'root',
@@ -49,7 +51,7 @@ class profile::openstack::dashboard(
       group   => 'root',
       mode    => '0644',
       seltype => 'systemd_unit_file_t',
-      source  => "puppet:///modules/${module_name}/openstack/horizon/httpd-systemd-limits.conf",
+      content => template('base/systemd-limit-nofile.erb'),
       require => File['/etc/systemd/system/httpd.service.d'],
       notify  => [
         Class['profile::base::systemd::daemon_reload'],

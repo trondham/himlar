@@ -1,0 +1,5 @@
+<% @systemd_extras.each do |topic,element| -%>
+[<%= topic %>]
+<% element["lhs"].each do |rhs| -%>
+<%= element["lhs"] %>=<%= rhs %>
+<% end -%>
