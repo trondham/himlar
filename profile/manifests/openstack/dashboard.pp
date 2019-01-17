@@ -34,7 +34,7 @@ class profile::openstack::dashboard(
 
   if $manage_systemd_unit {
 
-    include ::profile::base::systemd::daemon_reload
+    include ::profile::base::systemd
 
     $systemd_unit_content = lookup('profile::openstack::dashboard::httpd_systemd_extras', Hash, 'deep', {})
 
