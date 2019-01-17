@@ -19,8 +19,8 @@ profile::dns::ns::rndc_sources_ipv4:
 
 # Define an ACL for networks allowed to do complete zone transfer
 profile::dns::ns::allowed_transfer_nets:
-  - '172.16.0.0/12;         # rfc1918: 20-bit block (internal)'
-  - '192.168.0.0/16'        # rfc1918: 16-bit block (test)
+  - '172.16.0.0/12;  # rfc1918: 20-bit block (internal)'
+  - '192.168.0.0/16; # rfc1918: 16-bit block (test)'
 
 # Forward zones, for which the name server is authoritative
 profile::dns::ns::fw_zones:
