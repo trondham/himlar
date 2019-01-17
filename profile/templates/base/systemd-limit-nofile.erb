@@ -1,6 +1,6 @@
 <% @systemd_extras.each do |topic,element| -%>
 [<%= topic %>]
-<% element["lhs"].each do |rhs| -%>
-<%= element["lhs"] %>=<%= rhs %>
+<% element.each do |lhs,rhs| -%>
+<%= lhs %>=<%= rhs %>
 <% end -%>
 <% end -%>
