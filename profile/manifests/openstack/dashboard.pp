@@ -51,7 +51,7 @@ class profile::openstack::dashboard(
       group   => 'root',
       mode    => '0644',
       seltype => 'systemd_unit_file_t',
-      content => template('base/systemd-limit-nofile.erb'),
+      content => template("${module_name}/base/systemd-limit-nofile.erb"),
       require => File['/etc/systemd/system/httpd.service.d'],
       notify  => [
         Class['profile::base::systemd::daemon_reload'],
