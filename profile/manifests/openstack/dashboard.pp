@@ -54,7 +54,7 @@ class profile::openstack::dashboard(
       content => template("${module_name}/base/systemd-unit.erb"),
       require => File['/etc/systemd/system/httpd.service.d'],
       notify  => [
-        Class['profile::base::systemd::daemon_reload'],
+        Exec['systemctl_daemon_reload'],
         Service['httpd'],
       ],
     }
