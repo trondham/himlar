@@ -36,7 +36,7 @@ class profile::openstack::dashboard(
 
     include ::profile::base::systemd::daemon_reload
 
-    $systemd_extras = lookup('profile::openstack::dashboard::httpd_systemd_extras', Hash, 'deep', {})
+    $systemd_unit_content = lookup('profile::openstack::dashboard::httpd_systemd_extras', Hash, 'deep', {})
 
     file { '/etc/systemd/system/httpd.service.d':
       ensure => 'directory',

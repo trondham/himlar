@@ -1,4 +1,4 @@
-<% @systemd_extras.each do |topic,values| -%>
+<% @systemd_unit_content.each do |topic,values| -%>
 [<%= topic %>]
 <% values.each do |lhs,rhs| -%>
 <%= lhs %>=<%= rhs %>
