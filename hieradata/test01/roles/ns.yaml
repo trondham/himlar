@@ -36,10 +36,38 @@ profile::dns::ns::fw_zones:
 
 # Reverse zones, for which the name server is authoritative
 profile::dns::ns::ptr_zones:
-  mgmt:
-    cidr: "%{::network_mgmt1}/%{::cidr_mgmt1}"
-    origin: "%{hiera('reverse_mgmt')}"
-    filename: "pz/%{hiera('reverse_mgmt')}"
+  mgmt01:
+    cidr:     "%{hiera('netcfg_mgmt_net_c0')}.0/24"
+    origin:   "%{hiera('reverse_mgmt_c0')}"
+    filename: "pz/%{hiera('reverse_mgmt_c0')}"
+  mgmt02:
+    cidr:     "%{hiera('netcfg_mgmt_net_c1')}.0/24"
+    origin:   "%{hiera('reverse_mgmt_c1')}"
+    filename: "pz/%{hiera('reverse_mgmt_c1')}"
+  mgmt03:
+    cidr:     "%{hiera('netcfg_mgmt_net_c2')}.0/24"
+    origin:   "%{hiera('reverse_mgmt_c2')}"
+    filename: "pz/%{hiera('reverse_mgmt_c2')}"
+  mgmt04:
+    cidr:     "%{hiera('netcfg_mgmt_net_c3')}.0/24"
+    origin:   "%{hiera('reverse_mgmt_c3')}"
+    filename: "pz/%{hiera('reverse_mgmt_c3')}"
+  mgmt05:
+    cidr:     "%{hiera('netcfg_mgmt_net_c4')}.00/24"
+    origin:   "%{hiera('reverse_mgmt_c4')}"
+    filename: "pz/%{hiera('reverse_mgmt_c4')}"
+  mgmt06:
+    cidr:     "%{hiera('netcfg_mgmt_net_c5')}.0/24"
+    origin:   "%{hiera('reverse_mgmt_c5')}"
+    filename: "pz/%{hiera('reverse_mgmt_c5')}"
+  mgmt07:
+    cidr:     "%{hiera('netcfg_mgmt_net_c6')}.0/24"
+    origin:   "%{hiera('reverse_mgmt_c6')}"
+    filename: "pz/%{hiera('reverse_mgmt_c6')}"
+  mgmt08:
+    cidr:     "%{hiera('netcfg_mgmt_net_c7')}.0/24"
+    origin:   "%{hiera('reverse_mgmt_c7')}"
+    filename: "pz/%{hiera('reverse_mgmt_c7')}"
   transport:
     cidr: "%{::network_trp1}/%{::cidr_trp1}"
     origin: "%{hiera('reverse_trp')}"
