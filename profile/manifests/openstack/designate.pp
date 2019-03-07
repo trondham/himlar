@@ -10,7 +10,6 @@ class profile::openstack::designate (
   include ::designate::config
   include ::designate::worker
   include ::designate::producer
-  include ::designate::policy
 
   $bind_servers = lookup('profile::openstack::designate::bind_servers', Hash, 'first', {})
 
