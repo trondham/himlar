@@ -14,7 +14,6 @@ profile::base::common::packages:
   'python-memcached': {}
 
 profile::base::selinux::manage_selinux:       true
-profile::openstack::image::registry_enabled:  true
 profile::openstack::image::manage_policy:     true
 profile::openstack::image::manage_notify:     true
 
@@ -37,7 +36,7 @@ profile::base::yumrepo::repo_hash:
 # Image nodes need only glance key
 ceph::profile::params::client_keys:
   'client.glance':
-    secret: "%{hiera('client_glance::secret')}"
+    secret: "%{hiera('ceph_storage_client_glance_key')}"
     mode: '0600'
     user: 'glance'
     group: 'glance'

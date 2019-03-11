@@ -6,6 +6,7 @@ class profile::openstack::identity (
   $neutron_enabled          = false,
   $nova_enabled             = false,
   $swift_enabled            = false,
+  $radosgw_enabled          = false,
   $trove_enabled            = false,
   $designate_enabled        = false,
   $mistral_enabled          = false,
@@ -74,7 +75,7 @@ class profile::openstack::identity (
   }
 
   if $manage_openidc {
-    include ::keystone::federation::openidc
+    include ::profile::openstack::identity::openidc
   }
 
   create_resources('keystone_config', $keystone_config)
@@ -119,6 +120,10 @@ class profile::openstack::identity (
 
   if $gnocchi_enabled {
     include ::gnocchi::keystone::auth
+  }
+
+  if $radosgw_enabled {
+    include ::ceph::rgw::keystone::auth
   }
 
   unless empty($roles_extra) {

@@ -16,11 +16,12 @@ class profile::openstack::dashboard(
   $enable_pwd_retrieval = false,
   $enable_designate     = false,
   $enable_mistral       = false,
-  $image_upload_mode    = undef,
   $change_region_selector = false,
   $change_login_footer  = false,
   $keystone_admin_roles = undef,
-  ) {
+  $customize_logo       = false,
+  $user_menu_links      = undef,
+) {
 
   if $manage_dashboard {
     include ::horizon
@@ -34,10 +35,10 @@ class profile::openstack::dashboard(
 
   if $database {
     # Run syncdb if we use database backend
-    exec { 'horizon syncdb':
-      command => '/usr/share/openstack-dashboard/manage.py syncdb --noinput && touch /usr/share/openstack-dashboard/.syncdb',
+    exec { 'horizon migrate':
+      command => '/usr/share/openstack-dashboard/manage.py migrate --noinput && touch /usr/share/openstack-dashboard/.migrate',
       user    => 'root',
-      creates => '/usr/share/openstack-dashboard/.syncdb',
+      creates => '/usr/share/openstack-dashboard/.migrate',
       require => [Concat::Fragment['extra-local_settings.py'], Package['horizon']]
     }
   }
@@ -110,6 +111,33 @@ class profile::openstack::dashboard(
     file { '/usr/share/openstack-dashboard/openstack_dashboard/templates/_login_footer.html':
       ensure  => present,
       source  => "puppet:///modules/${module_name}/openstack/horizon/_login_footer.html",
+      require => Class['horizon'],
+      notify  => Service['httpd']
+    }
+  }
+
+  if $customize_logo {
+    file { 'logo-splash.svg':
+      ensure  => present,
+      path    => '/usr/share/openstack-dashboard/openstack_dashboard/static/dashboard/img/logo-splash.svg',
+      source  => "puppet:///modules/${module_name}/openstack/horizon/logo-splash.svg",
+      replace => true,
+      require => Class['horizon'],
+      notify  => Service['httpd']
+    }
+    file { 'logo.svg':
+      ensure  => present,
+      path    => '/usr/share/openstack-dashboard/openstack_dashboard/static/dashboard/img/logo.svg',
+      source  => "puppet:///modules/${module_name}/openstack/horizon/logo.svg",
+      replace => true,
+      require => Class['horizon'],
+      notify  => Service['httpd']
+    }
+    file { 'favicon.ico':
+      ensure  => present,
+      path    => '/usr/share/openstack-dashboard/openstack_dashboard/static/dashboard/img/favicon.ico',
+      source  => "puppet:///modules/${module_name}/openstack/horizon/favicon.ico",
+      replace => true,
       require => Class['horizon'],
       notify  => Service['httpd']
     }

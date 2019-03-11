@@ -11,6 +11,7 @@ horizon::horizon_cert:                  "/etc/pki/tls/certs/%{hiera('public__add
 horizon::horizon_key:                   "/etc/pki/tls/private/%{hiera('public__address__dashboard')}.key.pem"
 horizon::secure_cookies:                true
 horizon::images_panel:                  'angular'
+horizon::horizon_upload_mode:           "'direct'"
 
 horizon::help_url:                      'http://docs.uh-iaas.no'
 horizon::openstack_endpoint_type:       'publicURL'
@@ -42,7 +43,7 @@ horizon::websso_initial_choice: openidc
 horizon::websso_choices:
   - ['openidc', 'Dataporten']
 horizon::websso_idp_mapping:
-  openidc: [ 'dataporten', 'openidc' ]
+  openidc: [ 'dataporten', 'openid' ]
 
 # cache and session
 horizon::cache_server_ip:               '127.0.0.1'

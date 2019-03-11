@@ -88,7 +88,7 @@ mod 'theforeman/puppet', :ref => '0946aab48e',      :git => github + 'theforeman
 mod 'puppetlabs/hocon', :ref => '1.0.0',            :git => github + 'puppetlabs/puppetlabs-hocon'
 mod 'puppetlabs/puppet_authorization', :ref => '0.4.0', :git => github + 'puppetlabs/puppetlabs-puppet_authorization'
 mod 'theforeman/dns', :ref => '5.0.1',              :git => github + 'theforeman/puppet-dns'
-mod 'theforeman/dhcp', :ref => '3.1.5-norcams',     :git => github + 'norcams/puppet-dhcp.git'
+mod 'theforeman/dhcp', :ref => '3.1.9-norcams',     :git => github + 'norcams/puppet-dhcp.git'
 mod 'theforeman/foreman_proxy', :ref => '9.0.0',    :git => github + 'theforeman/puppet-foreman_proxy.git'
 mod 'theforeman/git', :ref => '3.0.0',              :git => github + 'theforeman/puppet-git'
 mod 'voxpupuli/alternatives', :ref => 'v2.0.0',     :git => github + 'voxpupuli/puppet-alternatives'
@@ -154,21 +154,21 @@ mod 'archive', :ref => 'v2.2.0',                    :git => github + 'voxpupuli/
 #
 # profile::openstack::*
 #
-mod 'glance', :ref => '11.5.0',                     :git => github + 'openstack/puppet-glance'
-mod 'cinder', :ref => '11.5.0',                     :git => github + 'openstack/puppet-cinder'
-mod 'neutron', :ref => '11.5.0',                    :git => github + 'openstack/puppet-neutron'
-mod 'nova', :ref => '11.5.0',                       :git => github + 'openstack/puppet-nova'
-mod 'horizon', :ref => '11.5.0',                    :git => github + 'openstack/puppet-horizon'
-mod 'gnocchi', :ref => '10.4.0',                    :git => github + 'openstack/puppet-gnocchi'
-mod 'keystone', :ref => 'norcams/pike',             :git => github + 'norcams/puppet-keystone'
+mod 'glance', :ref => '12.4.0',                     :git => github + 'openstack/puppet-glance'
+mod 'cinder', :ref => '12.4.0',                     :git => github + 'openstack/puppet-cinder'
+mod 'neutron', :ref => '12.4.0',                    :git => github + 'openstack/puppet-neutron'
+mod 'nova', :ref => '12.4.0',                       :git => github + 'openstack/puppet-nova'
+mod 'horizon', :ref => '12.4.0',                    :git => github + 'openstack/puppet-horizon'
+mod 'gnocchi', :ref => '12.4.0',                    :git => github + 'openstack/puppet-gnocchi'
+mod 'keystone', :ref => '12.4.0',                   :git => github + 'openstack/puppet-keystone'
 mod 'swift', :ref => 'norcams/ocata',               :git => github + 'norcams/puppet-swift'
-mod 'ceilometer', :ref => '10.4.0',                 :git => github + 'openstack/puppet-ceilometer'
+mod 'ceilometer', :ref => '12.5.0',                 :git => github + 'openstack/puppet-ceilometer'
 mod 'designate', :ref => '12.4.0',                  :git => github + 'openstack/puppet-designate'
 mod 'mistral', :ref => '12.4.0',                    :git => github + 'openstack/puppet-mistral'
 
 mod 'oslo', :ref => '12.4.0',                       :git => github + 'openstack/puppet-oslo'
-mod 'openstacklib', :ref => '11.5.0',               :git => github + 'openstack/puppet-openstacklib'
-mod 'openstack_extras', :ref => '11.5.0',           :git => github + 'openstack/puppet-openstack_extras'
+mod 'openstacklib', :ref => '12.4.0',               :git => github + 'openstack/puppet-openstacklib'
+mod 'openstack_extras', :ref => '12.4.0',           :git => github + 'openstack/puppet-openstack_extras'
 mod 'sysctl', :ref => 'v0.0.11',                    :git => github + 'duritong/puppet-sysctl'
 mod 'memcached', :ref => 'v3.0.2',                  :git => github + 'saz/puppet-memcached'
 mod 'rsync', :ref => '0.4.0',                       :git => github + 'puppetlabs/puppetlabs-rsync'
@@ -188,6 +188,7 @@ mod 'ceph', :ref => '43863d13fc',                   :git => github + 'norcams/pu
 #
 mod 'haproxy', :ref => '1.5.0',                     :git => github + 'puppetlabs/puppetlabs-haproxy'
 mod 'corosync', :ref => 'v5.1.0',                   :git => github + 'voxpupuli/puppet-corosync'
+mod 'zookeeper', :ref => 'v0.8.1',                  :git => github + 'deric/puppet-zookeeper'
 
 #
 # Common libs

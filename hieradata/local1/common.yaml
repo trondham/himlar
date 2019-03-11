@@ -14,7 +14,16 @@ domain_frontend:      'iaas.intern'
 domain_public:        'local1.iaas.intern'
 domain_trp:           'trp.local1.iaas.intern'
 domain_mgmt:          'mgmt.local1.iaas.intern'
+domain_oob:           'oob.local1.iaas.intern'
 reverse_mgmt:         '4.31.172.in-addr.arpa'
+reverse_mgmt_c0:      '4.31.172.in-addr.arpa'
+reverse_mgmt_c1:      '5.31.172.in-addr.arpa'
+reverse_mgmt_c2:      '6.31.172.in-addr.arpa'
+reverse_mgmt_c3:      '7.31.172.in-addr.arpa'
+reverse_mgmt_c4:      '8.31.172.in-addr.arpa'
+reverse_mgmt_c5:      '9.31.172.in-addr.arpa'
+reverse_mgmt_c6:      '10.31.172.in-addr.arpa'
+reverse_mgmt_c7:      '11.31.172.in-addr.arpa'
 reverse_trp:          '12.31.172.in-addr.arpa'
 reverse_public:       '12.168.192.in-addr.arpa'
 
@@ -25,11 +34,27 @@ netcfg_trp_gateway:     '172.31.12.1'
 netcfg_trp_gateway6:    'fd00::1'
 netcfg_trp_netpart6:    'fd00'
 netcfg_trp_netmask6:    '64'
+netcfg_trp_net_c0:      '172.31.12'
+netcfg_trp_net_c1:      '172.31.13'
+netcfg_trp_net_c2:      '172.31.14'
+netcfg_trp_net_c3:      '172.31.15'
+netcfg_trp_net_c4:      '172.31.16'
+netcfg_trp_net_c5:      '172.31.17'
+netcfg_trp_net_c6:      '172.31.18'
+netcfg_trp_net_c7:      '172.31.19'
 netcfg_live_netpart:    '172.31.12'
 netcfg_live_netmask:    '255.255.255.0'
 netcfg_mgmt_netpart:    '172.31.4'
 netcfg_mgmt_netmask:    '255.255.255.0'
 netcfg_mgmt_gateway:    '172.31.4.12'
+netcfg_mgmt_net_c0:     '172.31.4'
+netcfg_mgmt_net_c1:     '172.31.5'
+netcfg_mgmt_net_c2:     '172.31.6'
+netcfg_mgmt_net_c3:     '172.31.7'
+netcfg_mgmt_net_c4:     '172.31.8'
+netcfg_mgmt_net_c5:     '172.31.9'
+netcfg_mgmt_net_c6:     '172.31.10'
+netcfg_mgmt_net_c7:     '172.31.11'
 netcfg_public_netmask:  '255.255.255.0'
 netcfg_public_netpart:  '192.168.12'
 netcfg_public_netpart6: 'fd01'
@@ -79,8 +104,6 @@ profile::network::services::dns_options:
       server: "%{hiera('netcfg_mgmt_netpart')}.11"
 
 profile::network::services::dns_records:
-  CNAME:
-    "proxy.%{hiera('domain_mgmt')}":                      "%{location}-proxy-01.%{hiera('domain_mgmt')}"
   A:
     # public
     "dashboard.%{hiera('domain_frontend')}":              "%{hiera('netcfg_public_netpart')}.254"
@@ -108,26 +131,23 @@ profile::network::services::dns_records:
     'compute.api.local2.iaas.intern':                     '192.168.13.250'
     'volume.api.local2.iaas.intern':                      '192.168.13.250'
     'ns.local2.iaas.intern':                              '192.168.13.250'
+  CNAME:
+    "proxy.%{hiera('domain_mgmt')}":                         "%{::location}-proxy-01.%{hiera('domain_mgmt')}"
+    "%{::location}-object-ceph-01.%{hiera('domain_mgmt')}":  "%{::location}-object-01.%{hiera('domain_mgmt')}"
+    "%{::location}-object-ceph-02.%{hiera('domain_mgmt')}":  "%{::location}-object-02.%{hiera('domain_mgmt')}"
+    "%{::location}-object-ceph-03.%{hiera('domain_mgmt')}":  "%{::location}-object-03.%{hiera('domain_mgmt')}"
+
 #
 ## Secret data which for other environments are stored ooutside of this data tree
 #
 
-# ceph.yaml
-ceph::profile::params::mon_key:                     'AQATGHJTUCBqIBAA7M2yafV1xctn1pgr3GcKPg=='
-client_admin::secret:                               'AQBMGHJTkC8HKhAAJ7NH255wYypgm1oVuV41MA=='
-client_bootstrap-osd::secret:                       'AQARG3JTsDDEHhAAVinHPiqvJkUi5Mww/URupw=='
-client_bootstrap-mds::secret:                       'AQCztJdSyNb0NBAASA2yPZPuwXeIQnDJ9O8gVw=='
-client_glance::secret:                              'AQBGJ8dWKhgcNhAA+VU0GlKHcRLJSsJ8WouuSQ=='
-client_volumes::secret:                             'AQA4MPZTOGU0ARAAXH9a0fXxVq0X25n2yPREDw=='
-client_cinder::secret:                              'AQBypF1V2JYiChAA2qYbjM6jbXJBMmpXPkvwBg=='
-
-# FIXME: puppet 3 legacy params
-client.admin::secret:                               'AQBMGHJTkC8HKhAAJ7NH255wYypgm1oVuV41MA=='
-client.bootstrap-osd::secret:                       'AQARG3JTsDDEHhAAVinHPiqvJkUi5Mww/URupw=='
-client.bootstrap-mds::secret:                       'AQCztJdSyNb0NBAASA2yPZPuwXeIQnDJ9O8gVw=='
-client.glance::secret:                              'AQBGJ8dWKhgcNhAA+VU0GlKHcRLJSsJ8WouuSQ=='
-client.volumes::secret:                             'AQA4MPZTOGU0ARAAXH9a0fXxVq0X25n2yPREDw=='
-client.cinder::secret:                              'AQBypF1V2JYiChAA2qYbjM6jbXJBMmpXPkvwBg=='
+# object-ceph
+ceph_object_client_fsid:                           'cc91fb3d-6b18-4640-9743-1b9bb6b97d86'
+ceph_object_client_admin_key:                       'AQAIknZci/9lCxAAolMJzwm/uT7zEgMHnWQhYw=='
+ceph_object_client_bootstrap_osd_key:               'AQAAknZcmA/MMRAA1ELkRSjBR7AXLH/ZO++I7Q=='
+ceph_object_client_rgw_key:                         'AQDrkXZc71xHJBAAnr3xcAxuCpom1ZOmylKtLA=='
+ceph_object_client_mon_key:                         'AQC+lXZcanv4NhAAGWDjSYE6+L9hUBDz3CyJnQ=='
+ceph_object_client_mgr_key:                         'AQAOCudaiWQmKxAAjj6i10gfW887T2dYOCNLvw=='
 
 # service user api password
 keystone_admin_password:                            'admin_pass'
@@ -140,6 +160,7 @@ gnocchi_api_password:                               'gnocchi'
 ceilometer_api_password:                            'ceilometer_pass'
 access_api_password:                                'access_pass'
 designate_api_password:                             'designate_pass'
+radosgw_api_password:                               'radosgw_pass'
 
 # rabbitmq
 rabbitmq::default_pass:                             'guest'

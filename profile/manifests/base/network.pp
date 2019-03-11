@@ -36,8 +36,8 @@ class profile::base::network(
         command     => "/bin/hostname ${hostname}",
         refreshonly => true
       }
-    } elsif fact('os.distro.codename') == 'jessie' {
-      exec { 'set jessie hostname':
+    } elsif (fact('os.distro.codename') == 'jessie') or (fact('os.distro.codename') == 'stretch') {
+      exec { 'set debian hostname':
         command => "/usr/bin/hostnamectl set-hostname ${hostname}",
         unless  => "/usr/bin/hostnamectl status | grep 'Static hostname: ${hostname}'",
       }
@@ -133,7 +133,13 @@ class profile::base::network(
   #
   if String(lookup('network::interfaces_hash', Hash, 'deep', {})) == "{}" and $::osfamily == 'RedHat' {
     $addresslist = lookup('profile::network::services::dns_records', Hash, 'deep', '')
-    $mgmtaddress = $addresslist['A'][$::clientcert]
+    $cname = $addresslist['CNAME'][$::clientcert]
+    if empty($cname) {
+      $mgmtaddress = $addresslist['A'][$::clientcert]
+    }
+    else {
+      $mgmtaddress = $addresslist['A'][$cname]
+    }
 
     # Create interface files only if an A record is defined in hiera
     # to avoid destroying existing network interfaces config
@@ -145,10 +151,10 @@ class profile::base::network(
       # our third octet might be higher than base, we need to know the difference
       $addrdiff = $ouraddr-$addrbase
       # Find which interfaces to configure and their options
-      $named_interface_hash = lookup('named_interfaces::config', Hash, 'first', {})
+      $named_interfaces_hash = lookup('named_interfaces::config', Hash, 'first', {})
       $ifopts = lookup('profile::base::network::network_auto_opts', Hash, 'deep', {})
       # Configure each interface
-      $named_interface_hash.each |$ifrole, $ifnamed| {
+      $named_interfaces_hash.each |$ifrole, $ifnamed| {
         $ifname = String($ifnamed[0])
 
         # We must avoid duplicate interface files for logical constructs in named_interfaces, i.e trp vs transport, live etc
@@ -156,8 +162,9 @@ class profile::base::network(
         if $ifopts[$ifrole] {
           # Calculate ip address pr interface based on mgmt address, get gw and mask
           $ipnetpart = lookup("netcfg_${ifrole}_netpart", String, 'first', '')
-          $netrole = regsubst($ipnetpart, '^(\d+)\.(\d+)\.(\d+)$','\3',) + $addrdiff
-          $newipaddr = regsubst($mgmtaddress, '^(\d+)\.(\d+)\.(\d+)\.(\d+)$',"\\1.\\2.${netrole}.\\4",)
+          $cnet = regsubst($ipnetpart, '^(\d+)\.(\d+)\.(\d+)$','\3',) + $addrdiff
+          $netrole= regsubst($ipnetpart, '^(\d+)\.(\d+)\.(\d+)$','\2',)
+          $newipaddr = regsubst($mgmtaddress, '^(\d+)\.(\d+)\.(\d+)\.(\d+)$',"\\1.${netrole}.${cnet}.\\4",)
           $ifmask = lookup("netcfg_${ifrole}_netmask", String, 'first', '')
           $ifgw = lookup("netcfg_${ifrole}_gateway", String, 'first', '')
 

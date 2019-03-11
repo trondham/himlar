@@ -79,6 +79,7 @@ nova::keystone::authtoken::auth_version:        'v3'
 nova::keystone::authtoken::project_domain_name: "%{hiera('keystone__default__domain')}"
 nova::keystone::authtoken::user_domain_name:    "%{hiera('keystone__default__domain')}"
 nova::keystone::authtoken::project_name:        "%{hiera('keystone__service__project')}"
+nova::keystone::authtoken::memcached_servers:   '127.0.0.1:11211'
 
 # scheduler (node: novactrl)
 nova::cpu_allocation_ratio:                         '16'
@@ -151,17 +152,17 @@ nova::nova_public_key:
 
 # console (node: compute)
 # VNC
-#nova::compute::vnc_enabled: true
-#nova::compute::vncserver_proxyclient_address: "%{ipaddress_mgmt1}"
-#nova::compute::vncproxy_host: "console.%{hiera('domain_public')}"
-#nova::compute::vncproxy_protocol: 'https'
-#nova::compute::libvirt::vncserver_listen: "%{ipaddress_mgmt1}"
+nova::compute::vnc_enabled: true
+nova::compute::vncserver_proxyclient_address: "%{ipaddress_mgmt1}"
+nova::compute::vncproxy_host: "console.%{hiera('domain_public')}"
+nova::compute::vncproxy_protocol: 'https'
+nova::compute::libvirt::vncserver_listen: "%{ipaddress_mgmt1}"
 # SPICE
-nova::compute::vnc_enabled:                       false
-nova::compute::spice::server_proxyclient_address: "%{::ipaddress_trp1}"
-nova::compute::spice::proxy_host:                 "console.%{hiera('domain_public')}"
-nova::compute::spice::proxy_protocol:             'https'
-nova::compute::spice::server_listen:              "%{::ipaddress_trp1}"
+# nova::compute::vnc_enabled:                       false
+# nova::compute::spice::server_proxyclient_address: "%{::ipaddress_trp1}"
+# nova::compute::spice::proxy_host:                 "console.%{hiera('domain_public')}"
+# nova::compute::spice::proxy_protocol:             'https'
+# nova::compute::spice::server_listen:              "%{::ipaddress_trp1}"
 
 # for telemetry reporting
 nova::compute::instance_usage_audit:              true
@@ -170,6 +171,9 @@ nova::notify_on_state_change:                     'vm_and_task_state'
 nova::notification_driver:                        'messagingv2'
 nova::notification_transport_url:                 "%{hiera('service__transport__url')}"
 nova::notification_topics:                        'notifications' # not used before ocata
+# FIXME: https://bugs.launchpad.net/ceilometer/+bug/1665449
+# Could be changed to both in the future
+nova::notification_format:                        'unversioned'
 
 # Disable reboot through api until DHCP is fixed upstream (calico)
 nova::policy::policies:

@@ -30,8 +30,10 @@ profile::openstack::designate::bind_servers:
     mdns_addr:
       - "%{hiera('service__address__mdns_01')}"
 
-# Add iptables rules
+# Firewall configuration
 profile::openstack::designate::manage_firewall: true
+profile::openstack::designate::ns_sources_ipv4:
+  - "%{hiera('service__address__ns')}"
 
 # Some extra packages we want installed
 profile::base::common::packages:
@@ -42,9 +44,6 @@ profile::base::common::packages:
 
 # Don't purge sudo stuff
 sudo::purge: false
-
-# Override repo "rdo-release"
-openstack_version: 'queens'
 
 # Enable extra yum repo
 profile::base::yumrepo::repo_hash:

@@ -3,8 +3,9 @@ include:
   default:
     - profile::openstack::dashboard
     - profile::logging::rsyslog::client
-    - profile::webserver::apache
+    - profile::webserver::apache::status
     - profile::openstack::cache
+    - profile::base::systemd
 
 profile::base::common::packages:
   'MySQL-python.x86_64': {}
@@ -31,9 +32,8 @@ profile::openstack::dashboard::manage_overrides:       true
 profile::openstack::dashboard::enable_pwd_retrieval:   true
 profile::openstack::dashboard::change_region_selector: true
 profile::openstack::dashboard::change_login_footer:    true
+profile::openstack::dashboard::customize_logo:         true
 profile::openstack::dashboard::image_upload_mode:     'direct'
-profile::webserver::apache::mods_enable:
-  - status
 
 # cronjob to cleanup expired session from db
 profile::base::cron::crontabs:
@@ -52,10 +52,11 @@ profile::base::yumrepo::repo_hash:
     includepkgs: 'htop bash-completion-extras'
 
 # Sensu
+profile::webserver::apache::status::manage_status: true
 profile::monitoring::sensu::agent::plugins:
   sensu-plugins-apache:
     type:         package
-    pkg_version:  '2.0.0'
+    pkg_version:  '3.0.0'
 
 profile::monitoring::sensu::agent::checks:
   'metrics-httpd-overview':
@@ -64,13 +65,6 @@ profile::monitoring::sensu::agent::checks:
     interval:     60
     subscribers:  ['metrics']
     handlers:     ['graphite_tcp']
-
-profile::webserver::apache::vhosts:
-  status:
-    ip:                 '127.0.0.1'
-    port:               '80'
-    manage_docroot:     false
-    docroot:            '/var/www/html'
 
 # We should change this to the same as the API services
 profile::openstack::dashboard::policies:
@@ -116,3 +110,13 @@ horizon::keystone_options:
   can_edit_project:             False
   can_edit_domain:              False
   can_edit_role:                False
+
+# Adjust the ulimit (number of open files) for Apache via systemd
+profile::base::systemd::manage_limits: true
+profile::base::systemd::limits:
+  httpd:
+    limits:
+      Service:
+        'LimitNOFILE': 32768
+
+profile::openstack::dashboard::user_menu_links: '[]'
