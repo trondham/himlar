@@ -333,6 +333,7 @@ profile::network::services::dns_records:
     "%{::location}-object-05.%{hiera('domain_mgmt')}":      "%{hiera('netcfg_mgmt_net_c0')}.123"
     "%{::location}-storage-06.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c0')}.124"
     "%{::location}-storage-07.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c0')}.125"
+    "%{::location}-workflow-01.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c0')}.200"
     "%{::location}-compute-11.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.11"
     "%{::location}-compute-12.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.12"
     "%{::location}-compute-13.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.13"
@@ -345,7 +346,6 @@ profile::network::services::dns_records:
     "%{::location}-mgmt-opx-03.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.3"
     "%{::location}-spine-01.%{hiera('domain_mgmt')}":       "%{hiera('netcfg_mgmt_net_c6')}.1"
     "%{::location}-spine-02.%{hiera('domain_mgmt')}":       "%{hiera('netcfg_mgmt_net_c6')}.2"
-    "%{::location}-workflow-01.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_netpart')}.200"
     # mgmt nodes
     "foreman.%{hiera('domain_mgmt')}":                      "%{hiera('netcfg_mgmt_net_c0')}.11"
     "puppet.%{hiera('domain_mgmt')}":                       "%{hiera('netcfg_mgmt_net_c0')}.11"
