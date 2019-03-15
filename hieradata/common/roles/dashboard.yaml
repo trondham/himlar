@@ -7,6 +7,9 @@ include:
     - profile::openstack::cache
     - profile::base::systemd
 
+# Override repo "rdo-release"
+openstack_version: 'rocky'
+
 profile::base::common::packages:
   'MySQL-python.x86_64': {}
   'bash-completion': {}
