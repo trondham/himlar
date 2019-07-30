@@ -7,15 +7,21 @@ include:
     - profile::logging::kibana
     - profile::logging::logrotate
 
+
 named_interfaces::config:
   mgmt:
     - eth0
 
-rsyslog::perm_dir:    '0755'
+# packages
+profile::base::common::packages:
+  'java-1.8.0-openjdk':     {}
+  'elasticsearch-curator':  {}
+  'bash-completion':        {}
+  'bash-completion-extras': {}
+  'jq':                     {}
 
-profile::logging::logrotate::manage_logrotate:    true
+# elasticsearch
 profile::logging::elasticsearch::manage_curator:  true
-
 profile::logging::elasticsearch::instances:
   'openstack':
     datadir:  '/opt/els/openstack'
@@ -32,13 +38,20 @@ profile::logging::elasticsearch::templates:
             'number_of_replicas': '0'
             'number_of_shards':   '1'
 
-profile::base::common::packages:
-  'java-1.8.0-openjdk':     {}
-  'elasticsearch-curator':  {}
-  'bash-completion': {}
-  'bash-completion-extras': {}
-  'jq': {}
+# logstash
+profile::logging::logstash::config_files:
+  00-input:
+    source: 'puppet:///modules/profile/logging/logstash/conf.d/input.conf'
+  01-norcams: # everything in syslog local6
+    source: 'puppet:///modules/profile/logging/logstash/conf.d/norcams.conf'
+  02-openstack: #everything in syslog local0-local5
+    source: 'puppet:///modules/profile/logging/logstash/conf.d/openstack.conf'
+  03-syslog: # everything else in syslog
+    source: 'puppet:///modules/profile/logging/logstash/conf.d/syslog.conf'
+  99-output:
+    source: 'puppet:///modules/profile/logging/logstash/conf.d/output.conf'
 
+# disks
 profile::base::lvm::physical_volume:
   '/dev/vdb':
     ensure: present
@@ -57,6 +70,9 @@ profile::base::lvm::logical_volume:
     volume_group: 'vg_log'
     fs_type:      "xfs"
     mountpath:    "/opt/els"
+
+# logrotate
+profile::logging::logrotate::manage_logrotate:    true
 
 logrotate::rules:
   openstack:
@@ -87,9 +103,11 @@ logrotate::rules:
 
 # Enable extra yum repo
 profile::base::yumrepo::repo_hash:
-  logstash:
+  logstash6:
     ensure: present
-  elasticsearch:
+  elasticsearch6:
     ensure: present
   curator5:
+    ensure: present
+  kibana6:
     ensure: present

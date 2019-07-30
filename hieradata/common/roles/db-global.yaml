@@ -3,6 +3,14 @@ include:
   default:
     - profile::database::galera
 
+named_interfaces::config:
+  mgmt:
+    - eth0
+  trp:
+    - eth1
+  public:
+    - dummy0
+
 mysql::server::restart:         false
 
 profile::base::common::packages:
@@ -19,6 +27,10 @@ profile::base::common::packages:
 # Packages needed to run
 profile::database::mariadb::packages:
   - MariaDB-backup
+
+mysql__config__max_connections:             '128'
+mysql__config__query_cache_size:            '128M'
+mysql__config__query_cache_limit:           '32M'
 
 profile::base::network::manage_dummy: true
 

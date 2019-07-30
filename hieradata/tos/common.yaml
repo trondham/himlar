@@ -92,8 +92,6 @@ named_interfaces::config:
     - eth1
   client:
     - eth2
-  public:
-    - dummy0
 
 # We need to allow both trafic from mgmt (nat via login) and public net
 
@@ -184,7 +182,7 @@ ntp::servers:
   - ntp2.uit.no
 
 ceph::profile::params::mon_initial_members:         'tos-cephmon-01, tos-cephmon-02, tos-cephmon-03'
-ceph::profile::params::mon_host:                    '10.246.16.91:6789, 10.246.16.92:6789, 10.246.16.93:6789'
+ceph::profile::params::mon_host:                    '10.246.16.91, 10.246.16.92, 10.246.16.93'
 ceph::profile::params::cluster_network:             '172.20.64.0/21'
 ceph::profile::params::public_network:              '10.246.16.0/21'
 

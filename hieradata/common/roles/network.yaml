@@ -26,6 +26,7 @@ profile::base::common::packages:
   'openstack-selinux': {}
   'python-etcd3gw': {}
   'python-memcached': {}
+  'libibverbs': {}
 
 profile::openstack::openrc::password:     "%{hiera('neutron_api_password')}"
 profile::openstack::openrc::username:     'neutron'
@@ -66,6 +67,8 @@ profile::base::yumrepo::repo_hash:
   rdo-release:
     ensure: present
   calico31:
+    ensure: absent
+  calico37:
     ensure: present
   epel: # should be absent when using RDO, but whitelist can also work
     ensure:   present
