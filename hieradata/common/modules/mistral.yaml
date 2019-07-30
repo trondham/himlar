@@ -33,11 +33,11 @@ mistral::keystone::auth::password:     "%{hiera('mistral_api_password')}"
 # Authentication tokens (manifests/keystone/authtoken.pp)
 #   - runs on the WORKFLOW node
 #---------------------------------------------------------------------
-mistral::keystone::authtoken::password:          "%{hiera('mistral_api_password')}"
-mistral::keystone::authtoken::auth_url:          "%{hiera('endpoint__identity__admin')}"
-mistral::keystone::authtoken::auth_uri:          "%{hiera('endpoint__identity__public')}"
-mistral::keystone::authtoken::memcached_servers: '127.0.0.1'
-mistral::keystone::authtoken::region_name:       "%{::location}"
+mistral::keystone::authtoken::password:             "%{hiera('mistral_api_password')}"
+mistral::keystone::authtoken::auth_url:             "%{hiera('endpoint__identity__admin')}"
+mistral::keystone::authtoken::www_authenticate_uri: "%{hiera('endpoint__identity__public')}"
+mistral::keystone::authtoken::memcached_servers:    '127.0.0.1'
+mistral::keystone::authtoken::region_name:          "%{::location}"
 
 #---------------------------------------------------------------------
 # Database (manifests/db.pp)
