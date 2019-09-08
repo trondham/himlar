@@ -28,7 +28,7 @@ profile::base::common::packages:
 sudo::purge: false
 
 # Override repo "rdo-release"
-openstack_version: 'rocky'
+#openstack_version: 'rocky'
 
 # Enable extra yum repo
 profile::base::yumrepo::repo_hash:
