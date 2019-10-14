@@ -60,6 +60,10 @@ class profile::openstack::database::sql (
     include ::designate::db::mysql
   }
 
+  if $congress_enabled {
+    include ::congress::db::mysql
+  }
+
   if $gnocchi_enabled {
     include ::gnocchi::db::mysql
   }

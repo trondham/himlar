@@ -39,8 +39,8 @@ profile::base::network::manage_dummy:                               true
 profile::highavailability::loadbalancing::haproxy::manage_haproxy:  true
 profile::highavailability::loadbalancing::haproxy::manage_firewall: true
 profile::highavailability::loadbalancing::haproxy::firewall_ports:
-  public:    ['80', '443', '5000', '8041', '8774', '8776', '9292', '9696', '6080', '8080', '8778', '9001']
-  internal:  ['5000', '8041', '8774', '8776', '9292', '9696', '35357', '8080', '8778', '9001']
+  public:    ['80', '443', '5000', '8041', '8774', '8776', '9292', '9696', '6080', '8080', '8778', '9001', '1789']
+  internal:  ['5000', '8041', '8774', '8776', '9292', '9696', '35357', '8080', '8778', '9001', '1789']
   mgmt:      ['9000']
   limited:   []
 
@@ -84,6 +84,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
       - "image.api.%{hiera('domain_public')}:9292":         'bk_image'
       - "object.api.%{hiera('domain_public')}:8080":        'bk_object'
       - "dns.api.%{hiera('domain_public')}:9001":           'bk_dns'
+      - "governance.api.%{hiera('domain_public')}:1789":    'bk_governance'
       - "status.%{hiera('domain_frontend')}":               'bk_status'
       - "status-%{::location}.%{hiera('domain_frontend')}": 'bk_status'
       - "request.%{hiera('domain_frontend')}":              'bk_request'
@@ -104,6 +105,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
       - "volume.%{hiera('domain_trp')}:8776":           'bk_volume'
       - "image.%{hiera('domain_trp')}:9292":            'bk_image'
       - "dns.%{hiera('domain_trp')}:9001":              'bk_dns'
+      - "governance.%{hiera('domain_trp')}:1789":       'bk_dns'
       - "object.%{hiera('domain_trp')}:8080":           'bk_object'
 
 # HAproxy backends: public, internal and haproxy monitor
@@ -119,6 +121,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_frontends:
       "%{::ipaddress_public1}:9292":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
       "%{::ipaddress_public1}:9696":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
       "%{::ipaddress_public1}:9001":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
+      "%{::ipaddress_public1}:1789":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
       "%{::ipaddress_public1}:443":   ['ssl', 'crt', "%{hiera('status_ssl_pem')}"]
       "%{::ipaddress_public1}:80":    []
       "%{::ipaddress_public1}:6080":  ['ssl', 'crt', "%{hiera('console_ssl_pem')}"]
@@ -145,6 +148,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_frontends:
       "%{::ipaddress_trp1}:9696":  [] # neutron
       "%{::ipaddress_trp1}:8080":  [] # object
       "%{::ipaddress_trp1}:9001":  [] # designate
+      "%{::ipaddress_trp1}:1789":  [] # congress
       "%{::ipaddress_trp1}:8778":  [] # placement
     options:
       - capture:        'request header Host len 64' #for debug
@@ -198,6 +202,11 @@ profile::highavailability::loadbalancing::haproxy::haproxy_backends:
       - option:       'httplog'
       - errorfile:    '503 /etc/haproxy/error.api.http'
       - balance:      'roundrobin'
+  bk_governance:
+    options:
+      - option:       'httplog'
+      - errorfile:    '503 /etc/haproxy/error.api.http'
+      - balance:      'roundrobin'
   bk_object:
     options:
       - option:
@@ -245,6 +254,8 @@ status__backend__names:    ['%{::location}-status-01']
 status__backend__ips:      ["%{hiera('netcfg_trp_netpart')}.21"]
 dns__backend__names:       ['%{::location}-dns-01']
 dns__backend__ips:         ["%{hiera('netcfg_trp_netpart')}.34"]
+governance__backend__names: ['%{::location}-governance-01']
+governance__backend__ips:   ["%{hiera('netcfg_trp_netpart')}.49"]
 console__backend__names:   ['%{::location}-console-01']
 console__backend__ips:     ["%{hiera('netcfg_trp_netpart')}.61"]
 access__backend__names:    ['%{::location}-access-01']
@@ -313,6 +324,12 @@ profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
     ipaddresses:        "%{alias('dns__backend__ips')}"
     ports:              '9001'
     options:            'check'
+  governance:
+    listening_service:  'bk_governance'
+    server_names:       "%{alias('governance__backend__names')}"
+    ipaddresses:        "%{alias('governance__backend__ips')}"
+    ports:              '1789'
+    options:            'check'
   console:
     listening_service:  'bk_console'
     server_names:       "%{alias('console__backend__names')}"
@@ -378,6 +395,10 @@ profile::base::selinux::ports:
     seltype:  'http_port_t'
     protocol: 'tcp'
     port:     9001
+  governance-http:
+    seltype:  'http_port_t'
+    protocol: 'tcp'
+    port:     1789
 
 # Errorpage for api, not used for status!
 profile::highavailability::loadbalancing::haproxy::haproxy_errorpage:

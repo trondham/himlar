@@ -1,0 +1,57 @@
+---
+# Configuration for Congress (Governance service)
+#
+# Uses puppet-congress:
+#   https://github.com/openstack/puppet-congress
+
+#---------------------------------------------------------------------
+# Logging (manifests/logging.pp)
+#   - runs on the GOVERNANCE node
+#---------------------------------------------------------------------
+congress::logging::use_syslog:  true
+congress::logging::use_journal: true
+congress::logging::use_json:    false
+
+#---------------------------------------------------------------------
+# RabbitMQ (manifests/init.pp)
+#   - runs on the GOVERNANCE node
+#---------------------------------------------------------------------
+congress::default_transport_url:       "%{hiera('service__transport__url')}"
+congress::notification_transport_url:  "%{hiera('service__transport__url')}"
+
+#---------------------------------------------------------------------
+# Authentication (manifests/keystone/auth.pp)
+#   - runs on the IDENTITY node
+#---------------------------------------------------------------------
+congress::keystone::auth::region:       "%{::location}"
+congress::keystone::auth::public_url:   "%{hiera('endpoint__congress__public')}"
+congress::keystone::auth::admin_url:    "%{hiera('endpoint__congress__admin')}"
+congress::keystone::auth::internal_url: "%{hiera('endpoint__congress__internal')}"
+congress::keystone::auth::password:     "%{hiera('congress_api_password')}"
+
+#---------------------------------------------------------------------
+# Authentication tokens (manifests/keystone/authtoken.pp)
+#   - runs on the GOVERNANCE node
+#---------------------------------------------------------------------
+congress::keystone::authtoken::password:             "%{hiera('congress_api_password')}"
+congress::keystone::authtoken::auth_url:             "%{hiera('endpoint__identity__admin')}"
+congress::keystone::authtoken::www_authenticate_uri: "%{hiera('endpoint__identity__public')}"
+congress::keystone::authtoken::memcached_servers:    '127.0.0.1'
+congress::keystone::authtoken::region_name:          "%{::location}"
+
+#---------------------------------------------------------------------
+# Database (manifests/db.pp)
+#   - runs on the GOVERNANCE node
+#---------------------------------------------------------------------
+congress::db::database_connection: "mysql+pymysql://congress:%{hiera('congress::db::mysql::password')}@%{hiera('service__address__db_regional')}/congress"
+congress::db::database_max_retries: "-1"
+
+#---------------------------------------------------------------------
+# Database MySQL (manifests/db/mysql.pp)
+#   - runs on the DB node
+#---------------------------------------------------------------------
+congress::db::mysql::user:   "congress"
+congress::db::mysql::dbname: "congress"
+congress::db::mysql::allowed_hosts:
+  - "%{hiera('netcfg_trp_netpart')}.%"
+
