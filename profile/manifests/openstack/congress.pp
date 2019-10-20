@@ -4,6 +4,7 @@ class profile::openstack::congress (
 {
   include ::congress
   include ::congress::db
+  include ::congress::server
 
   if $manage_firewall {
     profile::firewall::rule { '001 congress incoming':
