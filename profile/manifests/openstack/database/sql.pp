@@ -7,6 +7,7 @@ class profile::openstack::database::sql (
   $trove_enabled    = false,
   $cinder_enabled   = false,
   $designate_enabled = false,
+  $congress_enabled = false,
   $gnocchi_enabled  = false,
   $database         = 'mariadb',
   $extra_databases  = {},
