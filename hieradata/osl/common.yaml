@@ -79,7 +79,8 @@ netcfg_pub_natgw:         '158.37.63.248'
 netcfg_pub_natgw2:        '158.39.75.248'
 netcfg_anycast_dns:       '158.37.63.252'
 netcfg_anycast_dns6:      '2001:700:2:82ff::252'
-
+netcfg_ib_vlan:           '3379'
+netcfg_oob_vlan:          '3378'
 netcfg_trp_rr:
   rr1:
     peer_ipv4: '172.18.32.1'
@@ -108,7 +109,6 @@ profile::network::services::dns_records:
   MX:
     "%{hiera('domain_frontend')}": [ '10 uninett-no.mx1.staysecuregroup.com.', '20 uninett-no.mx2.staysecuregroup.net.' ]
   CNAME:
-    "www.%{hiera('domain_frontend')}":           'norcams.github.io'
     "docs.%{hiera('domain_frontend')}":          'uh-iaas.readthedocs.io'
     "status.%{hiera('domain_frontend')}":        'pubproxy.ha.uib.no'
     "report.%{hiera('domain_frontend')}":        'pubproxy.ha.uib.no'
@@ -118,8 +118,6 @@ profile::network::services::dns_records:
     "%{::location}-compute-atlas-14.%{hiera('domain_mgmt')}": "%{::location}-compute-14.%{hiera('domain_mgmt')}"
     "%{::location}-compute-atlas-15.%{hiera('domain_mgmt')}": "%{::location}-compute-15.%{hiera('domain_mgmt')}"
     "%{::location}-compute-atlas-16.%{hiera('domain_mgmt')}": "%{::location}-compute-16.%{hiera('domain_mgmt')}"
-    #"%{::location}-compute-atlas-17.%{hiera('domain_mgmt')}": "%{::location}-compute-17.%{hiera('domain_mgmt')}"
-    #"%{::location}-compute-atlas-18.%{hiera('domain_mgmt')}": "%{::location}-compute-18.%{hiera('domain_mgmt')}"
     #"%{::location}-compute-atlas-19.%{hiera('domain_mgmt')}": "%{::location}-compute-19.%{hiera('domain_mgmt')}"
     #"%{::location}-compute-atlas-20.%{hiera('domain_mgmt')}": "%{::location}-compute-20.%{hiera('domain_mgmt')}"
     "%{::location}-compute-atlas-21.%{hiera('domain_mgmt')}": "%{::location}-compute-21.%{hiera('domain_mgmt')}"
@@ -131,8 +129,11 @@ profile::network::services::dns_records:
     "%{::location}-compute-hpc-26.%{hiera('domain_mgmt')}": "%{::location}-compute-26.%{hiera('domain_mgmt')}"
     "%{::location}-compute-hpc-27.%{hiera('domain_mgmt')}": "%{::location}-compute-27.%{hiera('domain_mgmt')}"
     "%{::location}-compute-hpc-28.%{hiera('domain_mgmt')}": "%{::location}-compute-28.%{hiera('domain_mgmt')}"
-    # VGPU
-    "%{::location}-compute-vgpu-42.%{hiera('domain_mgmt')}":  "%{::location}-compute-42.%{hiera('domain_mgmt')}"
+    # GPU
+    "%{::location}-compute-vgpu-42.%{hiera('domain_mgmt')}": "%{::location}-compute-42.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-gpu-17.%{hiera('domain_mgmt')}":  "%{::location}-compute-17.%{hiera('domain_mgmt')}"
+    # Dedicated
+    "%{::location}-compute-robin-18.%{hiera('domain_mgmt')}": "%{::location}-compute-18.%{hiera('domain_mgmt')}"
     # Arccache storage tempo
     "%{::location}-storage-arccache-08.%{hiera('domain_mgmt')}":  "%{::location}-storage-08.%{hiera('domain_mgmt')}"
     "%{::location}-storage-arccache-09.%{hiera('domain_mgmt')}":  "%{::location}-storage-09.%{hiera('domain_mgmt')}"
@@ -158,6 +159,7 @@ profile::network::services::dns_records:
     "api-osl.%{hiera('domain_frontend')}":       '158.37.63.250'
     "ns1.%{hiera('domain_frontend')}":           '158.37.63.251'
     "ns2.%{hiera('domain_frontend')}":           '158.39.77.251'
+    "www.%{hiera('domain_frontend')}":           '158.39.77.250'
 
     # Public records (<foo>.<location>.uh-iaas.no)
     "console.%{hiera('domain_public')}":         '158.37.63.250'
@@ -174,6 +176,7 @@ profile::network::services::dns_records:
     # Management network (entries that differ from common/common.yaml)
     "%{::location}-login-01.%{hiera('domain_mgmt')}": "%{hiera('netcfg_mgmt_netpart')}.10"
     "repo.%{hiera('domain_oob')}":                    "%{hiera('netcfg_oob_netpart')}.9"
+
   AAAA:
     # Frontend records (<foo>.uh-iaas.no)
     "ns1.%{hiera('domain_frontend')}":           '2001:700:2:82ff::251'
@@ -190,9 +193,9 @@ profile::network::services::dns_records:
     '252.63.37.158.in-addr.arpa':   "resolver.%{hiera('domain_public')}"
     '254.63.37.158.in-addr.arpa':   "dashboard-osl.%{hiera('domain_frontend')}"
     # public IPv6
-    '1.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.2.8.0.0.7.0.2.0.0.0.1.0.0.2.ip6.arpa':  "ns1.%{hiera('domain_frontend')}"
-    '2.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.2.8.0.0.7.0.2.0.0.0.1.0.0.2.ip6.arpa':  "resolver.%{hiera('domain_public')}"
-    '6.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.2.8.0.0.7.0.2.0.0.0.1.0.0.2.ip6.arpa':  "%{::location}-dns-01.%{hiera('domain_public')}"
+    '1.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.2.8.2.0.0.0.0.0.7.0.1.0.0.2.ip6.arpa':  "ns1.%{hiera('domain_frontend')}"
+    '2.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.2.8.2.0.0.0.0.0.7.0.1.0.0.2.ip6.arpa':  "resolver.%{hiera('domain_public')}"
+    '6.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.2.8.2.0.0.0.0.0.7.0.1.0.0.2.ip6.arpa':  "%{::location}-dns-01.%{hiera('domain_public')}"
 
 ntp::servers:
   - ntp1.uio.no

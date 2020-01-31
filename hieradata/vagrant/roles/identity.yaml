@@ -3,7 +3,6 @@ include:
   default:
     - profile::development::patch
 
-openstack_version: 'rocky'
 # Turn on for debug
 # include:
 #   default:
@@ -12,6 +11,10 @@ openstack_version: 'rocky'
 # apache::log_level:  dumpio:trace7
 
 # profile::openstack::identity::keystone_config:
+#   'federation/trusted_dashboard':
+#     value:  "https://%{hiera('public__address__dashboard')}/dashboard/auth/websso/"
+#   'federation/remote_id_attribute':
+#     value:  'OIDC-iss'
 #   'resource/project_name_url_safe':
 #     value:  'new'
 #   'resource/domain_name_url_safe':
@@ -27,4 +30,3 @@ openstack_version: 'rocky'
 #   'DEFAULT/insecure_debug':
 #     value:  'true'
 #
-openstack_version:      'rocky'

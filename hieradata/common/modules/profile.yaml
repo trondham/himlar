@@ -19,7 +19,8 @@ profile::base::common::include_virtual:        true
 profile::base::common::include_physical:       true
 profile::base::firewall::manage_firewall:      true
 profile::base::network::manage_hostname:       true
-profile::base::network::http_proxy:            "%{hiera('mgmt__address__proxy')}:8888"
+profile::base::network::http_proxy:            "http://%{hiera('mgmt__address__proxy')}:8888"
+profile::base::network::https_proxy:           "https://%{hiera('mgmt__address__proxy')}:8888"
 profile::base::network::http_proxy_profile:    '/root/proxy.sh'
 profile::base::dell::manage_repos:             true
 profile::base::dell::manage_openmanage:        true
@@ -181,6 +182,13 @@ profile::base::yumrepo::repo_hash:
     enabled:        1
     gpgcheck:       1
     gpgkey:         "%{hiera('yum_base_mirror')}/calico37/key"
+  calico38:
+    ensure:         absent
+    descr:          'Calico 3.8 Repository'
+    baseurl:        "%{hiera('yum_base_mirror')}/calico38/"
+    enabled:        1
+    gpgcheck:       1
+    gpgkey:         "%{hiera('yum_base_mirror')}/calico38/key"
   ceph-%{hiera('ceph_version')}:
     ensure:         absent
     descr:          'Ceph packages'
@@ -211,20 +219,6 @@ profile::base::yumrepo::repo_hash:
     gpgcheck:       1
     gpgkey:         "%{hiera('yum_base_mirror')}/elasticsearch6/GPG-KEY-elasticsearch"
     exclude:        'kibana-oss logstash-oss'
-  logstash:
-    ensure:         absent
-    descr:          'Logstash Centos Repo'
-    baseurl:        "%{hiera('yum_base_mirror')}/logstash/"
-    enabled:        1
-    gpgcheck:       1
-    gpgkey:         "%{hiera('yum_base_mirror')}/logstash/GPG-KEY-elasticsearch"
-  elasticsearch:
-    ensure:         absent
-    descr:          'Elasticsearch Centos Repo'
-    baseurl:        "%{hiera('yum_base_mirror')}/elasticsearch/"
-    enabled:        1
-    gpgcheck:       1
-    gpgkey:         "%{hiera('yum_base_mirror')}/elasticsearch/GPG-KEY-elasticsearch"
   curator5:
     ensure:         absent
     descr:          'Elasticsearch Curator 5.x Centos Repo'
@@ -273,7 +267,7 @@ profile::base::yumrepo::repo_hash:
     gpgcheck:       '1'
   grafana:
     ensure:         absent
-    descr:          'MariaDB 10.1 repo'
+    descr:          'Grafana repo'
     baseurl:        "%{hiera('yum_base_mirror')}/grafana"
     gpgkey:         "%{hiera('yum_base_mirror')}/grafana/RPM-GPG-KEY-grafana"
     enabled:        1
@@ -285,13 +279,17 @@ profile::base::dell::repo_hash:
     baseurl:        "%{hiera('yum_base_mirror')}/dell-system-update_dependent"
     enabled:        1
     gpgcheck:       1
-    gpgkey:         "%{hiera('yum_base_mirror')}/dell-system-update_dependent/public.key"
+    gpgkey:         "%{hiera('yum_base_mirror')}/dell-system-update_dependent/0x1285491434D8786F.asc
+                     %{hiera('yum_base_mirror')}/dell-system-update_dependent/0x756ba70b1019ced6.asc
+                     %{hiera('yum_base_mirror')}/dell-system-update_dependent/0xca77951d23b66a9d.asc"
   dell-system-update_independent:
     descr:          "dell-system-update_independent"
     baseurl:        "%{hiera('yum_base_mirror')}/dell-system-update_independent"
     enabled:        1
     gpgcheck:       1
-    gpgkey:         "%{hiera('yum_base_mirror')}/dell-system-update_independent/public.key"
+    gpgkey:         "%{hiera('yum_base_mirror')}/dell-system-update_dependent/0x1285491434D8786F.asc
+                     %{hiera('yum_base_mirror')}/dell-system-update_dependent/0x756ba70b1019ced6.asc
+                     %{hiera('yum_base_mirror')}/dell-system-update_dependent/0xca77951d23b66a9d.asc"
 
 profile::base::dell::packages:
   'srvadmin-all': {}

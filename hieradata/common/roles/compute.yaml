@@ -20,6 +20,9 @@ include:
 # Set SELinux mode to enforcing
 profile::base::selinux::manage_selinux: true
 
+# Turn on nested virtualization as default
+profile::virtualization::nested::manage: true
+
 # Fix SELinux file context for Nova's .ssh
 profile::base::selinux::fcontext:
   nova-dot-ssh:
@@ -187,7 +190,7 @@ profile::base::yumrepo::repo_hash:
     ensure: present
   epel: # should be absent when using RDO, but whitelist can also work
     ensure:   present
-    includepkgs: 'bird bird6 htop bash-completion-extras lttng-ust userspace-rcu libbabeltrace leveldb liboath py-bcrypt python2-bcrypt libsmbios smbios-utils-bin'
+    includepkgs: 'collectd collectd-virt bird bird6 htop bash-completion-extras lttng-ust userspace-rcu libbabeltrace leveldb liboath py-bcrypt python2-bcrypt libsmbios smbios-utils-bin'
 
 # Compute nodes need only admin and cinder keys
 ceph::profile::params::client_keys:

@@ -102,7 +102,7 @@ mod 'bind', :ref => 'keyfile_resource_record',      :git => github + 'norcams/pu
 #
 # bootstrap
 #
-mod 'himlar_bootstrap', :ref => '1.0.4',            :git => github + 'norcams/puppet-himlar_bootstrap'
+mod 'himlar_bootstrap', :ref => '1.0.8',            :git => github + 'norcams/puppet-himlar_bootstrap'
 
 #
 # profile::logging
@@ -110,7 +110,7 @@ mod 'himlar_bootstrap', :ref => '1.0.4',            :git => github + 'norcams/pu
 mod 'rsyslog', :ref => 'v3.3.0',                    :git => github + 'voxpupuli/puppet-rsyslog'
 mod 'logstash', :ref => '6.1.5',                    :git => github + 'elastic/puppet-logstash'
 mod 'datacat', :ref => '0.6.2',                     :git => github + 'richardc/puppet-datacat'
-mod 'elasticsearch', :ref => 'dbd06d6',             :git => github + 'elastic/puppet-elasticsearch'
+mod 'elasticsearch', :ref => '6.4.0',               :git => github + 'elastic/puppet-elasticsearch'
 mod 'file_concat', :ref => '1.0.1',                 :git => github + 'electrical/puppet-lib-file_concat'
 mod 'logrotate', :ref => 'v3.2.1',                  :git => github + 'voxpupuli/puppet-logrotate'
 
@@ -124,6 +124,7 @@ mod 'redis', :ref => 'v3.2.0',                      :git => github + 'arioch/pup
 mod 'grafana', :ref => 'v4.5.0',                    :git => github + 'voxpupuli/puppet-grafana'
 mod 'statsd', :ref => '3.1.0',                      :git => github + 'justindowning/puppet-statsd'
 mod 'netdata', :ref => '1f8bcef',                   :git => github + 'norcams/denver-netdata'
+mod 'collectd', :ref => 'v10.0.0',                  :git => github + 'voxpupuli/puppet-collectd'
 
 #
 # profile::webserver::apache

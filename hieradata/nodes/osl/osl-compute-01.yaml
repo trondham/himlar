@@ -15,7 +15,8 @@ network::interfaces_hash:
     ipaddress:     "%{hiera('netcfg_mgmt_netpart')}.103"
     netmask:       "%{hiera('netcfg_mgmt_netmask')}"
     defroute:      'no'
-    dns1:          "%{hiera('mgmt__address__proxy')}"
+    dns1:          "%{hiera('netcfg_dns_server1')}"
+    dns2:          "%{hiera('netcfg_dns_server2')}"
     domain:        "%{hiera('netcfg_dns_search')}"
     peerdns:       'yes'
   'team1':
@@ -50,6 +51,10 @@ profile::base::lvm::volume_group:
     physical_volumes:
       - /dev/sda3
       - /dev/sdb
+
+# Create and enable more swap
+profile::base::common::extraswap:        true
+profile::base::common::extraswap_sizegb: 10
 
 # This compute host uses local storage for instances
 # nova::compute::rbd::ephemeral_storage:            false

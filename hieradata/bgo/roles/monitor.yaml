@@ -1,4 +1,6 @@
 ---
+profile::base::common::manage_lvm: true
+
 profile::monitoring::sensu::server::handlers:
   slack:
     type:           'pipe'
@@ -13,3 +15,18 @@ profile::monitoring::sensu::server::handlers:
       - 'ok'
       - 'critical'
       - 'unknown'
+
+profile::base::lvm::physical_volume:
+  '/dev/vdb':
+    ensure: present
+    force:  true
+profile::base::lvm::volume_group:
+  'vg_graphite':
+    physical_volumes:
+      - /dev/vdb
+profile::base::lvm::logical_volume:
+  'lv_graphite':
+    volume_group: 'vg_graphite'
+    fs_type:      "xfs"
+    mountpath:    "/opt/graphite"
+

@@ -92,6 +92,8 @@ netcfg_pub_natgw:         '158.39.77.248'
 netcfg_pub_natgw2:        '158.39.74.248'
 netcfg_anycast_dns:       '158.39.77.252'
 netcfg_anycast_dns6:      '2001:700:2:83ff::252'
+netcfg_ib_vlan:           '908'
+netcfg_oob_vlan:          '909'
 netcfg_trp_rr:
   rr1:
     peer_ipv4: '172.18.0.1'
@@ -166,6 +168,11 @@ profile::network::services::dns_records:
     "%{::location}-storage-dcache-32.%{hiera('domain_mgmt')}":  "%{::location}-storage-32.%{hiera('domain_mgmt')}"
     "%{::location}-storage-dcache-33.%{hiera('domain_mgmt')}":  "%{::location}-storage-33.%{hiera('domain_mgmt')}"
     "%{::location}-storage-dcache-34.%{hiera('domain_mgmt')}":  "%{::location}-storage-34.%{hiera('domain_mgmt')}"
+    "%{::location}-storage-v2d-35.%{hiera('domain_mgmt')}":     "%{::location}-storage-35.%{hiera('domain_mgmt')}"
+    "%{::location}-storage-v2d-36.%{hiera('domain_mgmt')}":     "%{::location}-storage-36.%{hiera('domain_mgmt')}"
+    "%{::location}-storage-v2d-37.%{hiera('domain_mgmt')}":     "%{::location}-storage-37.%{hiera('domain_mgmt')}"
+    "%{::location}-storage-v2d-38.%{hiera('domain_mgmt')}":     "%{::location}-storage-38.%{hiera('domain_mgmt')}"
+    "%{::location}-storage-v2d-39.%{hiera('domain_mgmt')}":     "%{::location}-storage-39.%{hiera('domain_mgmt')}"
   A:
     # Public records (<foo>.<location>.uh-iaas.no)
     "console.%{hiera('domain_public')}":         '158.39.77.250'
@@ -199,9 +206,9 @@ profile::network::services::dns_records:
     '252.77.39.158.in-addr.arpa':   "resolver.%{hiera('domain_public')}"
     '254.77.39.158.in-addr.arpa':   "dashboard.%{hiera('domain_frontend')}"
     # public IPv6
-    '1.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.3.8.0.0.7.0.2.0.0.0.1.0.0.2.ip6.arpa':  "ns2.%{hiera('domain_frontend')}"
-    '2.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.3.8.0.0.7.0.2.0.0.0.1.0.0.2.ip6.arpa':  "resolver.%{hiera('domain_public')}"
-    '6.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.3.8.0.0.7.0.2.0.0.0.1.0.0.2.ip6.arpa':  "%{::location}-dns-01.%{hiera('domain_public')}"
+    '1.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.3.8.2.0.0.0.0.0.7.0.1.0.0.2.ip6.arpa':  "ns2.%{hiera('domain_frontend')}"
+    '2.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.3.8.2.0.0.0.0.0.7.0.1.0.0.2.ip6.arpa':  "resolver.%{hiera('domain_public')}"
+    '6.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.3.8.2.0.0.0.0.0.7.0.1.0.0.2.ip6.arpa':  "%{::location}-dns-01.%{hiera('domain_public')}"
 
 ntp::servers:
   - ntp.uib.no

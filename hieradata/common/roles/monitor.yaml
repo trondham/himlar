@@ -9,6 +9,21 @@ include:
     - profile::openstack::openrc
     - profile::messaging::rabbitmq
     - profile::logging::rsyslog::client
+    - profile::monitoring::collectd
+
+# collectd
+profile::monitoring::collectd::enable: true
+collectd::plugin::interface::interfaces:
+  - "%{::interface_trp1}"
+  - "%{::interface_mgmt1}"
+profile::monitoring::collectd::plugins:
+  - collectd::plugin::aggregation
+  - collectd::plugin::cpu
+  - collectd::plugin::disk
+  - collectd::plugin::load
+  - collectd::plugin::memory
+  - collectd::plugin::interface
+  - collectd::plugin::write_graphite
 
 profile::messaging::rabbitmq::manage_rsyslog: true
 
@@ -258,4 +273,4 @@ profile::base::yumrepo::repo_hash:
     ensure: present
   epel: # should be absent when using RDO, but whitelist can also work
     ensure:   present
-    includepkgs: 'htop bash-completion-extras statsd python2-pip nagios-plugins-openmanage nagios-common perl-Config-Tiny perl-Crypt-DES perl-Digest*'
+    includepkgs: 'collectd* htop bash-completion-extras statsd python2-pip nagios-plugins-openmanage nagios-common perl-Config-Tiny perl-Crypt-DES perl-Digest* libuv nodejs* perl-Net-SNMP npm python-sqlite3dbm python-cairocffi'

@@ -1,4 +1,28 @@
 ---
+# collectd
+include:
+  default:
+    - profile::monitoring::collectd
+
+# Turn off nested virtualization
+profile::virtualization::nested::manage: false
+
+profile::monitoring::collectd::enable: true
+
+collectd::plugin::interface::interfaces:
+  - "%{::interface_trp1}"
+  - "%{::interface_mgmt1}"
+
+profile::monitoring::collectd::plugins:
+  - collectd::plugin::aggregation
+  - collectd::plugin::cpu
+  - collectd::plugin::disk
+  - collectd::plugin::load
+  - collectd::plugin::memory
+  - collectd::plugin::interface
+  - collectd::plugin::write_graphite
+  - collectd::plugin::virt
+
 # Enable hugepages to prevent OOM-killer when using NUMA
 profile::base::physical::enable_hugepages: true
 # Number and size of hugepages, based on 512GB - 32 GB (4GB free pr node)
@@ -23,13 +47,16 @@ profile::base::lvm::physical_volume:
   '/dev/sda3':
     ensure: present
     force:  true
+  '/dev/nvme0n1':
+    ensure: present
+    force:  true
 profile::base::lvm::volume_group:
-  'vg_ext':
+  'vg_instances':
     physical_volumes:
-      - /dev/sda3
+      - /dev/nvme0n1
 profile::base::lvm::logical_volume:
   'lv_instances':
-    volume_group: 'vg_ext'
+    volume_group: 'vg_instances'
     fs_type:      "xfs"
     mountpath:    "/var/lib/nova/instances"
 
@@ -62,3 +89,7 @@ nova::compute::rbd::ephemeral_storage: false
 nova::config::nova_config:
   libvirt/images_type:
     value: default
+  DEFAULT/metadata_workers:
+    value: '4'
+
+sensu__memory__check:     "check-memory.rb -w 2048 -c 1024"

@@ -15,7 +15,8 @@ network::interfaces_hash:
     ipaddress:     "%{hiera('netcfg_mgmt_netpart')}.113"
     netmask:       "%{hiera('netcfg_mgmt_netmask')}"
     defroute:      'no'
-    dns1:          "%{hiera('mgmt__address__proxy')}"
+    dns1:          "%{hiera('netcfg_dns_server1')}"
+    dns2:          "%{hiera('netcfg_dns_server2')}"
     domain:        "%{hiera('netcfg_dns_search')}"
     peerdns:       'yes'
   'team1':
@@ -57,7 +58,7 @@ profile::base::lvm::logical_volume:
     mountpath:    "/var/lib/nova/instances"
 
 # This compute host uses local storage for instances
-nova::compute::rbd::ephemeral_storage:            false
-nova::config::nova_config:
-  libvirt/images_type:
-    value: default
+# nova::compute::rbd::ephemeral_storage:            false
+# nova::config::nova_config:
+#   libvirt/images_type:
+#     value: default

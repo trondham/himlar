@@ -19,9 +19,9 @@ baseurl=$repo/epel
 EOM
   cat > /etc/yum.repos.d/puppetlabs.repo <<- EOM
 [puppetlabs]
-name=Puppet 4 Yum Repo
-baseurl=$repo/puppetlabs-PC1/
-gpgkey=$repo/puppetlabs-PC1/RPM-GPG-KEY-puppet
+name=Puppet 5 Yum Repo
+baseurl=$repo/puppetlabs5/
+gpgkey=$repo/puppetlabs5/RPM-GPG-KEY-puppet
 enabled=1
 gpgcheck=1
 EOM
@@ -59,8 +59,10 @@ bootstrap_puppet()
     # Remove default version 3 hiera.yaml
     rm -f /etc/puppetlabs/puppet/hiera.yaml
 
-    gem install -N puppet_forge -v 2.2.6
-    gem install -N r10k -v 2.6.4
+    /opt/puppetlabs/puppet/bin/gem install -N r10k
+    /opt/puppetlabs/puppet/bin/gem install -N puppet_forge
+    ln -s /opt/puppetlabs/puppet/bin/wrapper.sh /opt/puppetlabs/bin/r10k
+
   fi
 
   if command -v apt-get >/dev/null 2>&1; then

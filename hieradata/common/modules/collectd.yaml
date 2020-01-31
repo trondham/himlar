@@ -1,0 +1,36 @@
+---
+collectd::manage_repo:            false
+collectd::manage_package:         true
+collectd::purge_config:           true
+collectd::fqdnlookup:             false
+collectd::plugin_conf_dir_mode:   '0755'
+collectd::collectd_hostname:      '%{::hostname}'
+
+# plugins
+collectd::plugin::write_graphite::carbons:
+  monitor: {}
+
+collectd::plugin::write_graphite::carbon_defaults:
+  graphitehost:   "%{hiera('mgmt__address__monitor')}"
+  graphiteport:   2003
+  graphiteprefix: 'collectd.'
+  protocol:       'udp'
+
+collectd::plugin::aggregation::aggregators:
+  cpu:
+    plugin:           'cpu'
+    agg_type:         'cpu'
+    groupby:          ["Host", "TypeInstance"]
+    calculateaverage: true
+
+collectd::plugin::disk::manage_package: false
+collectd::plugin::disk::disks:          ["/^[hsv]d[a-z]/"]
+collectd::plugin::disk::ignoreselected: false
+
+collectd::plugin::cpu::reportbycpu:     false
+
+collectd::plugin::virt::connection:       'qemu:///system'
+# FIXME use metadata for instance name in version 5.9 of collectd
+collectd::plugin::virt::hostname_format:  'hostname uuid'
+collectd::plugin::virt::refresh_interval: '300'
+collectd::plugin::virt::extra_stats:      'cpu_util disk disk_err'
