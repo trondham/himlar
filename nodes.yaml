@@ -141,7 +141,6 @@ nodesets:
     - role:       "db-regional"
     - role:       "mq"
     - role:       "api"
-    - role:       "ns"
     - role:       "dashboard"
     - role:       "admin"
     - role:       "governance"
