@@ -129,6 +129,7 @@ nodesets:
     - role:       "admin"
     - role:       "dns"
     - role:       "governance"
+    - role:       "telemetry"
     - role:       "identity"
     - role:       "novactrl"
     - role:       "image"
