@@ -128,6 +128,22 @@ nodesets:
     - role:       "dashboard"
     - role:       "admin"
     - role:       "dns"
+    - role:       "identity"
+    - role:       "novactrl"
+    - role:       "image"
+    - role:       "volume"
+    - role:       "network"
+    - role:       "compute"
+      memory:     4096
+      cpus:       2
+  congress:
+    - role:       "db-global"
+    - role:       "db-regional"
+    - role:       "mq"
+    - role:       "api"
+    - role:       "ns"
+    - role:       "dashboard"
+    - role:       "admin"
     - role:       "governance"
     - role:       "telemetry"
     - role:       "identity"
