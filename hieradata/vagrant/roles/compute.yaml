@@ -59,3 +59,6 @@ profile::base::network::rules:
 profile::monitoring::sensu::agent::checks:
   'nova-ssh-key':
     ensure:       absent
+
+# remove when telemetry/ceilometer is up in all environments and move to common
+profile::openstack::compute::manage_telemetry: true
