@@ -7,6 +7,11 @@ include:
   bootstrap:
     - profile::storage::cephmon_firewall
 
+# Enable ceph balancer plugin
+profile::storage::cephmon::target_max_misplaced_ratio: '0.05'
+profile::storage::cephmon::ceph_balancer_mode:         'upmap'
+profile::storage::cephmon::ceph_balancer_active:       true
+
 # collectd
 profile::monitoring::collectd::enable: true
 collectd::plugin::ceph::daemons:
@@ -83,8 +88,8 @@ accounts::accounts:
 # Sensu
 profile::monitoring::sensu::agent::plugin_gems:
   sensu-plugins-himlar:
-    ensure:       '0.3.0'
-    provider:     'sensu_gem'
+    ensure:       '0.4.0'
+    provider:     'sensuclassic_gem'
     source:       'http://download.iaas.uio.no/uh-iaas/gem'
 
 sudo::configs:
@@ -109,6 +114,8 @@ profile::base::yumrepo::repo_hash:
     ensure: present
   ceph-%{hiera('ceph_version')}-noarch:
     ensure: present
+  epel:
+    ensure:   present
 
 # enable Ceph dashboard
 profile::storage::cephmon::manage_dashboard:                    true
@@ -121,3 +128,15 @@ profile::storage::ceph_crushbucket::buckets:
   'storage':
     bucket_type:   'pod'
     bucket_parent: 'default'
+
+profile::base::selinux::manage_selinux: true
+profile::base::selinux::semodules:
+  'collectd_cephmon':
+    avc_file:   "collectd_cephmon.avc"
+profile::base::selinux::boolean:
+  'collectd_tcp_network_connect':
+    ensure: 'on'
+    persistent: true
+  'daemons_enable_cluster_mode':
+    ensure: 'on'
+    persistent: true

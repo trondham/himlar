@@ -10,8 +10,11 @@ location_description:     'Production environment in Bergen'
 profile::base::dell::manage_repos:      true
 profile::base::dell::manage_openmanage: false
 
-domain_frontend:          'uh-iaas.no'
-domain_public:            'bgo.uh-iaas.no'
+
+domain_frontend:          "%{hiera('profile::dns::ns::frontend_zone')}"
+domain_public:            "bgo.%{hiera('profile::dns::ns::frontend_zone')}"
+domain_frontend2:         "%{hiera('profile::dns::ns::frontend_zone2')}"
+domain_public2:           "bgo.%{hiera('profile::dns::ns::frontend_zone2')}"
 domain_trp:               'bgo.uhdc.no'
 domain_mgmt:              'mgmt.bgo.uhdc.no'
 domain_oob:               'oob.bgo.uhdc.no'
@@ -48,8 +51,8 @@ netcfg_mgmt_net_c4:       '172.16.4'
 netcfg_mgmt_net_c5:       '172.16.5'
 netcfg_mgmt_net_c6:       '172.16.6'
 netcfg_mgmt_net_c7:       '172.16.7'
-netcfg_trp_gateway:       '172.18.7.1'
-netcfg_trp_gateway6:      'fd00::701'
+netcfg_trp_gateway:       '172.18.7.2'
+netcfg_trp_gateway6:      'fd00::702'
 netcfg_trp_netpart:       '172.18.0'
 netcfg_trp_netpart6:      'fd00'
 netcfg_trp_net6_c0:       'fd00::0'
@@ -88,19 +91,23 @@ netcfg_lhc_gateway:       '172.18.7.3'
 netcfg_lhc_gateway6:      'fd00::703'
 netcfg_lhc_network:       '109.105.127.128/26'
 netcfg_lhc_network6:      '2001:948:62:3::/64'
+netcfg_lhc2_network6:     '2001:948:62:4::/64'
+netcfg_lhcpriv_network:   '10.109.0.0/20'
+netcfg_lhcpriv_gateway:   '172.18.0.28'
 netcfg_pub_natgw:         '158.39.77.248'
 netcfg_pub_natgw2:        '158.39.74.248'
+netcfg_lhc_natgw:         '109.105.127.189'
 netcfg_anycast_dns:       '158.39.77.252'
 netcfg_anycast_dns6:      '2001:700:2:83ff::252'
 netcfg_ib_vlan:           '908'
 netcfg_oob_vlan:          '909'
 netcfg_trp_rr:
   rr1:
-    peer_ipv4: '172.18.0.1'
-    peer_ipv6: 'fd00::1'
+    peer_ipv4: '172.18.6.1'
+    peer_ipv6: 'fd00::6:1'
   rr2:
-    peer_ipv4: '172.18.0.2'
-    peer_ipv6: 'fd00::2'
+    peer_ipv4: '172.18.6.2'
+    peer_ipv6: 'fd00::6:2'
 
 public__ip__proxy:             '158.39.77.253'
 public__ip__ns:                '158.39.77.251'
@@ -111,6 +118,15 @@ public__ipv6__resolver:        '2001:700:2:83ff::252'
 #
 # DNS (merge of common and this)
 #
+
+# main public zones
+profile::dns::ns::frontend_zone:    "nrec.no"
+profile::dns::ns::frontend_zone2:   "uh-iaas.no"
+
+profile::dns::ns::internal_zone: "bgo.uhdc.no"
+profile::dns::ns::public_zone:   "bgo.%{hiera('profile::dns::ns::frontend_zone')}"
+profile::dns::ns::public_zone2:  "bgo.%{hiera('profile::dns::ns::frontend_zone2')}"
+
 profile::network::services::dns_records:
   CNAME:
     "%{::location}-compute-alice-11.%{hiera('domain_mgmt')}":   "%{::location}-compute-11.%{hiera('domain_mgmt')}"
@@ -137,7 +153,21 @@ profile::network::services::dns_records:
     "%{::location}-compute-alice-32.%{hiera('domain_mgmt')}":   "%{::location}-compute-32.%{hiera('domain_mgmt')}"
     "%{::location}-compute-alice-33.%{hiera('domain_mgmt')}":   "%{::location}-compute-33.%{hiera('domain_mgmt')}"
     "%{::location}-compute-alice-34.%{hiera('domain_mgmt')}":   "%{::location}-compute-34.%{hiera('domain_mgmt')}"
-    "%{::location}-compute-tape-49.%{hiera('domain_mgmt')}":    "%{::location}-compute-49.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-vgpu-35.%{hiera('domain_mgmt')}":    "%{::location}-compute-35.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-clarino-36.%{hiera('domain_mgmt')}": "%{::location}-compute-36.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-clarino-37.%{hiera('domain_mgmt')}": "%{::location}-compute-37.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-epyc-41.%{hiera('domain_mgmt')}":    "%{::location}-compute-41.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-epyc-42.%{hiera('domain_mgmt')}":    "%{::location}-compute-42.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-epyc-43.%{hiera('domain_mgmt')}":    "%{::location}-compute-43.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-epyc-44.%{hiera('domain_mgmt')}":    "%{::location}-compute-44.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-epyc-45.%{hiera('domain_mgmt')}":    "%{::location}-compute-45.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-hpc-46.%{hiera('domain_mgmt')}":     "%{::location}-compute-46.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-hpc-47.%{hiera('domain_mgmt')}":     "%{::location}-compute-47.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-hpc-48.%{hiera('domain_mgmt')}":     "%{::location}-compute-48.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-hpc-49.%{hiera('domain_mgmt')}":     "%{::location}-compute-49.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-hpc-50.%{hiera('domain_mgmt')}":     "%{::location}-compute-50.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-hpc-51.%{hiera('domain_mgmt')}":     "%{::location}-compute-51.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-vgpu-52.%{hiera('domain_mgmt')}":    "%{::location}-compute-52.%{hiera('domain_mgmt')}"
     "%{::location}-object-ceph-01.%{hiera('domain_mgmt')}":     "%{::location}-object-01.%{hiera('domain_mgmt')}"
     "%{::location}-object-ceph-02.%{hiera('domain_mgmt')}":     "%{::location}-object-02.%{hiera('domain_mgmt')}"
     "%{::location}-object-ceph-03.%{hiera('domain_mgmt')}":     "%{::location}-object-03.%{hiera('domain_mgmt')}"
@@ -168,34 +198,55 @@ profile::network::services::dns_records:
     "%{::location}-storage-dcache-32.%{hiera('domain_mgmt')}":  "%{::location}-storage-32.%{hiera('domain_mgmt')}"
     "%{::location}-storage-dcache-33.%{hiera('domain_mgmt')}":  "%{::location}-storage-33.%{hiera('domain_mgmt')}"
     "%{::location}-storage-dcache-34.%{hiera('domain_mgmt')}":  "%{::location}-storage-34.%{hiera('domain_mgmt')}"
+    "%{::location}-storage-v2d-06.%{hiera('domain_mgmt')}":     "%{::location}-storage-06.%{hiera('domain_mgmt')}"
+    "%{::location}-storage-v2d-07.%{hiera('domain_mgmt')}":     "%{::location}-storage-07.%{hiera('domain_mgmt')}"
+    "%{::location}-storage-v2d-08.%{hiera('domain_mgmt')}":     "%{::location}-storage-08.%{hiera('domain_mgmt')}"
+    "%{::location}-storage-v2d-09.%{hiera('domain_mgmt')}":     "%{::location}-storage-09.%{hiera('domain_mgmt')}"
     "%{::location}-storage-v2d-35.%{hiera('domain_mgmt')}":     "%{::location}-storage-35.%{hiera('domain_mgmt')}"
     "%{::location}-storage-v2d-36.%{hiera('domain_mgmt')}":     "%{::location}-storage-36.%{hiera('domain_mgmt')}"
     "%{::location}-storage-v2d-37.%{hiera('domain_mgmt')}":     "%{::location}-storage-37.%{hiera('domain_mgmt')}"
     "%{::location}-storage-v2d-38.%{hiera('domain_mgmt')}":     "%{::location}-storage-38.%{hiera('domain_mgmt')}"
     "%{::location}-storage-v2d-39.%{hiera('domain_mgmt')}":     "%{::location}-storage-39.%{hiera('domain_mgmt')}"
   A:
-    # Public records (<foo>.<location>.uh-iaas.no)
-    "console.%{hiera('domain_public')}":         '158.39.77.250'
-    "compute.api.%{hiera('domain_public')}":     '158.39.77.250'
-    "identity.api.%{hiera('domain_public')}":    '158.39.77.250'
-    "network.api.%{hiera('domain_public')}":     '158.39.77.250'
-    "image.api.%{hiera('domain_public')}":       '158.39.77.250'
-    "volume.api.%{hiera('domain_public')}":      '158.39.77.250'
-    "placement.api.%{hiera('domain_public')}":   '158.39.77.250'
-    "metric.api.%{hiera('domain_public')}":      '158.39.77.250'
-    "dns.api.%{hiera('domain_public')}":         '158.39.77.250'
-    "object.api.%{hiera('domain_public')}":      '158.39.77.250'
+    # Public records (<foo>.<location>.nrec.no)
+    "console.%{hiera('domain_public')}":          '158.39.77.250'
+    "compute.api.%{hiera('domain_public')}":      '158.39.77.250'
+    "identity.api.%{hiera('domain_public')}":     '158.39.77.250'
+    "network.api.%{hiera('domain_public')}":      '158.39.77.250'
+    "image.api.%{hiera('domain_public')}":        '158.39.77.250'
+    "volume.api.%{hiera('domain_public')}":       '158.39.77.250'
+    "placement.api.%{hiera('domain_public')}":    '158.39.77.250'
+    "metric.api.%{hiera('domain_public')}":       '158.39.77.250'
+    "dns.api.%{hiera('domain_public')}":          '158.39.77.250'
+    "object.api.%{hiera('domain_public')}":       '158.39.77.250'
 
-    "resolver.%{hiera('domain_public')}":        '158.39.77.252'
+    "resolver.%{hiera('domain_public')}":         '158.39.77.252'
+
+    # Public records (<foo>.<location>.uh-iaas.no)
+    "console.%{hiera('domain_public2')}":         '158.39.77.250'
+    "compute.api.%{hiera('domain_public2')}":     '158.39.77.250'
+    "identity.api.%{hiera('domain_public2')}":    '158.39.77.250'
+    "network.api.%{hiera('domain_public2')}":     '158.39.77.250'
+    "image.api.%{hiera('domain_public2')}":       '158.39.77.250'
+    "volume.api.%{hiera('domain_public2')}":      '158.39.77.250'
+    "placement.api.%{hiera('domain_public2')}":   '158.39.77.250'
+    "metric.api.%{hiera('domain_public2')}":      '158.39.77.250'
+    "dns.api.%{hiera('domain_public2')}":         '158.39.77.250'
+    "object.api.%{hiera('domain_public2')}":      '158.39.77.250'
+
+    "resolver.%{hiera('domain_public2')}":        '158.39.77.252'
 
     # Management network (entries that differ from common/common.yaml)
     "%{::location}-mgmt-01.%{hiera('domain_mgmt')}":  "%{hiera('netcfg_mgmt_netpart')}.5"
     "%{::location}-login-01.%{hiera('domain_mgmt')}": "%{hiera('netcfg_mgmt_netpart')}.10"
     "repo.%{hiera('domain_oob')}":                    "%{hiera('netcfg_oob_netpart')}.9"
   AAAA:
+    # Public records (<foo>.<location>.nrec.no)
+    "resolver.%{hiera('domain_public')}":              '2001:700:2:83ff::252'
+    "%{::location}-dns-01.%{hiera('domain_public')}":  '2001:700:2:83ff::256'
     # Public records (<foo>.<location>.uh-iaas.no)
-    "resolver.%{hiera('domain_public')}":             '2001:700:2:83ff::252'
-    "%{::location}-dns-01.%{hiera('domain_public')}": '2001:700:2:83ff::256'
+    "resolver.%{hiera('domain_public2')}":             '2001:700:2:83ff::252'
+    "%{::location}-dns-01.%{hiera('domain_public2')}": '2001:700:2:83ff::256'
   PTR:
     # Management network (entries that differ from common/common.yaml)
     "5.%{hiera('reverse_mgmt')}":      "%{::location}-mgmt-01.%{hiera('domain_mgmt')}"
@@ -270,7 +321,13 @@ profile::openstack::resource::networks:
     name: 'lhc-dualStack'
     admin_state_up: true
     shared: false
-    tenant_name: 'uib-hpc-cern-alice'
+    tenant_id: '2eb4ee7df70f4d56999c5945fafb1781'
+    provider_network_type: 'local'
+  lhc_IPv6:
+    name: 'lhc-IPv6'
+    admin_state_up: true
+    shared: false
+    tenant_id: '2eb4ee7df70f4d56999c5945fafb1781'
     provider_network_type: 'local'
 profile::openstack::resource::subnets:
   public1_IPv4:
@@ -306,6 +363,17 @@ profile::openstack::resource::subnets:
       - "%{hiera('netcfg_anycast_dns')}"
     network_name: 'imagebuilder'
     tenant_name: 'imagebuilder'
+  public4_IPv4:
+    name: 'public4_IPv4'
+    cidr: '158.39.201.0/24'
+    ip_version: '4'
+    allocation_pools:
+      - 'start=158.39.201.2,end=158.39.201.254'
+    gateway_ip: '158.39.201.1'
+    dns_nameservers:
+      - "%{hiera('netcfg_anycast_dns')}"
+    network_name: 'dualStack'
+    tenant_name: 'openstack'
   public1_ipv6:
     name: 'public1_IPv6'
     cidr: '2001:700:2:8301::/64'
@@ -344,20 +412,42 @@ profile::openstack::resource::subnets:
     cidr: '2001:948:62:3::/64'
     ip_version: '6'
     allocation_pools:
-      - 'start=2001:948:62:3::2000,end=2001:948:62:3::ffff'
+      - 'start=2001:948:62:3::2000,end=2001:948:62:3::2fff'
     gateway_ip: '2001:948:62:3::1'
     dns_nameservers:
       - "%{hiera('netcfg_anycast_dns6')}"
     network_name: 'lhc-dualStack'
-    tenant_name: 'uib-hpc-cern-alice'
+    tenant_id: '2eb4ee7df70f4d56999c5945fafb1781'
+  lhc2_ipv6:
+    name: 'lhc2_IPv6'
+    cidr: '2001:948:62:4::/64'
+    ip_version: '6'
+    allocation_pools:
+      - 'start=2001:948:62:4::3000,end=2001:948:62:4::3fff'
+    gateway_ip: '2001:948:62:4::1'
+    dns_nameservers:
+      - "%{hiera('netcfg_anycast_dns6')}"
+    network_name: 'lhc-IPv6'
+    tenant_id: '2eb4ee7df70f4d56999c5945fafb1781'
   lhc1_IPv4:
     name: 'lhc1_IPv4'
     cidr: '109.105.127.128/26'
     ip_version: '4'
     allocation_pools:
-      - 'start=109.105.127.130,end=109.105.127.190'
+      - 'start=109.105.127.130,end=109.105.127.188'
     gateway_ip: '109.105.127.129'
     dns_nameservers:
       - "%{hiera('netcfg_anycast_dns')}"
     network_name: 'lhc-dualStack'
-    tenant_name: 'uib-hpc-cern-alice'
+    tenant_id: '2eb4ee7df70f4d56999c5945fafb1781'
+  lhc2_IPv4:
+    name: 'lhc2_IPv4'
+    cidr: '10.109.0.0/22'
+    ip_version: '4'
+    allocation_pools:
+      - 'start=10.109.0.10,end=10.109.3.254'
+    gateway_ip: '10.109.0.1'
+    dns_nameservers:
+      - "%{hiera('netcfg_anycast_dns')}"
+    network_name: 'lhc-IPv6'
+    tenant_id: '2eb4ee7df70f4d56999c5945fafb1781'

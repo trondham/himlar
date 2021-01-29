@@ -1,7 +1,12 @@
 ---
 network::interfaces_hash:
   'eth0':
-    ipaddress:     '172.28.0.10'
+    ipaddress:     '172.28.0.9' # test01 mgmt
+    netmask:       '255.255.248.0'
+    defroute:      'no'
+    onboot:        'yes'
+  'eth0:1':
+    ipaddress:     '10.17.0.10' # test01 mgmt
     netmask:       '255.255.255.0'
     defroute:      'no'
     onboot:        'yes'

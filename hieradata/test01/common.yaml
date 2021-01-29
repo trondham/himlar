@@ -42,7 +42,7 @@ bgp_as:                 '65535'
 
 netcfg_mgmt_gateway:    '172.28.0.12'
 netcfg_mgmt_netpart:    '172.28.0'
-netcfg_mgmt_netmask:    '255.255.255.0'
+netcfg_mgmt_netmask:    '255.255.248.0'
 netcfg_mgmt_net_c0:     '172.28.0'
 netcfg_mgmt_net_c1:     '172.28.1'
 netcfg_mgmt_net_c2:     '172.28.2'
@@ -51,8 +51,8 @@ netcfg_mgmt_net_c4:     '172.28.4'
 netcfg_mgmt_net_c5:     '172.28.5'
 netcfg_mgmt_net_c6:     '172.28.6'
 netcfg_mgmt_net_c7:     '172.28.7'
-netcfg_trp_gateway:     '172.30.0.1'
-netcfg_trp_gateway6:    'fd00::1'
+netcfg_trp_gateway:     '172.30.7.1'
+netcfg_trp_gateway6:    'fd00::701'
 netcfg_trp_netpart:     '172.30.0'
 netcfg_trp_netpart6:    'fd00'
 netcfg_trp_net_c0:      '172.30.0'
@@ -63,10 +63,12 @@ netcfg_trp_net_c4:      '172.30.4'
 netcfg_trp_net_c5:      '172.30.5'
 netcfg_trp_net_c6:      '172.30.6'
 netcfg_trp_net_c7:      '172.30.7'
-netcfg_trp_netmask:     '255.255.255.0'
+netcfg_trp_netmask:     '255.255.248.0'
 netcfg_trp_netmask6:    '64'
-netcfg_live_netpart:    '172.30.0'
-netcfg_live_netmask:    '255.255.255.0'
+netcfg_ceph_netpart:    '172.29.0'
+netcfg_ceph_netmask:    '255.255.248.0'
+netcfg_live_netpart:    '172.31.0'
+netcfg_live_netmask:    '255.255.248.0'
 #netcfg_dns_server2:     '129.177.12.31'
 netcfg_dns_server1:     '172.28.0.10'
 netcfg_dns_server2:     '172.28.0.17'
@@ -78,8 +80,11 @@ netcfg_anycast_dns:     '129.177.31.118'
 netcfg_anycast_dns6:    '2001:700:200:917::3f18'
 netcfg_trp_rr:
   rr1:
-    peer_ipv4: '172.30.0.1'
-    peer_ipv6: 'fd00::1'
+    peer_ipv4: '172.30.6.1'
+    peer_ipv6: 'fd00::6:1'
+  rr2:
+    peer_ipv4: '172.30.6.2'
+    peer_ipv6: 'fd00::6:2'
 
 public__ip__proxy:              '129.177.31.123'
 public__ip__ns:                 '129.177.31.117'
@@ -107,6 +112,9 @@ profile::network::services::dns_records:
     "access.%{hiera('domain_public')}":                     '129.177.31.122' #124
     "console.%{hiera('domain_public')}":                    '129.177.31.122' #125
     "dashboard.%{hiera('domain_public')}":                  '129.177.31.126'
+    # mgmt
+    "%{::location}-login-01.%{hiera('domain_mgmt')}":       "%{hiera('netcfg_mgmt_netpart')}.10"
+    "git.%{hiera('domain_mgmt')}":                          "%{hiera('netcfg_mgmt_net_c0')}.9"
   AAAA:
     "ns.%{hiera('domain_frontend')}":     '2001:700:200:917::3f17'
     "resolver.%{hiera('domain_public')}": '2001:700:200:917::3f18'
@@ -119,7 +127,8 @@ profile::network::services::dns_records:
     # public IPv6
     "7.1.f.3.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "ns.%{hiera('domain_frontend')}"
     "8.1.f.3.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "resolver.%{hiera('domain_public')}"
-
+  CNAME:
+    "%{::location}-leaf-placeholder-01.%{hiera('domain_mgmt')}":    "%{::location}-leaf-01.%{hiera('domain_mgmt')}"
 
 profile::network::services::dns_options:
   CNAME:
@@ -151,24 +160,11 @@ ntp::servers:
   - ntp.uib.no
   - ntp2.uib.no
 
-ceph::profile::params::mon_initial_members:         'test01-cephmon-01, test01-cephmon-02, test01-cephmon-03'
-ceph::profile::params::mon_host:                    '172.30.0.91, 172.30.0.92, 172.30.0.93'
-ceph::profile::params::cluster_network:             '172.30.0.0/24'
-ceph::profile::params::public_network:              '172.30.0.0/24'
-
 profile::openstack::volume::manage_rbd: true
 profile::openstack::compute::hypervisor::manage_libvirt_rbd: true
 
 # If backend != file, you must explicitly define stores in %location/modules/glance.yaml
 profile::openstack::image::api::backend: 'rbd'
-
-profile::network::services::dhcp_reservation:
-  test01-torack-01:
-    mac: '00:50:56:ae:c7:af'
-    ip:  '172.28.0.1'
-  test01-torack-02:
-    mac: '00:50:56:ae:4b:f6'
-    ip:  '172.28.0.2'
 
 profile::openstack::resource::networks:
   dualStack:

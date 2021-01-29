@@ -21,6 +21,11 @@ profile::base::selinux::ports:
 
 mgmt__address__logger: '129.177.5.51'
 
+ssl_cert_apps:          'apps.uib.no.pem'
+ssl_cert_nrec_docs:     'docs.nrec.no.pem'
+ssl_cert_nrec_www:      'www.nrec.no.pem'
+ssl_cert_nrec:          'nrec.no.pem'
+
 #
 # Default interfaces
 #
@@ -41,6 +46,9 @@ profile::highavailability::loadbalancing::haproxy::access_list:
       - 129.177.33.0/24 # vpn-ansatt
       - 129.177.48.0/24 # vpn-student
       - 129.177.49.0/24 # vpn-student
+      - 129.177.94.64/26 # vpn
+      - 129.177.144.0/23 # new vpn
+      - 129.177.13.203/32 # login
 
 corosync::unicast_addresses:
   - "%{hiera('netcfg_public_netpart')}.96"
@@ -53,13 +61,15 @@ corosync::quorum_members:
 corosync_cluster_node1:   "%{::location}-ha-01.%{hiera('domain_mgmt')}"
 corosync_cluster_node2:   "%{::location}-ha-02.%{hiera('domain_mgmt')}"
 
-corosync_cluster_vip1:    "%{hiera('netcfg_public_netpart')}.200"
-corosync_cluster_vip2:    "%{hiera('netcfg_public_netpart')}.201"
-corosync_cluster_vip3:    "%{hiera('netcfg_public_netpart')}.91"
-corosync_cluster_vip4:    "%{hiera('netcfg_public_netpart')}.114"
-corosync_cluster_vip5:    "%{hiera('netcfg_public_netpart')}.166"
+corosync_cluster_vip1:    "%{hiera('netcfg_public_netpart')}.200" # pubproxy.ha.uib.no
+corosync_cluster_vip2:    "%{hiera('netcfg_public_netpart')}.201" # pubproxy.ha.uib.no
+corosync_cluster_vip3:    "%{hiera('netcfg_public_netpart')}.91"  # uibproxy.ha.uib.no
+corosync_cluster_vip4:    "%{hiera('netcfg_public_netpart')}.114" # uibproxy.ha.uib.no
+corosync_cluster_vip5:    "%{hiera('netcfg_public_netpart')}.166" # sslproxy.ha.uib.no
+corosync_cluster_vip6:    "%{hiera('netcfg_public_netpart')}.241" # sslproxy.ha.uib.no
 
 # Firewall
+profile::firewall::rules::merge_strategy: first
 profile::firewall::rules::custom_rules:
   '451 haproxy http for public vip1':
     proto:        'tcp'
@@ -84,14 +94,23 @@ profile::firewall::rules::custom_rules:
     dport:        [ '80', '443' ]
     source:       '0.0.0.0/0'
     destination:  "%{hiera('corosync_cluster_vip5')}"
-  '455 haproxy status':
+  '456 haproxy http for public vip6':
+    proto:        'tcp'
+    dport:        [ '80', '443' ]
+    source:       '0.0.0.0/0'
+    destination:  "%{hiera('corosync_cluster_vip6')}"
+  '455 haproxy status public':
     proto:        'tcp'
     dport:        ['9000']
-    source:       '129.177.10.0/24'
-    destination:
-      - "%{hiera('corosync_cluster_vip4')}"
-      - "%{hiera('corosync_cluster_vip3')}"
-      - '%{::ipaddress_public1}'
+    source:
+      - '129.177.10.0/24'
+      - '129.177.6.133/32' # bgo-login
+    destination:  '%{::ipaddress_public1}'
+  '456 haproxy status mgmt':
+    proto:        'tcp'
+    dport:        ['9000']
+    source:       '172.31.0.10/32' #bgo-login
+    destination:  '%{::ipaddress_mgmt1}'
 
 # HAproxy
 haproxy::global_options:
@@ -99,6 +118,13 @@ haproxy::global_options:
   nbproc:       '2'
   cpu-map:      ['1 0', '2 2']
   maxconn:      '20000' # per core
+  crt-base:     '/etc/pki/tls/certs'
+  tune.ssl.default-dh-param:  2048
+  ssl-default-bind-options:   'no-sslv3 no-tls-tickets no-tlsv10 no-tlsv11'
+  ssl-default-bind-ciphers:   'ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:RSA+AESGCM:RSA+AES:!aNULL:!MD5:!DSS'
+  ssl-default-server-options: 'no-sslv3 no-tls-tickets no-tlsv10 no-tlsv11'
+  ssl-default-server-ciphers: 'ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:RSA+AESGCM:RSA+AES:!aNULL:!MD5:!DSS'
+
 haproxy::defaults_options:
   log:          'global'  #FIXME turn of debug logging in production
   stats:        []
@@ -130,19 +156,37 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
     ensure: present
     mappings:
       - 'apps.uib.no':                            'public-https-apps'
-      - 'appstest.uib.no':                        'public-https-apps-test'
+      - 'appsanywhere.uib.no':                    'public-https-apps'
       - 'report.uh-iaas.no':                      'public-https-uh-report'
       - 'status.uh-iaas.no':                      'public-https-uh-status'
+      - 'report.nrec.no':                         'public-https-uh-report'
+      - 'status.nrec.no':                         'public-https-uh-status'
   public_http_domains:
     ensure: present
     mappings:
-      - 'apps.uib.no':                            'public-http-apps'
-      - 'report.uh-iaas.no':                      'public-http-uh-report'
-      - 'status.uh-iaas.no':                      'public-http-uh-status'
-  uib_grid_domains:
+      - 'apps.uib.no':                            'ssl-https-apps'
+      - 'appsanywhere.uib.no':                    'ssl-https-apps'
+      - 'docs.uh-iaas.no':                        'public-http-uh-docs'
+      - 'report.uh-iaas.no':                      'public-http-nrec-redirect'
+      - 'status.uh-iaas.no':                      'public-http-nrec-redirect'
+      - 'report.nrec.no':                         'public-http-nrec-redirect'
+      - 'status.nrec.no':                         'public-http-nrec-redirect'
+  ssl_https_domains:
     ensure: present
     mappings:
-      - 's3.grid.uib.no':                         'uib-https-grid'
+      - 'apps.uib.no':                            'ssl-https-apps'
+      - 'appsanywhere.uib.no':                    'ssl-https-apps'
+      - 'docs.nrec.no':                           'ssl-https-nrec-docs'
+      - 'www.nrec.no':                            'ssl-https-nrec-www'
+      - 'nrec.no':                                'ssl-https-nrec-www'
+  ssl_http_domains:
+    ensure: present
+    mappings:
+      - 'apps.uib.no':                            'ssl-http-apps'
+      - 'appsanywhere.uib.no':                    'ssl-http-apps'
+      - 'docs.nrec.no':                           'public-http-nrec-redirect'
+      - 'www.nrec.no':                            'public-http-nrec-redirect'
+      - 'nrec.no':                                'public-http-nrec-redirect'
 
 profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
   'public-https-uh-status':
@@ -157,27 +201,31 @@ profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
     server_names:       ['report-osl', 'report-bgo']
     ipaddresses:        ['158.37.63.250', '158.39.77.250']
     options:            'verify none inter 1000 check check-ssl'
+  'ssl-https-nrec-www':
+    listening_service:  'ssl-https-nrec-www'
+    ports:              443
+    server_names:       ['www01']
+    ipaddresses:        ['norcams.github.io']
+    options:            'verify none inter 1000 check check-ssl ssl'
+  'ssl-https-nrec-docs':
+    listening_service:  'ssl-https-nrec-docs'
+    ports:              443
+    server_names:       ['docs01']
+    ipaddresses:        ['uh-iaas.readthedocs.io']
+    options:            'verify none inter 1000 check check-ssl ssl'
+  'ssl-https-apps':
+    listening_service:  'ssl-https-apps'
+    ports:              443
+    server_names:       ['appsanywhere05.uib.no', 'appsanywhere06.uib.no']
+    ipaddresses:        ['129.177.150.205', '129.177.150.206']
+    options:            'verify none inter 120 check check-ssl ssl'
+#    define_cookies:     true
   'public-https-apps':
     listening_service:  'public-https-apps'
     ports:              443
-    server_names:       ['appsanywhere01.uib.no', 'appsanywhere02.uib.no']
-    ipaddresses:        ['129.177.30.211', '129.177.30.229']
-    options:
-      - 'check'
-  'public-http-apps':
-    listening_service:  'public-http-apps'
-    ports:              80
-    server_names:       ['appsanywhere01.uib.no', 'appsanywhere02.uib.no']
-    ipaddresses:        ['129.177.30.211', '129.177.30.229']
-    options:
-      - 'check'
-  'public-https-apps-test':
-    listening_service:  'public-https-apps-test'
-    ports:              443
-    server_names:       ['apps-test01.uib.no']
-    ipaddresses:        ['129.177.30.203']
-#    define_cookies:     true
-    options:            'verify none inter 1000 check check-ssl ssl'
+    server_names:       ['appsanywhere05.uib.no', 'appsanywhere06.uib.no']
+    ipaddresses:        ['129.177.150.205', '129.177.150.206']
+    options:            'check'
   'public-ldap-prod':
     listening_service:  'public-ldap-prod'
     ports:              '389'
@@ -255,38 +303,63 @@ profile::highavailability::loadbalancing::haproxy::haproxy_backends:
     mode:             'tcp'
     options:
       - balance:      'source'
-      # - option:
-      #   - 'httpchk HEAD /jukeboxserver/do/license/token/renew.tok?msid=ping HTTP/1.1\r\nHost:\ apps-admin.uib.no'
-  public-http-apps:
-    mode:             'tcp'
+      - http-check: 'expect status 200'
+      # Session stick table and based on source IP
+      - stick-table: 'type ip size 1m expire 1h'
+      - stick: 'on src'
+      - timeout:
+        - 'server 1m'
+        - 'queue 1m'
+  ssl-https-apps:
+    mode:             'http'
     options:
-      - balance:      'source'
-      # - option:
-      #   - 'forwardfor except 127.0.0.1'
-      # - option:
-      #   - 'httpchk HEAD /jukeboxserver/do/license/token/renew.tok?msid=ping HTTP/1.1\r\nHost:\ apps-admin.uib.no'
-  public-https-apps-test:
+      - balance:      'leastconn'
+      - option:
+        - 'forwardfor except 127.0.0.1'
+        - 'httpchk GET /healthcheck'
+      - http-check: 'expect status 200'
+      # Session stick table and based on source IP
+      - stick-table: 'type ip size 1m expire 1h'
+      - stick: 'on src'
+      - timeout:
+        - 'server 1m'
+        - 'queue 1m'
+  ssl-http-apps:
+    mode:             'http'
+    options:
+      - balance:      'roundrobin'
+      - redirect:     'scheme https if !{ ssl_fc }'
+  ssl-https-nrec-www:
     mode:             'http'
     options:
       - balance:      'source'
       - option:
         - 'forwardfor except 127.0.0.1'
-  public-http-uh-status:
+      - http-request:
+        - 'set-header Host norcams.github.io'
+  ssl-https-nrec-docs:
+    mode:             'http'
+    options:
+      - balance:      'source'
+      - option:
+        - 'forwardfor except 127.0.0.1'
+      - http-request:
+        - 'set-header Host uh-iaas.readthedocs.io'
+  public-http-nrec-redirect:
     mode:             'http'
     options:
       - balance:      'roundrobin'
       - redirect:     'scheme https if !{ ssl_fc }'
+  public-http-uh-docs:
+    mode:             'http'
+    options:
+      - redirect:     'code 301 location https://docs.nrec.no'
   public-https-uh-status:
     mode:             'tcp'
     options:
       - balance:      'source'
       - option:
         - 'httpchk HEAD /api/health HTTP/1.1\r\nHost:\ status.uh-iaas.no'
-  public-http-uh-report:
-    mode:             'http'
-    options:
-      - balance:      'roundrobin'
-      - redirect:     'scheme https if !{ ssl_fc }'
   public-https-uh-report:
     mode:             'tcp'
     options:
@@ -436,14 +509,50 @@ profile::highavailability::loadbalancing::haproxy::haproxy_frontends:
     options:
       - option:         'tcplog'
       - use_backend:    'uib-ldaps-test'
-  public-https-apps:
+  ssl-http: #for redirect
     mode:               'http'
     bind:
-      "%{hiera('corosync_cluster_vip5')}:443": ['ssl', 'crt', "%{hiera('ssl_cert_apps')}"]
+      "%{hiera('corosync_cluster_vip5')}:80": []
+      "%{hiera('corosync_cluster_vip6')}:80": []
+    options:
+      - option:         'httplog'
+      - use_backend:    '%[req.hdr(host),lower,map(/etc/haproxy/ssl_http_domains.map)]'
+      - capture:        'request header Host len 32' #for debug
+  ssl-https:
+    mode:               'http'
+    bind:
+      "%{hiera('corosync_cluster_vip5')}:443":
+        - 'ssl'
+        - 'crt'
+        - "%{hiera('ssl_cert_apps')}"
+        - 'ssl'
+        - 'crt'
+        - "%{hiera('ssl_cert_nrec')}"
+        - 'ssl'
+        - 'crt'
+        - "%{hiera('ssl_cert_nrec_www')}"
+        - 'ssl'
+        - 'crt'
+        - "%{hiera('ssl_cert_nrec_docs')}"
+      "%{hiera('corosync_cluster_vip6')}:443":
+        - 'ssl'
+        - 'crt'
+        - "%{hiera('ssl_cert_apps')}"
+        - 'ssl'
+        - 'crt'
+        - "%{hiera('ssl_cert_nrec')}"
+        - 'ssl'
+        - 'crt'
+        - "%{hiera('ssl_cert_nrec_www')}"
+        - 'ssl'
+        - 'crt'
+        - "%{hiera('ssl_cert_nrec_docs')}"
     options:
       - option:         'http-server-close'
       - option:         'forwardfor'
-      - use_backend:    '%[req.hdr(host),lower,map(/etc/haproxy/public_https_domains.map)]'
+      - use_backend:    '%[req.hdr(host),lower,map(/etc/haproxy/ssl_https_domains.map)]'
+      # Prevents X-Forwarded-For spoofing
+      - http-request:   'del-header ^X-Forwarded-For:.*'
       # - http-request:
       #   - 'add-header X-Forwarded-Proto https if { ssl_fc }'
       #   - 'set-header X-Forwarded-Port %[dst_port]'
@@ -509,12 +618,23 @@ profile::highavailability::corosync::primitives:
       'monitor':          { 'interval': '10s', 'timeout': '20s' }
       'start':            { 'interval': '0s', 'timeout': '20s' }
       'stop':             { 'interval': '0s', 'timeout': '20s' }
-  'gridip':
+  'sslip1':
     'primitive_class':    'ocf'
     'primitive_type':     'IPaddr2'
     'provided_by':        'heartbeat'
     'parameters':
       'ip':               "%{hiera('corosync_cluster_vip5')}"
+      'cidr_netmask':     '24'
+    operations:
+      'monitor':          { "interval": "10s", "timeout": "20s" }
+      'start':            { "interval": "0s", "timeout": "20s" }
+      'stop':             { "interval": "0s", "timeout": "20s" }
+  'sslip2':
+    'primitive_class':    'ocf'
+    'primitive_type':     'IPaddr2'
+    'provided_by':        'heartbeat'
+    'parameters':
+      'ip':               "%{hiera('corosync_cluster_vip6')}"
       'cidr_netmask':     '24'
     operations:
       'monitor':          { "interval": "10s", "timeout": "20s" }
@@ -545,14 +665,14 @@ profile::highavailability::corosync::locations:
     primitive:  'uibip2'
     node_name:  "%{hiera('corosync_cluster_node2')}"
     score:      'INFINITY'
-  'grid_location1':
-    primitive:  'gridip'
+  'sslip_location1':
+    primitive:  'sslip1'
     node_name:  "%{hiera('corosync_cluster_node1')}"
-    score:      '100'
-  'grid_location2':
-    primitive:  'gridip'
+    score:      'INFINITY'
+  'sslip_location2':
+    primitive:  'sslip2'
     node_name:  "%{hiera('corosync_cluster_node2')}"
-    score:      '50'
+    score:      'INFINITY'
 
 profile::highavailability::corosync::colocations:
   'pubip1_haproxy':
@@ -563,3 +683,7 @@ profile::highavailability::corosync::colocations:
     primitives:   ['clone_haproxy', 'uibip1']
   'uibip2_haproxy':
     primitives:   ['clone_haproxy', 'uibip2']
+  'sslip1_haproxy':
+    primitives:   ['clone_haproxy', 'sslip1']
+  'sslip2_haproxy':
+    primitives:   ['clone_haproxy', 'sslip2']

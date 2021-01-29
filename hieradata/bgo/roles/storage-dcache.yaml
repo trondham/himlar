@@ -26,8 +26,12 @@ profile::storage::cephosd::crush_parent_type: 'pod'
 #profile::base::common::manage_lvm: false
 #profile::base::lvm::create_lvm:    false
 
+# Ensure that the BOSS device is the last device
+profile::base::physical::load_ahci_last: true
+profile::base::physical::load_ahci_last_scsidrv: 'mpt3sas'
+
 # sensu overrides
-sensu__memory__check:     "check-memory-percent.rb -w 90 -c 95"
+sensu__memory__check:     "check-memory-percent.rb -w 92 -c 95"
 
 profile::storage::cephclient::create_extraconf: true
 profile::storage::ceph_extraconf::config:
@@ -36,16 +40,31 @@ profile::storage::ceph_extraconf::config:
     'config_value': "5368709120"
   osd_max_scrubs:
     'config_key'  : "osd/osd_max_scrubs"
-    'config_value': "2"
+    'config_value': "1"
   osd_deep_scrub_interval:
     'config_key'  : "osd/osd_deep_scrub_interval"
     'config_value': "2419200.000000"
+  osd scrub max interval:
+    'config_key'  : "osd/osd_scrub_max_interval"
+    'config_value': "2419200.000000"
   osd_recovery_max_active:
     'config_key'  : "osd/osd_recovery_max_active"
-    'config_value': "6"
+    'config_value': "3" # default value
   osd_max_backfills:
     'config_key'  : "osd/osd_max_backfills"
-    'config_value': "2"
+    'config_value': "1" # default value
+  osd_scrub_priority:
+    'config_key'  : "osd/osd_scrub_priority"
+    'config_value': "1"
+  osd_scrub_sleep:
+    'config_key'  : "osd/osd_scrub_sleep"
+    'config_value': "0.5"
+  osd_scrub_chunk_min:
+    'config_key'  : "osd/osd_scrub_chunk_min"
+    'config_value': "1"
+  osd_scrub_chunk_max:
+    'config_key'  : "osd/osd_scrub_chunk_max"
+    'config_value': "5"
 
 profile::storage::cephpool::manage_ec_pools: true
 
@@ -57,20 +76,63 @@ profile::storage::ceph_ecpool::ec_pools:
     k_data:              "10"
     m_code:              "3"
     crush_root:          "dcache"
-profile::storage::cephpool::pools:
+#  'dcache_hdd_ec_data8':
+#    pg_num:              "2048"
+#    manage:              true
+#    allow_ec_overwrites: true
+#    k_data:              "8"
+#    m_code:              "2"
+#    crush_root:          "dcache"
+#    plugin:              "isa"
+#    technique:           "reed_sol_van"
+
+profile::storage::ceph::pool::pools:
+  'rbd':
+    ensure: absent
   'dcache_hdd_ec_meta':
-    ensure: present
-    pg_num: 512
+    size:    3
+    pg_num:  512
     pgp_num: 512
+    tag:     'rbd'
+    custom:
+      crush_rule: 'ssd-storage'
+      nodelete:   'true'
+      min_size:   '2'
+  'dcache_hdd_ec_meta8':
+    size:    3
+    pg_num:  512
+    pgp_num: 512
+    tag:    'rbd'
+    custom:
+      crush_rule: 'ssd-storage'
+      nodelete:   'true'
+      min_size:   '2'
+  'dcache_hdd_ec_data':
+    custom:
+      deep_scrub_interval: '1.93536e+07' # every 32 weeks - overrides osd setting
+      scrub_max_interval:  '2.4192e+06'  # normal scrub at least every 4 weeks - overrides osd setting
+      scrub_min_interval:  '604800'      # minimum one week between each scrub
+      fast_read:           '1'           # read all k+m for read, trade bandwith for lower latency
+#  'dcache_hdd_ec_data8':
+#    custom:
+#      deep_scrub_interval: '1.93536e+07' # every 32 weeks - overrides osd setting
+#      scrub_max_interval:  '2.4192e+06'  # normal scrub at least every 4 weeks - overrides osd setting
+#      scrub_min_interval:  '604800'      # minimum one week between each scrub
+#      fast_read:           '1'           # read all k+m for read, trade bandwith for lower latency
+profile::storage::ceph::pool::ec_pools:
+  'placeholder':
+    manage: false
+
 profile::storage::cephpool_params::pools:
-  'dcache_hdd_ec_meta':
-    replicas_num:       4
-    replicas_min_size:  3
-    crush_rule:         "hdd-dcache"
-    application_enable: 'rbd'
   'dcache_hdd_ec_data':
     application_enable: 'rbd'
     replicas_min_size:  '11'
+  'dcache_hdd_ec_data8':
+    application_enable: 'rbd'
+    replicas_min_size:  '9'
+
+# Disable intel c states for performance
+profile::base::physical::disable_intel_cstates: true
 
 profile::base::common::extraswap:         true
 profile::base::common::extraswap_sizegb:  20
@@ -242,11 +304,28 @@ sudo::configs:
 profile::monitoring::sensu::agent::checks:
   'check-smart':
     command:      "/usr/bin/sudo /opt/sensu/embedded/bin/check-smart.rb"
-    interval:     600
+    interval:     3600
     subscribers:  ['checks']
+  'metrics-netif':
+    type:         'metric'
+    command:      'metrics-netif.rb --scheme network.%{::hostname}'
+    interval:     60
+    subscribers:  ['metrics']
+    handlers:     ['graphite_tcp']
+  'metrics-disk':
+    type:         'metric'
+    command:      'metrics-disk.rb --scheme disk.%{::hostname} -I sd[a-z]$'
+    interval:     60
+    subscribers:  ['metrics']
+    handlers:     ['graphite_tcp']
 
 profile::monitoring::sensu::agent::plugin_gems:
   sensu-plugins-himlar:
-    ensure:   '0.3.0'
-    provider: 'sensu_gem'
+    ensure:   '0.4.0'
+    provider: 'sensuclassic_gem'
     source:   'http://download.iaas.uio.no/uh-iaas/gem'
+
+profile::monitoring::sensu::agent::plugins:
+  sensu-plugins-network-checks:
+    type:         package
+    pkg_version:  '4.1.1'

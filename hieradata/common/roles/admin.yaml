@@ -7,15 +7,15 @@ include:
     - profile::network::services
     - profile::webserver::apache
 
-foreman_version: '1.22'
+foreman_version: '2.1'
 
 sensu__disk__warning:     80
 sensu__disk__crtical:     90
+sensu__memory__check:     "check-memory-percent.rb -w 85 -c 95"
 
 profile::base::common::packages:
   'bash-completion': {}
   'bash-completion-extras': {}
-  'jq': {}
   'python2-ruamel-yaml': {}
 
 apache::mod::passenger::manage_repo: false
@@ -57,7 +57,7 @@ profile::base::yumrepo::repo_hash:
     ensure: present
   passenger:
     ensure: present
-  foreman-rails:
+  postgres-10:
     ensure: present
 
 # Enable gem installation

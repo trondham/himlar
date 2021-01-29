@@ -1,8 +1,10 @@
 ---
-api_ssl_pem:      "api.uh-iaas.no.pem"
-status_ssl_pem:   "status.uh-iaas.no.pem"
-#console_ssl_pem:  "console.uh-iaas.no.pem"
-#access_ssl_pem:   "access.uh-iaas.no.pem"
+frontend_star_ssl_pem:    "star.%{hiera('domain_frontend')}.pem"
+frontend_star_ssl_pem2:   "star.%{hiera('domain_frontend2')}.pem"
+# api_ssl_pem:                "api.uh-iaas.no.pem"
+# status_ssl_pem:             "status.uh-iaas.no.pem"
+# console_ssl_pem:  "console.uh-iaas.no.pem"
+# access_ssl_pem:   "access.uh-iaas.no.pem"
 
 network__backend__names:
   - '%{::location}-network-01'
@@ -39,6 +41,7 @@ image__backend__ips:
 volume__backend__names:
   - "%{::location}-volume-01"
   - "%{::location}-volume-02"
+  - "%{::location}-volume-03"
 volume__backend__ips:
   - "%{hiera('netcfg_trp_netpart')}.46"
   - "%{hiera('netcfg_trp_netpart')}.47"

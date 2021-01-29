@@ -8,8 +8,27 @@ class profile::base::physical (
   $isolcpus                    = [],
   $blacklist_drv               = false,
   $blacklist_drv_list          = undef,
+  $disable_intel_cstates       = false,
+  $load_ahci_first             = false,
+  $load_ahci_first_scsidrv     = 'mpt3sas',
+  $load_ahci_last              = false,
+  $load_ahci_last_scsidrv      = 'mpt3sas',
+  $scsi_load_order             = false,
+  $scsi_load_order_first       = undef,
+  $scsi_load_order_second      = undef,
+  $enable_network_tweaks       = false,
+  $net_tweak_rmem_max          = '134217728',
+  $net_tweak_wmem_max          = '134217728',
+  $net_tweak_tcp_rmem          = '4096 87380 67108864',
+  $net_tweak_tcp_wmem          = '4096 87380 67108864',
+  $net_tweak_congest_ctrl      = 'htcp',
+  $net_tweak_mtu_probing       = '1',
+  $net_tweak_default_qdisc     = 'fq',
+  $net_tweak_somaxconn         = '2048',
   $enable_redfish_sensu_check  = false,
   $enable_redfish_http_proxy   = undef,
+  $package                     = 'lldpd',
+  $service                     = 'lldpd',
   $configure_bmc_nic           = false,
   $bmc_dns_server              = '192.168.0.10',
   $bmc_idrac_attributes = {
@@ -20,14 +39,13 @@ class profile::base::physical (
     'IPv4Static.1.DNS1'        => $bmc_dns_server,
     'IPv4.1.DHCPEnable'        => 'Disabled',
   },
-  $bmc_supermicro_attributes = {
+  $bmc_generic_attributes = {
     'Address'       => undef,
     'Gateway'       => lookup('netcfg_oob_gateway', String, 'first', ''),
     'SubnetMask'    => lookup('netcfg_oob_netmask', String, 'first', ''),
     'AddressOrigin' => 'Static',
   },
 ) {
-  include ::lldp
   include ::ipmi
 
   # Configure 82599ES SFP+ interface module options
@@ -45,6 +63,44 @@ class profile::base::physical (
       value  => '1',
     }
   }
+
+  # for intel based ceph osd servers disabling cpu c states provides significantly improved performance
+  if $disable_intel_cstates {
+    # Set options in grub2
+    kernel_parameter { 'processor.max_cstate':
+      ensure => present,
+      value  => '1',
+    }
+    kernel_parameter { 'intel_idle.max_cstate':
+      ensure => present,
+      value  => '0',
+    }
+  }
+
+  # to ensure that the Dell BOSS boot drive is always sda we can load the driver before any scsi driver
+  if $load_ahci_first {
+    file { "/etc/modprobe.d/${load_ahci_first_scsidrv}.conf":
+      ensure  => present,
+      content => "install ${load_ahci_first_scsidrv} /sbin/modprobe ahci; /sbin/modprobe --ignore-install ${load_ahci_first_scsidrv}\n",
+    }
+  }
+
+  # to ensure that the Dell BOSS boot drive is always the last sd device we can load the driver after any scsi driver
+  if $load_ahci_last {
+    file { "/etc/modprobe.d/ahci.conf":
+      ensure  => present,
+      content => "install ahci /sbin/modprobe ${load_ahci_last_scsidrv}; /sbin/modprobe --ignore-install ahci\n",
+    }
+  }
+
+  # for systems with multiple scsi controllers we need to define order
+  if $scsi_load_order {
+    file { "/etc/modprobe.d/${scsi_load_order_second}.conf":
+      ensure  => present,
+      content => "install ${scsi_load_order_second} /sbin/modprobe ${scsi_load_order_first}; /sbin/modprobe --ignore-install ${scsi_load_order_second}\n",
+    }
+  }
+
   if $enable_hugepages {
     kernel_parameter { 'hugepagesz':
       ensure => present,
@@ -66,6 +122,33 @@ class profile::base::physical (
       kmod::blacklist { $name:
         * => $data,
       }
+    }
+  }
+
+  if $enable_network_tweaks {
+    sysctl::value { "net.core.rmem_max":
+      value => $net_tweak_rmem_max
+    }
+    sysctl::value { "net.core.wmem_max":
+      value => $net_tweak_wmem_max,
+    }
+    sysctl::value { "net.ipv4.tcp_rmem":
+      value => $net_tweak_tcp_rmem,
+    }
+    sysctl::value { "net.ipv4.tcp_wmem":
+      value => $net_tweak_tcp_wmem,
+    }
+    sysctl::value { "net.ipv4.tcp_congestion_control":
+      value => $net_tweak_congest_ctrl,
+    }
+    sysctl::value { "net.ipv4.tcp_mtu_probing":
+      value => $net_tweak_mtu_probing,
+    }
+    sysctl::value { "net.core.default_qdisc":
+      value => $net_tweak_default_qdisc,
+    }
+    sysctl::value { "net.core.somaxconn":
+      value => $net_tweak_somaxconn,
     }
   }
 
@@ -93,6 +176,15 @@ class profile::base::physical (
     }
   }
 
+  package { $package:
+    ensure => installed,
+  }
+
+  service { $service:
+    ensure    => running,
+    enable    => true,
+  }
+
   if ($enable_redfish_sensu_check) and ($::runmode == 'default') {
     $bmc_network  = regsubst($::ipaddress_trp1, '^(\d+)\.(\d+)\.(\d+)\.(\d+)$','\2',) - 1
     $bmc_address  = regsubst($::ipaddress_trp1, '^(\d+)\.(\d+)\.(\d+)\.(\d+)$',"\\1.${bmc_network}.\\3.\\4",)
@@ -107,6 +199,9 @@ class profile::base::physical (
         $connection_string = '/redfish/v1/Systems/System.Embedded.1'
       }
       'Supermicro': {
+        $connection_string = '/redfish/v1/Systems/1'
+      }
+      'Huawei': {
         $connection_string = '/redfish/v1/Systems/1'
       }
       default: {
@@ -159,7 +254,7 @@ class profile::base::physical (
           }
         }
         'Supermicro': {
-          $bmc_supermicro_attributes.each |$attribute, $value| {
+          $bmc_generic_attributes.each |$attribute, $value| {
             if ($attribute == 'Address') and (!$value) {
               $attr_value = $bmc_address_set
             }
@@ -171,6 +266,9 @@ class profile::base::physical (
               creates     => "/etc/.bmc_configured-${attribute}",
             }
           }
+        }
+        'Huawei': {
+          notice('We can not configure network for Huawei ibmc')
         }
         default: {
           notice('BMC for this vendor is not supported')

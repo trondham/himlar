@@ -9,6 +9,7 @@ class profile::openstack::telemetry (
   include ::ceilometer
   include ::ceilometer::config
   include ::ceilometer::keystone::authtoken
+  include ::ceilometer::logging
   #include ::ceilometer::expirer
 
   # notification
@@ -37,13 +38,17 @@ class profile::openstack::telemetry (
   }
 
   if $manage_meters {
-    file { '/etc/ceilometer/meters.yaml':
+    file { '/etc/ceilometer/meters.d/meters.yaml':
       ensure => file,
       mode   => '0640',
       owner  => 'root',
       group  => 'ceilometer',
-      source => "puppet:///modules/${module_name}/openstack/telemetry/meters.yaml",
+      source => "puppet:///modules/${module_name}/openstack/telemetry/meters.d/meters.yaml",
       notify => Service['ceilometer-agent-notification', 'ceilometer-polling']
+    }
+    # Remove old file
+    file { '/etc/ceilometer/meters.yaml':
+      ensure => absent,
     }
   }
 

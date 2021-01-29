@@ -3,7 +3,8 @@ include:
   default:
     - profile::network::leaf
     - profile::base::common
-    - profile::monitoring::netdata
+    - profile::base::cl_limits
+#    - profile::monitoring::netdata
   bootstrap:
     - profile::base::common
 
@@ -17,20 +18,42 @@ profile::base::common::include_physical:          false
 profile::base::common::manage_yumrepo:            false
 profile::base::firewall::manage_firewall:         false
 profile::base::network::net_ifnames:              false
-profile::monitoring::sensu::agent::enable_agent:  false
 profile::network::leaf::manage_quagga:            false
 profile::network::leaf::manage_frrouting:         true
 profile::network::leaf::manage_acls:              true
 profile::base::network::cumulus_ifs:              true
 network::config_file_per_interface:               true
 profile::logging::logrotate::manage_logrotate:    false
+profile::base::cl_limits::manage_cl_limits:       true
+profile::base::cl_limits::as_value:               1153434
 
 # ntp service managed by profile because of mgmt VRF
 ntp::service_enable: false
 ntp::service_ensure: 'stopped'
+ntp::interfaces: [ 'eth0' ]
+
+# sensu
+profile::monitoring::sensu::agent::enable_agent:    true
+profile::monitoring::sensu::agent::merge_strategy: 'first'
+profile::monitoring::sensu::agent::run_in_vrf:      true
+profile::monitoring::sensu::agent::plugins:
+  sensu-plugins-network-checks:
+    type:         package
+    pkg_version:  '4.1.1'
+
+sensuclassic::checks:
+  'metrics-netif':
+    type:         'metric'
+    command:      'metrics-netif.rb --scheme network.%{::hostname}'
+    interval:     60
+    subscribers:  ['metrics']
+    handlers:     ['graphite_tcp']
+
+sensuclassic::install_repo:            true
+sensuclassic::manage_repo:             true
 
 # Netdata
-profile::monitoring::netdata::manage_firewall: false
+#profile::monitoring::netdata::manage_firewall: false
 
 frrouting::zebra:                 true
 frrouting::bgpd:                  true
@@ -73,6 +96,7 @@ profile::base::common::packages:
   'bind-utils': { 'ensure': 'absent', }
   'yum-utils': { 'ensure': 'absent', }
   'augeas-tools': {}
+  'sysstat': {} # needed for sensu network plugin
 
 sudo::configs:
   snmp:

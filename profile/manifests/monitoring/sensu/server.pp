@@ -4,14 +4,13 @@ class profile::monitoring::sensu::server (
   $manage_dashboard          = false,
   $manage_rabbitmq           = false,
   $manage_redis              = false,
-  $manage_graphite           = false,
   $manage_firewall           = false,
   $custom_json               = {},
   $firewall_extras           = {}
 ) {
 
   if $manage_dashboard {
-    Class['sensu'] -> Class['uchiwa']
+    Class['sensuclassic'] -> Class['uchiwa']
     include ::uchiwa
     #include ::profile::webserver::apache
     #create_resources('apache::vhost', $vhost_configuration)
@@ -29,19 +28,6 @@ class profile::monitoring::sensu::server (
     Service['rabbitmq-server'] -> Class['sensu::package']
   }
 
-  if $manage_graphite {
-    include ::graphite
-
-    # Used by collectd
-    profile::firewall::rule { '415 graphite accept udp':
-      dport       => [2003],
-      destination => $::ipaddress_mgmt1,
-      proto       => 'udp',
-      source      => "${::network_mgmt1}/${::netmask_mgmt1}"
-    }
-
-  }
-
   if $manage_firewall {
     profile::firewall::rule { '411 uchiwa accept tcp':
       dport       => [80, 3000, 4567],
@@ -52,9 +38,9 @@ class profile::monitoring::sensu::server (
 
   $handlers  = lookup('profile::monitoring::sensu::server::handlers', Hash, 'deep', {})
   $filters  = lookup('profile::monitoring::sensu::server::filters', Hash, 'deep', {})
-  create_resources('sensu::handler', $handlers)
-  create_resources('sensu::filter', $filters)
+  create_resources('sensuclassic::handler', $handlers)
+  create_resources('sensuclassic::filter', $filters)
 
-  create_resources('sensu::write_json', $custom_json)
+  create_resources('sensuclassic::write_json', $custom_json)
 
 }

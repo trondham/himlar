@@ -1,7 +1,9 @@
 ---
 horizon::allowed_hosts:                 '*'
 horizon::servername:                    "%{hiera('public__address__dashboard')}"
-horizon::server_aliases:                "dashboard-%{::location}.%{hiera('domain_frontend')}"
+horizon::server_aliases:
+  - "dashboard-%{::location}.%{hiera('domain_frontend')}"
+  - "dashboard.%{hiera('domain_frontend2')}"
 horizon::wsgi::apache::priority:        '10'
 horizon::wsgi::apache::bind_address:    "%{ipaddress_public1}"
 horizon::bind_address:                  "%{ipaddress_public1}"
@@ -15,13 +17,15 @@ horizon::horizon_upload_mode:           "'direct'"
 horizon::disable_password_reveal:       true
 horizon::enforce_password_check:        true
 
-horizon::help_url:                      'http://docs.uh-iaas.no'
+horizon::help_url:                      "http://docs.%{hiera('domain_frontend')}"
 horizon::openstack_endpoint_type:       'publicURL'
 horizon::keystone_url:                  "%{hiera('endpoint__identity__public')}/v3"
 horizon::keystone_default_role:         'user'
 horizon::keystone_multidomain_support:  false
 horizon::api_versions:
   'identity': 3
+horizon::vhost_extra_params:
+  'ssl_verify_client': "none"
 
 # Default for launch instance wizard
 horizon::instance_options:
@@ -52,6 +56,7 @@ horizon::cache_server_ip:               '127.0.0.1'
 horizon::cache_server_port:             '11211'
 horizon::cache_backend:                 'django.core.cache.backends.memcached.MemcachedCache'
 horizon::django_session_engine:         'django.contrib.sessions.backends.cached_db'
+horizon::session_timeout:               10800 # 3 hours, default 30 min
 
 # logging
 horizon::log_handler:     'syslog'

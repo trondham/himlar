@@ -62,3 +62,7 @@ profile::monitoring::sensu::agent::checks:
 
 # remove when telemetry/ceilometer is up in all environments and move to common
 profile::openstack::compute::manage_telemetry: true
+
+# Red Hat Subscription Management (RHSM)
+profile::rhsm::subscription::manage: false
+profile::rhsm::virtwho::manage:      false

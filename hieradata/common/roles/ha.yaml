@@ -10,8 +10,9 @@ include:
 # Netdata
 profile::monitoring::netdata::manage_firewall: true
 profile::monitoring::netdata::firewall_dest:   '%{::ipaddress_public1}'
-profile::monitoring::netdata::firewall_extras:
-  source:       '129.177.10.0/24'
+profile::monitoring::netdata::firewall_source:
+  - '129.177.10.0/24'
+  - '129.177.6.133/32'
 
 # SElinux are enforcing on this role!!
 profile::base::selinux::manage_selinux: true
@@ -20,7 +21,6 @@ profile::base::common::packages:
   'nmap-ncat': {}
   'bash-completion': {}
   'bash-completion-extras': {}
-  'jq': {}
 
 #
 # Firewall must be added in location or node section
@@ -59,8 +59,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_listens:
         - 'realm Monitor\ Stats'
         - 'uri /'
     bind:
-      "%{hiera('corosync_cluster_vip3')}:9000": []
-      "%{hiera('corosync_cluster_vip4')}:9000": []
+      '%{::ipaddress_mgmt1}:9000':              []
       '%{::ipaddress_public1}:9000':            []
 
 #
@@ -72,12 +71,13 @@ profile::highavailability::corosync::manage_firewall: true
 profile::highavailability::corosync::firewall_extras:
   source: "%{::network_mgmt1}/%{::netmask_mgmt1}"
 profile::highavailability::corosync::properties:
-  default-resource-stickiness:
-    value:  '0'
   no-quorum-policy:
     value:  'ignore'
   stonith-enabled:
     value:  'false'
+profile::highavailability::corosync::rsc_defaults:
+  resource-stickiness:
+    value:  '0'
 
 profile::highavailability::corosync::primitives:
   'vip1':

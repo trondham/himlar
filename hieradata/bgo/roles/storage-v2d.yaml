@@ -3,7 +3,7 @@ profile::base::network::network_auto_opts:
   trp:
     'defroute': 'no'
     'devicetype': 'Team'
-#    'mtu': '9000'
+    'mtu': '9000'
     'team_config': >-
                    { "runner" : {  "name" : "lacp",  "active": true, "fast_rate" : true,
                    "tx_hash": ["eth", "ipv4", "ipv6"], "tx_balancer": { "name": "basic" } },
@@ -15,13 +15,13 @@ profile::base::network::network_auto_bonding:
   trp:
     p2p1:
       'team_port_config': '{ "prio" : 100 }'
-#      'mtu': '9000'
+      'mtu': '9000'
     p2p2:
       'team_port_config': '{ "prio" : 100 }'
-#      'mtu': '9000'
+      'mtu': '9000'
 
 # sensu overrides
-#sensu__memory__check:     "check-memory-percent.rb -w 90 -c 95"
+sensu__memory__check:     "check-memory-percent.rb -w 93 -c 95"
 
 profile::storage::cephclient::create_extraconf: true
 profile::storage::ceph_extraconf::config:
@@ -30,25 +30,86 @@ profile::storage::ceph_extraconf::config:
     'config_value': "11811160064"
   osd_max_scrubs:
     'config_key'  : "osd/osd_max_scrubs"
-    'config_value': "2"
+    'config_value': "1"
   osd_deep_scrub_interval:
     'config_key'  : "osd/osd_deep_scrub_interval"
     'config_value': "2419200.000000"
   osd_recovery_max_active:
     'config_key'  : "osd/osd_recovery_max_active"
-    'config_value': "6"
+    'config_value': "3"
   osd_max_backfills:
     'config_key'  : "osd/osd_max_backfills"
-    'config_value': "2"
+    'config_value': "1"
+
+profile::storage::ceph::pool::pools:
+  'rbd':
+    ensure: absent
+  'volumes':
+    size:    3
+    pg_num:  2048
+    pgp_num: 2048
+    tag:     'rbd'
+    custom:
+      crush_rule: 'hdd-storage'
+      nodelete:   'true'
+      min_size:   '2'
+  'images':
+    size:    3
+    pg_num:  512
+    pgp_num: 512
+    tag:    'rbd'
+    custom:
+      crush_rule: 'hdd-storage'
+      nodelete:   'true'
+      min_size:   '2'
+  'vms':
+    size:    3
+    pg_num:  256
+    pgp_num: 256
+    tag:     'rbd'
+    custom:
+      crush_rule: 'ssd-storage'
+      nodelete:   'true'
+      min_size:   '2'
+  'volumes_hdd_ec_meta':
+    size:    3
+    pg_num:  256
+    pgp_num: 256
+    tag:     'rbd'
+    custom:
+      crush_rule: 'ssd-storage'
+      nodelete:   'true'
+      min_size:   '2'
+profile::storage::ceph::pool::ec_pools:
+  'placeholder':
+    manage: false
+
+profile::storage::ceph_ecpool::ec_pools:
+  'volumes_hdd_ec_data':
+    pg_num:              "1024"
+    manage:              true
+    allow_ec_overwrites: true
+    k_data:              "4"
+    m_code:              "2"
+    crush_root:          "storage"
+
+profile::storage::cephpool_params::pools:
+  'volumes_hdd_ec_data':
+    application_enable: 'rbd'
+    replicas_min_size:  '5'
+
+# Disable intel c states for performance
+profile::base::physical::disable_intel_cstates: true
 
 profile::base::common::extraswap:         true
 profile::base::common::extraswap_sizegb:  20
 profile::base::common::extraswap_fileloc: '/var/lib/swap/swapfile'
+profile::base::physical::load_ahci_first: true
 
 profile::base::lvm::volume_group:
   'vg_swap':
     physical_volumes:
-      - /dev/sda3
+      - /dev/sda4
   'vg_cache1':
     physical_volumes:
       - /dev/sdr
@@ -176,11 +237,28 @@ sudo::configs:
 profile::monitoring::sensu::agent::checks:
   'check-smart':
     command:      "/usr/bin/sudo /opt/sensu/embedded/bin/check-smart.rb"
-    interval:     600
+    interval:     3600
     subscribers:  ['checks']
+  'metrics-netif':
+    type:         'metric'
+    command:      'metrics-netif.rb --scheme network.%{::hostname}'
+    interval:     60
+    subscribers:  ['metrics']
+    handlers:     ['graphite_tcp']
+  'metrics-disk':
+    type:         'metric'
+    command:      'metrics-disk.rb --scheme disk.%{::hostname} -I sd[a-z]$'
+    interval:     60
+    subscribers:  ['metrics']
+    handlers:     ['graphite_tcp']
 
 profile::monitoring::sensu::agent::plugin_gems:
   sensu-plugins-himlar:
-    ensure:   '0.3.0'
-    provider: 'sensu_gem'
+    ensure:   '0.4.0'
+    provider: 'sensuclassic_gem'
     source:   'http://download.iaas.uio.no/uh-iaas/gem'
+
+profile::monitoring::sensu::agent::plugins:
+  sensu-plugins-network-checks:
+    type:         package
+    pkg_version:  '4.1.1'

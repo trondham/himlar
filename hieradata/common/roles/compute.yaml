@@ -8,6 +8,8 @@ include:
     - profile::logging::rsyslog::client
     - profile::openstack::openrc
     - profile::application::rngd
+    - profile::rhsm::subscription
+    - profile::rhsm::virtwho
   kickstart:
     - profile::base::lvm
     - profile::virtualization::nested
@@ -94,8 +96,8 @@ profile::monitoring::sensu::agent::plugins:
 
 profile::monitoring::sensu::agent::plugin_gems:
   sensu-plugins-himlar:
-    ensure:   '0.2.0'
-    provider: 'sensu_gem'
+    ensure:   '0.4.0'
+    provider: 'sensuclassic_gem'
     source:   'http://download.iaas.uio.no/uh-iaas/gem'
 
 # sensu
@@ -149,6 +151,8 @@ etcd::mode: 'proxy'
 
 calico::compute::bird_template:  'profile/bird/bird.conf.erb'
 calico::compute::bird6_template: 'profile/bird/bird6.conf.erb'
+# FIXME workaround that should be fixed upstream in calico-felix
+calico::compute::felix_vxlan_port: '31439'
 
 named_interfaces::config:
   mgmt:
@@ -179,9 +183,10 @@ profile::base::yumrepo::repo_hash:
   rdo-release:
     ensure: present
 #    exclude: 'openstack-neutron openstack-neutron-common python-neutron'
-  calico31:
-    ensure: absent
   calico37:
+    ensure: absent
+    exclude: 'dnsmasq'
+  calico312:
     ensure: present
     exclude: 'dnsmasq'
   ceph-%{hiera('ceph_version')}:
@@ -190,7 +195,7 @@ profile::base::yumrepo::repo_hash:
     ensure: present
   epel: # should be absent when using RDO, but whitelist can also work
     ensure:   present
-    includepkgs: 'collectd collectd-virt bird bird6 htop bash-completion-extras lttng-ust userspace-rcu libbabeltrace leveldb liboath py-bcrypt python2-bcrypt libsmbios smbios-utils-bin'
+    includepkgs: 'collectd collectd-virt bird bird6 htop bash-completion-extras lttng-ust userspace-rcu libbabeltrace leveldb liboath py-bcrypt python2-bcrypt libsmbios smbios-utils-bin lldpd'
 
 # Compute nodes need only admin and cinder keys
 ceph::profile::params::client_keys:
@@ -216,6 +221,13 @@ ceph::profile::params::client_keys:
     group: 'cinder'
     cap_mon: 'profile rbd'
     cap_osd: 'profile rbd pool=volumes_hdd_ec_meta, profile rbd pool=volumes_hdd_ec_data'
+  'client.cinder-ssd-ec':
+    secret: "%{hiera('ceph_storage_client_cinder_key')}"
+    mode: '0600'
+    user: 'cinder'
+    group: 'cinder'
+    cap_mon: 'profile rbd'
+    cap_osd: 'profile rbd pool=volumes_ssd_ec_meta, profile rbd pool=volumes_ssd_ec_data'
   'client.cinder-dcache-hdd-ec':
     secret: "%{hiera('ceph_storage_client_cinder_key')}"
     mode: '0600'
@@ -223,6 +235,13 @@ ceph::profile::params::client_keys:
     group: 'cinder'
     cap_mon: 'profile rbd'
     cap_osd: 'profile rbd pool=dcache_hdd_ec_meta, profile rbd pool=dcache_hdd_ec_data'
+  'client.cinder-dcache-hdd-ec8':
+    secret: "%{hiera('ceph_storage_client_cinder_key')}"
+    mode: '0600'
+    user: 'cinder'
+    group: 'cinder'
+    cap_mon: 'profile rbd'
+    cap_osd: 'profile rbd pool=dcache_hdd_ec_meta8, profile rbd pool=dcache_hdd_ec_data8'
   'client.cinder-arccache-hdd-ec':
     secret: "%{hiera('ceph_storage_client_cinder_key')}"
     mode: '0600'
@@ -230,18 +249,34 @@ ceph::profile::params::client_keys:
     group: 'cinder'
     cap_mon: 'profile rbd'
     cap_osd: 'profile rbd pool=arccache_hdd_ec_meta, profile rbd pool=arccache_hdd_ec_data'
+  'client.cinder-arccache-hdd-ec41':
+    secret: "%{hiera('ceph_storage_client_cinder_key')}"
+    mode: '0600'
+    user: 'cinder'
+    group: 'cinder'
+    cap_mon: 'profile rbd'
+    cap_osd: 'profile rbd pool=arccache_hdd_ec_meta41, profile rbd pool=arccache_hdd_ec_data41'
 
 profile::storage::cephclient::create_extraconf: true
 profile::storage::ceph_extraconf::config:
   client_ecc_backend:
     'config_key'  : "client.cinder-hdd-ec/rbd_default_data_pool"
     'config_value': "volumes_hdd_ec_data"
+  client_ssd_ecc_backend:
+    'config_key'  : "client.cinder-ssd-ec/rbd_default_data_pool"
+    'config_value': "volumes_ssd_ec_data"
   client_dcache_backend:
     'config_key'  : "client.cinder-dcache-hdd-ec/rbd_default_data_pool"
     'config_value': "dcache_hdd_ec_data"
+  client_dcache_backend8:
+    'config_key'  : "client.cinder-dcache-hdd-ec8/rbd_default_data_pool"
+    'config_value': "dcache_hdd_ec_data8"
   client_arccache_backend:
     'config_key'  : "client.cinder-arccache-hdd-ec/rbd_default_data_pool"
     'config_value': "arccache_hdd_ec_data"
+  client_arccache_backend41:
+    'config_key'  : "client.cinder-arccache-hdd-ec41/rbd_default_data_pool"
+    'config_value': "arccache_hdd_ec_data41"
 
 # Use rsync, not ssh for migrate transport to support sparse images
 nova::config::nova_config:
@@ -251,3 +286,7 @@ nova::config::nova_config:
     value: 'rsync'
   libvirt/live_migration_permit_auto_converge:
     value: 'true'
+
+# Red Hat Subscription Management (RHSM)
+profile::rhsm::subscription::manage: true
+profile::rhsm::virtwho::manage:      true

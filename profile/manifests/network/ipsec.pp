@@ -1,11 +1,13 @@
 #
 class profile::network::ipsec(
-  $enable          = false,
-  $config_dir      = '/etc/ipsec.d/',
-  $manage_firewall = false,
+  $enable              = false,
+  $config_dir          = '/etc/ipsec.d/',
+  $manage_firewall     = false,
+  $ipsec_iniface       = 'eth1',
+  $manage_ipforwarding = true,
 ) {
 
-  if enable_ipsec {
+  if $enable {
     package { 'libreswan':
       ensure   => installed
     }
@@ -26,11 +28,11 @@ class profile::network::ipsec(
       }
       profile::firewall::rule { "915 ipsec allow protocol ESP":
         proto    => 'esp',
-#        iniface => $::ipaddress_trp1,
+        iniface  => $ipsec_iniface,
       }
       profile::firewall::rule { "916 ipsec allow protocol AH":
         proto    => 'esp',
-#        iniface => $::ipaddress_trp1,
+        iniface  => $ipsec_iniface,
       }
       profile::firewall::rule { "915 ipsec allow protocol ESP IPv6":
         proto    => 'ah',
@@ -43,12 +45,14 @@ class profile::network::ipsec(
 #        iniface => $::ipaddress_trp1,
       }
     }
-    # Enable IP forwarding
-    sysctl::value { "net.ipv4.ip_forward":
-      value => 1,
-    }
-    sysctl::value { "net.ipv6.conf.all.forwarding":
-      value => 1,
+    if $manage_ipforwarding {
+      # Enable IP forwarding
+      sysctl::value { "net.ipv4.ip_forward":
+        value => 1,
+      }
+      sysctl::value { "net.ipv6.conf.all.forwarding":
+        value => 1,
+      }
     }
     # Disable ICMP redirects
     sysctl::value { "net.ipv4.conf.all.send_redirects":
@@ -66,5 +70,4 @@ class profile::network::ipsec(
     # Create the connections
     create_resources(profile::network::ipsec::tunnel, lookup('profile::network::ipsec::tunnels', Hash, 'deep', {}))
   }
-
 }

@@ -9,7 +9,7 @@ class profile::base::login (
   $oob_outiface             = undef,
   $oob_dhcrelay             = false,
   $ensure                   = 'present',
-  $agelimit                 = '14',
+  $agelimit                 = '10',
   $db_servers               = {},
   $repodir                  = '/opt/repo',
   $secretsdir               = "${repodir}/secrets",
@@ -22,6 +22,9 @@ class profile::base::login (
   $manage_firewall          = false,
   $manage_dnsmasq           = false,
   $ports                    = [ 53, ],
+  $retention                = '180',
+  $archivesubdir            = 'archive',
+  $gap                      = '2',
 ) {
 
 
@@ -82,6 +85,15 @@ class profile::base::login (
       content => template("${module_name}/base/db-dump.sh.erb"),
     }
 
+    file { 'db-longterm-bck.sh':
+      ensure  => $ensure,
+      path    => '/usr/local/sbin/db-longterm-bck.sh',
+      mode    => '0700',
+      owner   => 'root',
+      group   => 'root',
+      content => template("${module_name}/base/db-longterm-bck.sh.erb"),
+    }
+
     file { 'db-dump-dir':
       ensure => 'directory',
       path   => '/opt/repo/secrets/dumps',
@@ -124,7 +136,7 @@ class profile::base::login (
     }
     if $manage_firewall {
       profile::firewall::rule { '196 dhcprelay accept udp':
-        port   => 67,
+        dport   => 67,
         proto  => 'udp',
       }
     }

@@ -118,7 +118,7 @@ common_config()
     --location-id $foreman_location_id \
     --path $repo || true
   # Save CentOS mirror ids
-  medium_id_1=$(/bin/hammer --csv medium info --name 'CentOS mirror' | tail -n1 | cut -d, -f1)
+  #medium_id_1=$(/bin/hammer --csv medium info --name 'CentOS 7 mirror' | tail -n1 | cut -d, -f1)
   medium_id_2=$(/bin/hammer --csv medium info --name 'CentOS download.iaas.uio.no' | tail -n1 | cut -d, -f1)
 
   # Sync our custom provision templates
@@ -127,21 +127,26 @@ common_config()
   # Save template ids
   norcams_provision_id=$(/bin/hammer --csv template list --per-page 1000 | grep ',norcams Kickstart default,' | cut -d, -f1)
   norcams_pxelinux_id=$(/bin/hammer --csv template list --per-page 1000 | grep 'norcams Kickstart default PXELinux' | cut -d, -f1)
-  norcams_ptable_id=$(/bin/hammer --csv partition-table list --per-page 1000 | grep 'norcams Kickstart default' | cut -d, -f1)
+  norcams_pxegrub2_id=$(/bin/hammer --csv template list --per-page 1000 | grep 'norcams Kickstart default PXEGrub2' | cut -d, -f1)
+  norcams_ptable_id=$(/bin/hammer --csv partition-table list --per-page 1000 | grep 'norcams Kickstart default,' | cut -d, -f1)
+  norcams_ptable_uefi_id=$(/bin/hammer --csv partition-table list --per-page 1000 | grep 'norcams Kickstart default uefi,' | cut -d, -f1)
 
-  # Associate partition template with Redhat family of OSes
+  # Associate partition templates with Redhat family of OSes
   /bin/hammer partition-table update --id $norcams_ptable_id \
+      --organization-id $foreman_organization_id \
+      --location-id $foreman_location_id --os-family Redhat
+  /bin/hammer partition-table update --id $norcams_ptable_uefi_id \
       --organization-id $foreman_organization_id \
       --location-id $foreman_location_id --os-family Redhat
 
   # Create and update OS
-  /bin/hammer --csv os list --per-page 1000 | grep 'CentOS 7' || /bin/hammer os create --name CentOS --major 7 --minor 7 || true
-  for centos_os in $(/bin/hammer --csv os list --per-page 1000 | grep 'CentOS 7.7' | cut -d, -f1); do
+  /bin/hammer --csv os list --per-page 1000 | grep 'CentOS 7.9' || /bin/hammer os create --name CentOS --major 7 --minor 9.2009 || true
+  for centos_os in $(/bin/hammer --csv os list --per-page 1000 | grep 'CentOS 7.9' | cut -d, -f1); do
     /bin/hammer os update --id $centos_os --name CentOS --major 7\
       --family Redhat \
       --architecture-ids 1 \
       --medium-ids ${medium_id_2} \
-      --partition-table-ids $norcams_ptable_id \
+      --partition-table-ids $norcams_ptable_id,$norcams_ptable_uefi_id
     # Set default Kickstart and PXELinux templates and associate with os
     /bin/hammer template update --id $norcams_provision_id \
       --operatingsystem-ids $centos_os \
@@ -151,10 +156,16 @@ common_config()
       --operatingsystem-ids $centos_os \
       --organization-id $foreman_organization_id \
       --location-id $foreman_location_id
+    /bin/hammer template update --id $norcams_pxegrub2_id \
+      --operatingsystem-ids $centos_os \
+      --organization-id $foreman_organization_id \
+      --location-id $foreman_location_id
     /bin/hammer os set-default-template --id $centos_os \
-      --config-template-id $norcams_provision_id
+      --provisioning-template-id $norcams_provision_id
     /bin/hammer os set-default-template --id $centos_os \
-      --config-template-id $norcams_pxelinux_id
+      --provisioning-template-id $norcams_pxelinux_id
+    /bin/hammer os set-default-template --id $centos_os \
+      --provisioning-template-id $norcams_pxegrub2_id
   done
 
   # Create Puppet environment
@@ -207,7 +218,7 @@ common_config()
     Setting["entries_per_page"]             = 100
     Setting["foreman_url"]                  = "https://'$foreman_fqdn'"
     Setting["unattended_url"]               = "http://'$foreman_fqdn'"
-    Setting["trusted_puppetmaster_hosts"]   = [ "'$foreman_fqdn'" ]
+    Setting["trusted_hosts"]                = [ "'$foreman_fqdn'" ]
     Setting["discovery_fact_column"]        = "ipmi_ipaddress"
     Setting["update_ip_from_built_request"] = true
     Setting["use_shortname_for_vms"]        = true
@@ -215,7 +226,7 @@ common_config()
 
     Setting["safemode_render"] = false
     include Foreman::Renderer
-    ProvisioningTemplate.build_pxe_default(self)
+    ProvisioningTemplate.build_pxe_default()
     Setting["safemode_render"] = true
 
   ' | /sbin/foreman-rake console

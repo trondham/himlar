@@ -147,6 +147,12 @@ profile::network::services::dns_options:
 #
 # DNS (merge of common and this)
 #
+
+# Public and internal zones
+profile::dns::ns::internal_zone: "vagrant.iaas.intern"
+profile::dns::ns::public_zone:   "iaas.intern"
+profile::dns::ns::public_zone2:  "iaas2.intern"
+
 profile::network::services::dns_records:
   A:
     "access.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
@@ -179,6 +185,7 @@ profile::network::services::dns_records:
     # public IPv6
     "1.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "ns.%{hiera('domain_public')}"
     "2.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "resolver.%{hiera('domain_public')}"
+  CNAME: {} # needed for autoconfig of network
 
 #
 ## Secret data which for other environments are stored ooutside of this data tree
@@ -262,7 +269,7 @@ congress::rabbit_password:                          'guest'
 imagebuilder_password:                              'imagebuilder_pass'
 
 # sensu.yaml
-sensu::rabbit_password:                             'sensu_guest'
+sensu_rabbit_password:                              'sensu_guest'
 sensu_api_password:                                 'sensu'
 graphite_secret_key:                                'graphite_pass'
 sensu_mysql_password:                               'sensu_pass'

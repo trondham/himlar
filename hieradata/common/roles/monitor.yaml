@@ -3,6 +3,7 @@ include:
   default:
     - profile::database::redis
     - profile::monitoring::sensu::server
+    - profile::monitoring::graphite
     - profile::monitoring::grafana
     - profile::monitoring::statsd
     - profile::logging::logrotate
@@ -40,7 +41,7 @@ profile::base::common::packages:
 
 profile::messaging::rabbitmq::users:
   sensu:
-    password: "%{hiera('sensu::rabbit_password')}"
+    password: "%{hiera('sensu_rabbit_password')}"
   local:
     password: "%{hiera('local_rabbit_password')}"
     tags:     'monitoring'
@@ -85,15 +86,15 @@ grafana::provisioning_dashboards:
         puppetsource: 'puppet:///modules/profile/monitoring/grafana/dashboard'
 
 # Sensu server
-sensu::server:              true
-sensu::api:                 true
-sensu::redis_host:          127.0.0.1
+sensuclassic::server:              true
+sensuclassic::api:                 true
+sensuclassic::redis_host:          127.0.0.1
 
 profile::openstack::openrc::password:         "%{hiera('monitor_metric_password')}"
 profile::openstack::openrc::username:         'monitor'
 profile::openstack::openrc::project_name:     'services'
 
-profile::monitoring::sensu::server::manage_graphite:  true
+profile::monitoring::graphite::manage_graphite:  true
 profile::monitoring::sensu::server::manage_firewall:  true
 profile::monitoring::sensu::server::firewall_extras:
   source: "%{::network_mgmt1}/%{::netmask_mgmt1}"
@@ -133,7 +134,7 @@ profile::monitoring::sensu::server::filters:
 profile::monitoring::sensu::agent::plugins:
   sensu-plugins-http:
     type:         package
-    pkg_version:  '2.8.4'
+    pkg_version:  '3.0.1'
   sensu-plugins-slack:
     type:         package
     pkg_version:  '3.1.1'
@@ -142,27 +143,20 @@ profile::monitoring::sensu::agent::plugins:
     pkg_version:  '4.1.1'
 
 # metadata api check
+profile::monitoring::sensu::agent::expanded_transform_url: true
+profile::monitoring::sensu::agent::expanded_checks:
+  - "%{hiera('endpoint__volume__public')}"
+  - "%{hiera('endpoint__network__public')}"
+  - "%{hiera('endpoint__image__public')}"
+  - "%{hiera('endpoint__compute__public')}"
+  - "%{hiera('endpoint__identity__public')}"
+
+profile::monitoring::sensu::agent::expanded_defaults:
+  command:      "check-http.rb --response-code '(?!([45]0[0-9]))' -r %{hiera('sensu_ssl_cachain')} -u "
+  interval:     60
+  subscribers:  ['checks']
+
 profile::monitoring::sensu::agent::checks:
-  'identity-api-check':
-    command:      "check-http.rb -u %{hiera('endpoint__identity__public')} --response-code 300 -r %{hiera('sensu_ssl_cachain')}"
-    interval:     60
-    subscribers:  ['checks']
-  'compute-api-check':
-    command:      "check-http.rb -u %{hiera('endpoint__compute__public')} %{hiera('sensu_ssl_cachain')}"
-    interval:     60
-    subscribers:  ['checks']
-  'image-api-check':
-    command:      "check-http.rb -u %{hiera('endpoint__image__public')} --response-code 300 -r %{hiera('sensu_ssl_cachain')}"
-    interval:     60
-    subscribers:  ['checks']
-  'volume-api-check':
-    command:      "check-http.rb -u %{hiera('endpoint__volume__public')} --response-code 300 -r %{hiera('sensu_ssl_cachain')}"
-    interval:     60
-    subscribers:  ['checks']
-  'network-api-check':
-    command:      "check-http.rb -u %{hiera('endpoint__network__public')} %{hiera('sensu_ssl_cachain')}"
-    interval:     60
-    subscribers:  ['checks']
   'identity-api-metric':
     type:         'metric'
     command:      "metrics-curl.rb --scheme web.api.identity -u %{hiera('endpoint__identity__public')}"
@@ -172,6 +166,12 @@ profile::monitoring::sensu::agent::checks:
   'compute-api-metric':
     type:         'metric'
     command:      "metrics-curl.rb --scheme web.api.compute -u %{hiera('endpoint__compute__public')}"
+    interval:     60
+    subscribers:  ['metrics']
+    handlers:     ['graphite_tcp']
+  'placement-api-metric':
+    type:         'metric'
+    command:      "metrics-curl.rb --scheme web.api.placement -u %{hiera('endpoint__placement__public')}"
     interval:     60
     subscribers:  ['metrics']
     handlers:     ['graphite_tcp']
@@ -205,19 +205,19 @@ profile::monitoring::sensu::agent::checks:
     subscribers:  ['checks']
   'metrics-rabbitmq-overview':
     type:         'metric'
-    command:      "metrics-rabbitmq-overview.rb --scheme mq.%{::hostname} --user local --password %{hiera('local_rabbit_password')}"
+    command:      "metrics-rabbitmq-overview.rb --scheme mq.%{::hostname} --host %{::ipaddress_mgmt1} --user local --password %{hiera('local_rabbit_password')}"
     interval:     60
     subscribers:  ['metrics']
     handlers:     ['graphite_tcp']
   'metrics-rabbitmq-queue':
     type:         'metric'
-    command:      "metrics-rabbitmq-queue.rb --scheme mq.%{::hostname} --user local --password %{hiera('local_rabbit_password')}"
+    command:      "metrics-rabbitmq-queue.rb --scheme mq.%{::hostname} --host %{::ipaddress_mgmt1} --user local --password %{hiera('local_rabbit_password')}"
     interval:     60
     subscribers:  ['metrics']
     handlers:     ['graphite_tcp']
   'metrics-rabbitmq-exchange':
     type:         'metric'
-    command:      "metrics-rabbitmq-exchange.rb --scheme mq.%{::hostname} --user local --password %{hiera('local_rabbit_password')}"
+    command:      "metrics-rabbitmq-exchange.rb --scheme mq.%{::hostname} --host %{::ipaddress_mgmt1} --user local --password %{hiera('local_rabbit_password')}"
     interval:     60
     subscribers:  ['metrics']
     handlers:     ['graphite_tcp']
@@ -225,15 +225,6 @@ profile::monitoring::sensu::agent::checks:
 # logrotate
 profile::logging::logrotate::manage_logrotate: true
 logrotate::rules:
-  monitor_logrotate:
-    path:           '/opt/graphite/storage/log/carbon-cache/carbon-cache-a/*.log'
-    rotate:         1
-    postrotate:     '/bin/kill -HUP `cat /opt/graphite/storage/carbon-cache-a.pid 2> /dev/null` 2> /dev/null || true'
-    rotate_every:   daily
-    dateext:        true
-    sharedscripts:  true
-    missingok:      true
-    compress:       true
   sensu_dashboard:
     path:           '/var/log/uchiwa.log'
     rotate:         3

@@ -16,6 +16,7 @@ profile::openstack::novactrl::enable_scheduler:     true
 profile::openstack::novactrl::manage_az:            true
 profile::openstack::novactrl::manage_cells:         true
 
+profile::openstack::openrc::interface:    'internal'
 profile::openstack::openrc::password:     "%{hiera('nova_api_password')}"
 profile::openstack::openrc::username:     'nova'
 profile::openstack::openrc::project_name: 'services'
@@ -29,6 +30,13 @@ profile::base::common::packages:
   'jq': {}
   'openstack-selinux': {}
   'python-memcached': {}
+  'libibverbs': {} # not needed but avoid console complaints
+  'rdma': {} # not needed but avoid console complaints
+
+# apache httpd
+# this should be fine for 4 GB RAM
+apache::mod::prefork::serverlimit:        1024
+apache::mod::prefork::maxrequestworkers:  1024
 
 # Sensu
 profile::webserver::apache::status::manage_status: true
@@ -51,6 +59,6 @@ profile::base::yumrepo::repo_hash:
     ensure: present
   epel: # should be absent when using RDO, but whitelist can also work
     ensure:   present
-    includepkgs: 'htop bash-completion-extras'
+    includepkgs: 'htop bash-completion-extras python2-bcrypt'
 
 memcached::max_memory: '20%'

@@ -17,7 +17,7 @@ class profile::logging::elasticsearch(
 
   if $manage_firewall {
     profile::firewall::rule { '400 elasticsearch accept tcp':
-      port        => $ports,
+      dport        => $ports,
       destination => $::ipaddress_mgmt1,
       source      => "${::network_mgmt1}/${::netmask_mgmt1}",
       extras      => $firewall_extras,
@@ -34,7 +34,7 @@ class profile::logging::elasticsearch(
       content => template("${module_name}/logging/elasticsearch/curator.yml"),
     }
     # action file
-    file { '/root/delete_indices.yml':
+    file { '/var/lib/delete_indices.yml':
       ensure  => file,
       content => template("${module_name}/logging/elasticsearch/delete_indices.yml"),
     }

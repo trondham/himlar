@@ -61,60 +61,67 @@ class profile::application::foreman(
   }
   cron { 'push-puppet-facts-to-foreman':
     ensure  => $push_facts_ensure,
-    command => '/opt/himlar/provision/admin/remove_tap_interfaces_from_facts.py && /etc/puppetlabs/puppet/node.rb --push-facts',
+    command => '/etc/puppetlabs/puppet/node.rb --push-facts',
     minute  => '30',
     hour    => '0',
   }
 
   if $manage_firewall {
     profile::firewall::rule { '190 foreman-http accept tcp':
-      port   => 80,
+      dport  => 80,
       extras => $firewall_extras['http']
     }
 
     profile::firewall::rule { '191 foreman-https accept tcp':
-      port   => 443,
+      dport  => 443,
       extras => $firewall_extras['https']
     }
 
     profile::firewall::rule { '192 foreman-puppet accept tcp':
-      port   => 8140,
+      dport  => 8140,
       extras => $firewall_extras['puppet']
     }
 
     profile::firewall::rule { '193 foreman-dns accept udp':
-      port   => 53,
+      dport  => 53,
       proto  => 'udp',
       extras => $firewall_extras['dns']
     }
 
     profile::firewall::rule { '194 foreman-dns accept tcp':
-      port   => 53,
+      dport  => 53,
       extras => $firewall_extras['dns']
     }
 
     profile::firewall::rule { '195 foreman-dhcp accept udp in':
-      port   => 67,
+      dport  => 67,
       proto  => 'udp',
       extras => $firewall_extras['dhcp']
     }
 
     profile::firewall::rule { '196 foreman-dhcp accept udp out':
-      port   => 68,
+      dport  => 68,
       proto  => 'udp',
       chain  => 'OUTPUT',
       extras => $firewall_extras['dhcp']
     }
 
     profile::firewall::rule { '197 foreman-tftp accept tcp':
-      port   => 69,
+      dport  => 69,
       proto  => 'udp',
       extras => $firewall_extras['tftp']
     }
 
     profile::firewall::rule { '197 foreman-proxy accept tcp':
-      port   => 8443,
+      dport  => 8443,
       extras => $firewall_extras['proxy']
     }
   }
+
+    # Remove this after we upgrade to 2.1
+    file { 'foreman-systemd-override':
+      ensure => absent,
+      path   => '/etc/systemd/system/foreman.service.d/override.conf'
+    }
+
 }

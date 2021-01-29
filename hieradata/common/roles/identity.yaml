@@ -3,6 +3,7 @@ include:
   default:
     - profile::openstack::identity
     - profile::openstack::resource::imagebuilder
+    - profile::openstack::resource::image_sharing
     - profile::openstack::resource::dataporten
     - profile::openstack::resource::users
     - profile::logging::rsyslog::client
@@ -30,12 +31,11 @@ profile::openstack::identity::roles_extra:
   - superuser
   - admin_view
   - object
+  - imagebuilder
 
 profile::openstack::identity::keystone_config:
-  'federation/trusted_dashboard':
-    value:  "https://%{hiera('public__address__dashboard')}/dashboard/auth/websso/"
-  'federation/remote_id_attribute':
-    value:  'OIDC-iss'
+  'DEFAULT/max_project_tree_depth':
+    value:  2
   'resource/project_name_url_safe':
     value:  'new'
   'resource/domain_name_url_safe':
@@ -93,11 +93,13 @@ profile::openstack::resource::dataporten::domain:
     ensure:       present
     description:  'Federated users from Dataporten'
     is_default:   false
-profile::openstack::resource::dataporten::identity_provider:
-  dataporten:
-    enabled:      true
-    remote_ids:   [ 'https://auth.dataporten.no' ]
-    description:  'Federated user from Dataporten'
+# FIXME:stein - move to himlarcli dataporten.py
+
+# profile::openstack::resource::dataporten::identity_provider:
+#   dataporten:
+#     enabled:      true
+#     remote_ids:   [ 'https://auth.dataporten.no' ]
+#     description:  'Federated user from Dataporten'
 
 # Custom users
 profile::openstack::resource::users::users:
@@ -140,13 +142,18 @@ profile::monitoring::sensu::agent::checks:
     subscribers:  ['metrics']
     handlers:     ['graphite_tcp']
 
+# used for repo version
+mariadb_version: '10.2'
+
 # Enable extra yum repo
 profile::base::yumrepo::repo_hash:
   rdo-release:
     ensure:   present
     exclude:  'mariadb*'
   mariadb:
-    ensure:   present
+    ensure:   absent
+  "mariadb-%{hiera('mariadb_version')}":
+    ensure:     present
   epel: # should be absent when using RDO, but whitelist can also work
     ensure:   present
     includepkgs: 'htop bash-completion-extras'
@@ -161,3 +168,6 @@ profile::base::selinux::boolean:
   'httpd_use_openstack':
     ensure: 'on'
     persistent: true
+
+# Create project for global image sharing
+profile::openstack::resource::image_sharing::manage: true

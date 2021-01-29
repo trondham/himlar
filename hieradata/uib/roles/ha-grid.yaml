@@ -35,21 +35,27 @@ profile::firewall::rules::custom_rules:
     dport:        [ '80', '443' ]
     source:       '129.177.0.0/16'
     destination:  "%{hiera('corosync_cluster_vip2')}"
-  '455 haproxy status':
+  '455 haproxy status public':
     proto:        'tcp'
     dport:        ['9000']
-    source:       '129.177.10.0/24'
-    destination:
-      - "%{hiera('corosync_cluster_vip1')}"
-      - "%{hiera('corosync_cluster_vip2')}"
-      - '%{::ipaddress_public1}'
+    source:
+      - '129.177.10.0/24'
+      - '129.177.6.133/32' # bgo-login
+    destination:  '%{::ipaddress_public1}'
+  '456 haproxy status mgmt':
+    proto:        'tcp'
+    dport:        ['9000']
+    source:       '172.31.0.10/32' #bgo-login
+    destination:  '%{::ipaddress_mgmt1}'
 
 
 corosync_cluster_node1:   "%{::location}-ha-grid-01.%{hiera('domain_mgmt')}"
 corosync_cluster_node2:   "%{::location}-ha-grid-02.%{hiera('domain_mgmt')}"
 
-corosync_cluster_vip1:    "129.177.3.113" # grid
-corosync_cluster_vip2:    "129.177.3.114" # grid
+corosync_cluster_vip1:    "129.177.3.113" # gridproxy.ha
+corosync_cluster_vip2:    "129.177.3.114" # gridproxy.ha
+corosync_cluster_vip3:    "129.177.13.170" # pubgridproxy.ha
+corosync_cluster_vip4:    "129.177.13.171" # pubgridproxy.ha
 
 profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
   uib_grid_domains:
@@ -118,6 +124,28 @@ profile::highavailability::corosync::primitives:
       'monitor':          { "interval": "10s", "timeout": "20s" }
       'start':            { "interval": "0s", "timeout": "20s" }
       'stop':             { "interval": "0s", "timeout": "20s" }
+  'pubip1':
+    'primitive_class':    'ocf'
+    'primitive_type':     'IPaddr2'
+    'provided_by':        'heartbeat'
+    'parameters':
+      'ip':               "%{hiera('corosync_cluster_vip3')}"
+      'cidr_netmask':     '25'
+    operations:
+      'monitor':          { 'interval': '10s', 'timeout': '20s' }
+      'start':            { 'interval': '0s', 'timeout': '20s' }
+      'stop':             { 'interval': '0s', 'timeout': '20s' }
+  'pubip2':
+    'primitive_class':    'ocf'
+    'primitive_type':     'IPaddr2'
+    'provided_by':        'heartbeat'
+    'parameters':
+      'ip':               "%{hiera('corosync_cluster_vip4')}"
+      'cidr_netmask':     '25'
+    operations:
+      'monitor':          { 'interval': '10s', 'timeout': '20s' }
+      'start':            { 'interval': '0s', 'timeout': '20s' }
+      'stop':             { 'interval': '0s', 'timeout': '20s' }
   'haproxy':
     'primitive_class':    'systemd'
     'primitive_type':     'haproxy'
@@ -135,9 +163,21 @@ profile::highavailability::corosync::locations:
     primitive:  'gridip2'
     node_name:  "%{hiera('corosync_cluster_node2')}"
     score:      'INFINITY'
+  'pubdip_location1':
+    primitive:  'pubip1'
+    node_name:  "%{hiera('corosync_cluster_node1')}"
+    score:      'INFINITY'
+  'pubip_location2':
+    primitive:  'pubip2'
+    node_name:  "%{hiera('corosync_cluster_node2')}"
+    score:      'INFINITY'
 
 profile::highavailability::corosync::colocations:
   'gridip1_haproxy':
     primitives:   ['clone_haproxy', 'gridip1']
   'gridip2_haproxy':
     primitives:   ['clone_haproxy', 'gridip2']
+  'pubip1_haproxy':
+    primitives:   ['clone_haproxy', 'pubip1']
+  'pubip2_haproxy':
+    primitives:   ['clone_haproxy', 'pubip2']

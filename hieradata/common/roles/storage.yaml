@@ -3,6 +3,7 @@ include:
   default:
     - profile::storage::cephosd
     - profile::storage::cephpool
+    - profile::storage::ceph::pool
     - profile::storage::cephfs
     - profile::storage::cephclient
     - profile::storage::cephosd_firewall
@@ -47,6 +48,7 @@ profile::base::common::packages:
   'bash-completion-extras': {}
   'jq': {}
   'smartmontools': {}
+  'sysstat': {} # needed for sensu network plugin
 
 accounts::users:
   'cinder':
@@ -75,10 +77,10 @@ profile::storage::cephpool::manage_ec_pools: false
 
 profile::storage::ceph_ecpool::ec_pools:
   'volumes_hdd_ec_data':
-    pg_num:              "512"
+    pg_num:              "256"
     manage:              true
     allow_ec_overwrites: true
-    k_data:              "3"
+    k_data:              "4"
     m_code:              "2"
     crush_root:          "storage"
 profile::storage::cephpool::pools:
@@ -117,7 +119,7 @@ profile::storage::cephpool_params::pools:
   'volumes_hdd_ec_data':
     application_enable: 'rbd'
 
-# Enable extra yum repo
+# Enable extra yum repo and override epel exclude list
 profile::base::yumrepo::repo_hash:
   ceph-%{hiera('ceph_version')}:
     ensure: present

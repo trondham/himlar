@@ -3,6 +3,21 @@ include:
   default:
     - profile::monitoring::netdata
 
+named_interfaces::config:
+  mgmt:
+  - eth2
+  trp:
+  - team1
+  live:
+  - team1.120
+
+profile::base::network::network_auto_bonding:
+  trp:
+    eth0:
+      'team_port_config': '{ "prio" : 100 }'
+    eth1:
+      'team_port_config': '{ "prio" : 100 }'
+
 # Turn off nested virtualization
 profile::virtualization::nested::manage: false
 
@@ -35,3 +50,13 @@ profile::base::lvm::logical_volume:
     volume_group: 'vg_ext'
     fs_type:      "xfs"
     mountpath:    "/var/lib/nova/instances"
+
+sensu__memory__check:     "check-memory.rb -w 1536 -c 1024"
+
+# This compute host uses local storage for instances
+nova::compute::rbd::ephemeral_storage:  false
+nova::config::nova_config:
+  libvirt/images_type:
+    value: default
+  DEFAULT/metadata_workers:
+    value: '2'

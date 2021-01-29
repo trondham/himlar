@@ -18,7 +18,6 @@ block_api_connection:   'connection accept'
 profile::base::common::packages:
   'bash-completion': {}
   'bash-completion-extras': {}
-  'jq': {}
 
 # Sensu
 profile::monitoring::sensu::agent::plugins:
@@ -45,10 +44,12 @@ profile::highavailability::loadbalancing::haproxy::firewall_ports:
   limited:   []
 
 # HAproxy
-star_api_ssl_pem: "star.api.%{hiera('domain_public')}.pem"
-api_ssl_pem:      "api.%{hiera('domain_public')}.pem"
-status_ssl_pem:   "status.%{hiera('domain_public')}.pem"
-console_ssl_pem:  "console.%{hiera('domain_public')}.pem"
+star_api_ssl_pem:         "star.api.%{hiera('domain_public')}.pem"
+star_api_ssl_pem2:        "star.api.%{hiera('domain_public2')}.pem"
+console_ssl_pem:          "console.%{hiera('domain_public')}.pem"
+console_ssl_pem2:         "console.%{hiera('domain_public2')}.pem"
+frontend_star_ssl_pem:    "star.%{hiera('domain_public')}.pem"
+frontend_star_ssl_pem2:   "star.%{hiera('domain_public2')}.pem"
 
 haproxy::defaults_options:
   mode:         'http'
@@ -74,7 +75,9 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
   public_domains:
     ensure: present
     mappings:
+      - "dashboard.%{hiera('domain_frontend2')}":           'bk_dashboard'
       - "api.%{hiera('domain_frontend')}:5000":             'bk_identity'
+      - "api.%{hiera('domain_frontend2')}:5000":            'bk_identity'
       - "identity.api.%{hiera('domain_public')}:5000":      'bk_identity'
       - "network.api.%{hiera('domain_public')}:9696":       'bk_network'
       - "metric.api.%{hiera('domain_public')}:8041":        'bk_metric'
@@ -93,7 +96,24 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
       - "access-%{::location}.%{hiera('domain_frontend')}": 'bk_access'
       - "report.%{hiera('domain_frontend')}":               'bk_report'
       - "report-%{::location}.%{hiera('domain_frontend')}": 'bk_report'
-      - "www.%{hiera('domain_frontend')}":                  'bk_www'
+      - "identity.api.%{hiera('domain_public2')}:5000":     'bk_identity'
+      - "network.api.%{hiera('domain_public2')}:9696":      'bk_network'
+      - "metric.api.%{hiera('domain_public2')}:8041":       'bk_metric'
+      - "compute.api.%{hiera('domain_public2')}:8774":      'bk_compute'
+      - "placement.api.%{hiera('domain_public2')}:8778":    'bk_placement'
+      - "volume.api.%{hiera('domain_public2')}:8776":       'bk_volume'
+      - "image.api.%{hiera('domain_public2')}:9292":        'bk_image'
+      - "object.api.%{hiera('domain_public2')}:8080":       'bk_object'
+      - "dns.api.%{hiera('domain_public2')}:9001":          'bk_dns'
+      - "status.%{hiera('domain_frontend2')}":              'bk_status'
+      - "status-%{::location}.%{hiera('domain_frontend2')}": 'bk_status'
+      - "request.%{hiera('domain_frontend2')}":             'bk_request'
+      - "console.%{hiera('domain_public2')}:6080":          'bk_console'
+      - "access.%{hiera('domain_frontend2')}":              'bk_access'
+      - "access-%{::location}.%{hiera('domain_frontend2')}": 'bk_access'
+      - "report.%{hiera('domain_frontend2')}":              'bk_report'
+      - "report-%{::location}.%{hiera('domain_frontend2')}": 'bk_report'
+      - "www.%{hiera('domain_frontend2')}":                 'bk_www'
   internal_domains:
     ensure: present
     mappings:
@@ -113,22 +133,31 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
 profile::highavailability::loadbalancing::haproxy::haproxy_frontends:
   frontend_public:
     bind:
-      "%{::ipaddress_public1}:5000":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}", 'crt', "%{hiera('api_ssl_pem')}"]
-      "%{::ipaddress_public1}:8041":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
-      "%{::ipaddress_public1}:8080":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
-      "%{::ipaddress_public1}:8778":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
-      "%{::ipaddress_public1}:8774":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
-      "%{::ipaddress_public1}:8776":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
-      "%{::ipaddress_public1}:9292":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
-      "%{::ipaddress_public1}:9696":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
-      "%{::ipaddress_public1}:9001":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
-      "%{::ipaddress_public1}:1789":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}"]
-      "%{::ipaddress_public1}:443":   ['ssl', 'crt', "%{hiera('status_ssl_pem')}"]
+      "%{::ipaddress_public1}:5000":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}", 'crt', "%{hiera('star_api_ssl_pem2')}", 'crt', "%{hiera('frontend_star_ssl_pem')}", 'crt', "%{hiera('frontend_star_ssl_pem2')}"]
+      "%{::ipaddress_public1}:8041":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}", 'crt', "%{hiera('star_api_ssl_pem2')}"]
+      "%{::ipaddress_public1}:8080":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}", 'crt', "%{hiera('star_api_ssl_pem2')}"]
+      "%{::ipaddress_public1}:8778":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}", 'crt', "%{hiera('star_api_ssl_pem2')}"]
+      "%{::ipaddress_public1}:8774":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}", 'crt', "%{hiera('star_api_ssl_pem2')}"]
+      "%{::ipaddress_public1}:8776":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}", 'crt', "%{hiera('star_api_ssl_pem2')}"]
+      "%{::ipaddress_public1}:9292":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}", 'crt', "%{hiera('star_api_ssl_pem2')}"]
+      "%{::ipaddress_public1}:9696":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}", 'crt', "%{hiera('star_api_ssl_pem2')}"]
+      "%{::ipaddress_public1}:9001":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}", 'crt', "%{hiera('star_api_ssl_pem2')}"]
+      "%{::ipaddress_public1}:1789":  ['ssl', 'crt', "%{hiera('star_api_ssl_pem')}", 'crt', "%{hiera('star_api_ssl_pem2')}"]
+      "%{::ipaddress_public1}:443":   ['ssl', 'crt', "%{hiera('frontend_star_ssl_pem')}", 'crt', "%{hiera('frontend_star_ssl_pem2')}"]
       "%{::ipaddress_public1}:80":    []
-      "%{::ipaddress_public1}:6080":  ['ssl', 'crt', "%{hiera('console_ssl_pem')}"]
+      "%{::ipaddress_public1}:6080":  ['ssl', 'crt', "%{hiera('console_ssl_pem')}", 'crt', "%{hiera('console_ssl_pem2')}"]
     options:
       - capture:        'request header Host len 64' #for debug
       - acl:
+        - 'keystone_admin_endpoint path -i -m beg /v3/projects'
+        - 'keystone_admin_endpoint path -i -m beg /v3/groups'
+        - 'keystone_admin_endpoint path -i -m beg /v3/domains'
+        - 'keystone_admin_endpoint path -i -m beg /v3/regions'
+        - 'keystone_admin_endpoint path -i -m beg /v3/roles'
+        - 'keystone_admin_endpoint path -i -m beg /v3/endpoints'
+        - 'keystone_admin_endpoint path -i -m beg /v3/services'
+        - 'keystone_admin_endpoint path -i -m beg /v3/system'
+        - 'valid_method method GET HEAD OPTION'
         - 'is_request hdr_beg(host) -i request'
         - 'has_subdomain hdr_reg(host) -i .*\..*\..*'
       - redirect:
@@ -141,7 +170,11 @@ profile::highavailability::loadbalancing::haproxy::haproxy_frontends:
       - http-request:
         - 'add-header X-Forwarded-Proto https if { ssl_fc }'
         - 'set-header X-Forwarded-Port %[dst_port]'
+        # Returns 403 for all keystone admin endpoints on port 5000
+        # using http methods not whitelisted (e.g. POST, PATCH, DELETE)
+        - 'deny if { dst_port 5000 } !valid_method keystone_admin_endpoint'
       #  - 'set-header X-Forwarded-Host %[req.hdr(Host)]'
+      - errorfile:      '403 /etc/haproxy/error.forbidden.http'
       - use_backend:    '%[req.hdr(host),lower,map(/etc/haproxy/public_domains.map)]'
   frontend_internal:
     bind:
@@ -172,6 +205,15 @@ profile::highavailability::loadbalancing::haproxy::haproxy_frontends:
 
 # HAproxy backend, one for each API and one for status
 profile::highavailability::loadbalancing::haproxy::haproxy_backends:
+  # this will redirect domain_frontend2 to domain_frontend
+  bk_dashboard:
+    mode:             'http'
+    options:
+      - redirect:     "code 301 location https://dashboard.%{hiera('domain_frontend')}"
+  bk_www:
+    mode:             'http'
+    options:
+      - redirect:     "code 301 location https://www.%{hiera('domain_frontend')}"
   bk_identity:
     options:
       - option:       'httplog'
@@ -185,12 +227,12 @@ profile::highavailability::loadbalancing::haproxy::haproxy_backends:
     options:
       - option:       'httplog'
       - errorfile:    '503 /etc/haproxy/error.api.http'
-      - balance:      'roundrobin'
+      #- balance:      'roundrobin'
   bk_placement:
     options:
       - option:       'httplog'
       - errorfile:    '503 /etc/haproxy/error.api.http'
-      - balance:      'roundrobin'
+      #- balance:      'roundrobin'
   bk_volume:
     options:
       - option:       'httplog'
@@ -238,11 +280,6 @@ profile::highavailability::loadbalancing::haproxy::haproxy_backends:
     options:
       - option:       'httplog'
       - errorfile:    '503 /etc/haproxy/error.maintenance.http'
-  bk_www:
-    options:
-      - option:       'httplog'
-      - http-request:
-        - 'set-header Host norcams.github.io'
 
 # Servers for backends. This will be merged and can should be overridden i location
 
@@ -273,8 +310,6 @@ access__backend__names:    ['%{::location}-access-01']
 access__backend__ips:      ["%{hiera('netcfg_trp_netpart')}.56"]
 report__backend__names:    ['%{::location}-report-01']
 report__backend__ips:      ["%{hiera('netcfg_trp_netpart')}.22"]
-www__backend__names:       ['www01']
-www__backend__ips:         ['norcams.github.io']
 
 profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
   identity:
@@ -361,12 +396,6 @@ profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
     ipaddresses:        "%{alias('report__backend__ips')}"
     ports:              '80'
     options:            'check'
-  www:
-    listening_service:  'bk_www'
-    server_names:       "%{alias('www__backend__names')}"
-    ipaddresses:        "%{alias('www__backend__ips')}"
-    ports:              '443'
-    options:            'verify none check check-ssl ssl'
 
 # SELinux - open ports for HAproxy
 profile::base::selinux::ports:
@@ -425,7 +454,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_errorpage:
     code:     503
     header:   'Scheduled maintenance'
     content:  'Unavailable due to scheduled maintenance. Be right back.'
-    url:      'https://twitter.com/uhiaas'
+    url:      'https://twitter.com/nrec_no'
   'api':
     code:     503
     header:   'Be Right Back'
@@ -436,3 +465,8 @@ profile::highavailability::loadbalancing::haproxy::haproxy_errorpage:
     header:   'Be Right Back'
     content:  'The console is down at the moment'
     url:      "https://console.%{hiera('domain_frontend')}"
+  'forbidden':
+    code:     403
+    message:  'Forbidden'
+    content:  '{"error":{"code":403,"message":"Requested action require internal network access.","title":"Forbidden"}}'
+    format:   'json'

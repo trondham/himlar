@@ -1,0 +1,86 @@
+---
+sensuclassic::client:                  true
+sensuclassic::server:                  false
+sensuclassic::api:                     false
+sensuclassic::purge:                   true
+sensuclassic::version:                 present
+sensuclassic::install_repo:            false
+sensuclassic::manage_repo:             false
+sensuclassic::sensu_plugin_provider:   sensuclassic_gem
+sensuclassic::use_embedded_ruby:       true
+sensuclassic::rabbitmq_host:           "%{hiera('mgmt__address__monitor')}"
+sensuclassic::rabbitmq_password:       "%{hiera('sensu_rabbit_password')}"
+sensuclassic::rabbitmq_user:           'sensu'
+sensuclassic::rabbitmq_vhost:          'sensu'
+sensuclassic::rabbitmq_port:           '5672'
+
+# client
+sensuclassic::client_address:          "%{ipaddress_mgmt1}"
+sensuclassic::client_name:             "%{hostname}"
+sensuclassic::client_keepalive:
+  handler:    'default'
+  thresholds:
+    warning:  50
+    critical: 70
+sensuclassic::client_custom:
+  graphite_load:    "http://%{hiera('mgmt__address__monitor')}/render?from=-24h&target=aliasByNode(load.%{::hostname}.load_avg.*,3)&height=250&width=600&lineMode=connected&uchiwa_force_image=.jpg"
+  graphite_cpu:     "http://%{hiera('mgmt__address__monitor')}/render?from=-24h&target=aliasByNode(vmstats.%{::hostname}.cpu.*,3)&height=250&width=600&lineMode=connected&uchiwa_force_image=.jpg"
+  graphite_io:      "http://%{hiera('mgmt__address__monitor')}/render?from=-24h&target=aliasByNode(vmstats.%{::hostname}.io.*,3)&height=250&width=600&lineMode=connected&uchiwa_force_image=.jpg"
+  graphite_memory:  "http://%{hiera('mgmt__address__monitor')}/render?from=-24h&target=aliasByMetric(memory.%{::hostname}.total)&target=aliasByMetric(memory.%{::hostname}.free)&target=aliasByMetric(memory.%{::hostname}.used)&height=250&width=600&lineMode=connected&uchiwa_force_image=.jpg"
+#  graphite_memory2:  "http://%{hiera('mgmt__address__monitor')}/render?from=-2h&target=aliasByNode(vmstats.%{::hostname}.memory.*,3)&height=250&width=600&lineMode=connected&uchiwa_force_image=.jpg"
+sensuclassic::subscriptions:
+  - 'metrics'
+  - 'checks'
+
+sensu__memory__check:     "check-memory-percent.rb -w 80 -c 90"
+sensu__disk__warning:     70
+sensu__disk__crtical:     90
+sensu__disk__ignore:      ''
+sensu__load__check:       "check-load.rb -w 2.75,2.5,2.0 -c 3.5,3.25,3.0"
+
+sensuclassic::checks:
+  'metrics-vmstat':
+    type:         'metric'
+    command:      'metrics-vmstat.rb --scheme vmstats.%{::hostname}'
+    interval:     60
+    subscribers:  ['metrics']
+    handlers:     ['graphite_tcp']
+  'metrics-load':
+    type:         'metric'
+    command:      'metrics-load.rb --scheme load.%{::hostname}'
+    interval:     60
+    subscribers:  ['metrics']
+    handlers:     ['graphite_tcp']
+  'metrics-memory':
+    type:         'metric'
+    command:      'metrics-memory.rb --scheme memory.%{::hostname}'
+    interval:     60
+    subscribers:  ['metrics']
+    handlers:     ['graphite_tcp']
+  'check-disk-usage':
+    command:      "check-disk-usage.rb -p '/ceph/' -w %{hiera('sensu__disk__warning')} -c %{hiera('sensu__disk__crtical')} %{hiera('sensu__disk__ignore')}"
+    interval:     60
+    subscribers:  ['checks']
+  'check-load':
+    command:      "%{hiera('sensu__load__check')}"
+    interval:     60
+    subscribers:  ['checks']
+  'check-memory':
+    command:      "%{hiera('sensu__memory__check')}"
+    interval:     60
+    subscribers:  ['checks']
+  'check-process-cron':
+    command:      'check-process.rb -p cron'
+    interval:     300
+    subscribers:  ['checks']
+  'check-process-rsyslog':
+    command:      'check-process.rb -p rsyslog'
+    interval:     300
+    subscribers:  ['checks']
+
+# Server
+sensuclassic::api_user:          'sensu'
+sensuclassic::api_password:      "%{hiera('sensu_api_password')}"
+sensuclassic::api_host:          "%{ipaddress_mgmt1}"
+sensuclassic::api_bind:          "%{ipaddress_mgmt1}"
+sensuclassic::api_port:          4567

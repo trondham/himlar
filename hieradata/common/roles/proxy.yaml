@@ -25,6 +25,7 @@ profile::base::common::packages:
   'bash-completion-extras': {}
   'jq': {}
   'python2-gnocchiclient': {}
+  'python2-osc-placement': {}
   'openstack-selinux': {}
 
 profile::network::services::firewall_extras:
@@ -44,7 +45,7 @@ profile::application::himlarservice::package_url: 'http://download.iaas.uio.no/u
 profile::monitoring::sensu::agent::plugin_gems:
   sensu-plugins-openstack:
     ensure:   '0.2.0'
-    provider: 'sensu_gem'
+    provider: 'sensuclassic_gem'
     source:   'http://download.iaas.uio.no/uh-iaas/gem'
 # nova compute metrics
 profile::monitoring::sensu::agent::checks:
@@ -61,7 +62,7 @@ profile::base::yumrepo::repo_hash:
     ensure: present
   epel: # should be absent when using RDO, but whitelist can also work
     ensure:   present
-    includepkgs: 'tinyproxy htop bash-completion-extras jq oniguruma'
+    includepkgs: 'tinyproxy htop bash-completion-extras'
 
 logrotate::rules:
   himlarcli:

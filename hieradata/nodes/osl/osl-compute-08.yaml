@@ -5,11 +5,13 @@ network::interfaces_hash:
     devicetype:    'TeamPort'
     team_master:   'team1'
     team_port_config: '{ "prio" : 100 }'
+    ethtool_opts:  '-K ${DEVICE} gro off'
   'em2':
     onboot:        'yes'
     devicetype:    'TeamPort'
     team_master:   'team1'
     team_port_config: '{ "prio" : 100 }'
+    ethtool_opts:  '-K ${DEVICE} gro off'
   'em3':
     onboot:        'yes'
     ipaddress:     "%{hiera('netcfg_mgmt_netpart')}.116"
@@ -56,3 +58,7 @@ profile::base::lvm::logical_volume:
 # Create and enable more swap
 profile::base::common::extraswap:        true
 profile::base::common::extraswap_sizegb: 10
+
+# make disks are configured correctly as the devices we want
+profile::base::physical::load_ahci_last:    true
+profile::base::physical::scsidrv:           'mpt2sas'

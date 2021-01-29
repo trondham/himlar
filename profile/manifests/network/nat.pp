@@ -3,6 +3,12 @@ class profile::network::nat(
   $enable_masquerade = false,
   $enable_bird = false,
   $manage_bird_firewall = false,
+  $bird_export_networks = undef,
+  $bird_template = 'bird-nat.conf.erb',
+  $azure_bird_local_as = undef,
+  $azure_bird_remote_as = undef,
+  $azure_bird_remote_neigh = undef,
+  $azure_bird_remote_network = undef,
   $enable_snat = false,
   $enable_snat6 = false,
   $iniface = undef,
@@ -26,7 +32,7 @@ class profile::network::nat(
         }
         file { '/etc/bird.conf':
           ensure   => file,
-          content  => template("${module_name}/bird/bird-nat.conf.erb"),
+          content  => template("${module_name}/bird/${bird_template}"),
           notify   => Service['bird']
         }
         service { 'bird':
@@ -36,13 +42,13 @@ class profile::network::nat(
         }
       }
       if $manage_bird_firewall {
-        profile::firewall::rule { '912 bird allow bfd':
+        profile::firewall::rule { '011 bird allow bfd':
           proto  => 'udp',
-          port   => ['3784','3785','4784','4785'],
+          dport   => ['3784','3785','4784','4785'],
         }
         profile::firewall::rule { "010 bird bgp - accept tcp to ${name}":
           proto   => 'tcp',
-          port    => '179',
+          dport    => '179',
           iniface => $::ipaddress_trp1,
         }
       }

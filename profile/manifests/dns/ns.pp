@@ -10,6 +10,7 @@ class profile::dns::ns (
   $mdns_transport_addr = {},
   $mdns_public_addr = {},
   $admin_mgmt_addr = {},
+  $login_mgmt_addr = {},
   $ns_mgmt_addr = {},
   $ns_transport_addr = {},
   $ns_public_addr = {},
@@ -185,7 +186,7 @@ class profile::dns::ns (
     }
   }
   if $manage_bird_firewall {
-    profile::firewall::rule { '912 bird allow bfd':
+    profile::firewall::rule { '011 bird allow bfd':
       proto    => 'udp',
       port     => ['3784','3785','4784','4785'],
     }
@@ -211,7 +212,7 @@ class profile::dns::ns (
     }
   }
   if $manage_bird6_firewall {
-    profile::firewall::rule { '912 bird allow bfd ipv6':
+    profile::firewall::rule { '011 bird allow bfd ipv6':
       proto    => 'udp',
       port     => ['3784','3785','4784','4785'],
       provider => 'ip6tables',

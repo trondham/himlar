@@ -9,7 +9,7 @@ class profile::openstack::dashboard(
   $manage_overrides     = false,
   $database             = {},
   $override_template    = "${module_name}/openstack/horizon/local_settings.erb",
-  $site_branding        = 'UH-IaaS',
+  $site_branding        = 'NREC',
   $image_visibility     = 'private',
   $change_uploaddir     = false,
   $custom_uploaddir     = '/image-upload',
@@ -112,9 +112,9 @@ class profile::openstack::dashboard(
   }
 
   if $change_login_footer {
-    file { '/usr/share/openstack-dashboard/openstack_dashboard/templates/_login_footer.html':
+    file { '/usr/share/openstack-dashboard/openstack_dashboard/templates/_login_form_footer.html':
       ensure  => present,
-      source  => "puppet:///modules/${module_name}/openstack/horizon/_login_footer.html",
+      source  => "puppet:///modules/${module_name}/openstack/horizon/_login_form_footer.html",
       require => Class['horizon'],
       notify  => Service['httpd']
     }
@@ -124,21 +124,21 @@ class profile::openstack::dashboard(
     file { 'logo-splash.svg':
       ensure  => present,
       path    => '/usr/share/openstack-dashboard/openstack_dashboard/static/dashboard/img/logo-splash.svg',
-      source  => "puppet:///modules/${module_name}/openstack/horizon/logo-splash.svg",
+      source  => "puppet:///modules/${module_name}/openstack/horizon/img/logo-splash.svg",
       replace => true,
       require => Class['horizon'],
     } ->
     file { 'logo.svg':
       ensure  => present,
       path    => '/usr/share/openstack-dashboard/openstack_dashboard/static/dashboard/img/logo.svg',
-      source  => "puppet:///modules/${module_name}/openstack/horizon/logo.svg",
+      source  => "puppet:///modules/${module_name}/openstack/horizon/img/logo.svg",
       replace => true,
       require => Class['horizon'],
     } ->
     file { 'favicon.ico':
       ensure  => present,
       path    => '/usr/share/openstack-dashboard/openstack_dashboard/static/dashboard/img/favicon.ico',
-      source  => "puppet:///modules/${module_name}/openstack/horizon/favicon.ico",
+      source  => "puppet:///modules/${module_name}/openstack/horizon/img/favicon.ico",
       replace => true,
       require => Class['horizon'],
       notify  => Service['httpd']
