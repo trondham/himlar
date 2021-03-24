@@ -2,6 +2,7 @@
 include:
   default:
     - profile::base::tuned
+    - profile::monitoring::collectd
 
 named_interfaces::config:
   mgmt:
