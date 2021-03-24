@@ -78,3 +78,16 @@ profile::base::lvm::logical_volume:
     volume_group: 'vg_ext'
     fs_type:      "xfs"
     mountpath:    "/var/lib/nova/instances"
+
+# collectd
+profile::monitoring::collectd::enable: true
+profile::monitoring::collectd::plugins:
+  - collectd::plugin::aggregation
+  - collectd::plugin::cpu
+  - collectd::plugin::disk
+  - collectd::plugin::load
+  - collectd::plugin::memory
+  - collectd::plugin::interface
+  - collectd::plugin::write_graphite
+  - collectd::plugin::virt
+  - collectd::plugin::processes
