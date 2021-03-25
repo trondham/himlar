@@ -94,4 +94,4 @@ profile::monitoring::collectd::plugins:
   - collectd::plugin::processes
 
 collectd::plugin::virt::hostname_format:        'hostname'
-collectd::plugin::virt::plugin_instance_format: 'metadata'
+collectd::plugin::virt::plugin_instance_format: 'uuid'
