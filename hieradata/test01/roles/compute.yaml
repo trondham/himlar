@@ -92,3 +92,6 @@ profile::monitoring::collectd::plugins:
   - collectd::plugin::write_graphite
   - collectd::plugin::virt
   - collectd::plugin::processes
+
+collectd::plugin::virt::hostname_format:        'hostname'
+collectd::plugin::virt::plugin_instance_format: 'metadata'
