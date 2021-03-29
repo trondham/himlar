@@ -101,6 +101,8 @@ profile::storage::ceph_ecpool::ec_pools:
     k_data:              "4"
     m_code:              "2"
     crush_root:          "storage"
+    plugin:              "jerasure"
+    technique:           "blaum_roth"
   'volumes_ssd_ec_data':
     pg_num:              "1024"
     manage:              true
@@ -124,6 +126,12 @@ profile::base::common::extraswap:         true
 profile::base::common::extraswap_sizegb:  20
 profile::base::common::extraswap_fileloc: '/var/lib/swap/swapfile'
 profile::base::physical::load_ahci_first: true
+
+# Disable write cache on osd cache disks
+profile::base::disk::manage_hdparm: true
+profile::base::disk::disk_hdparams:
+  '/dev/sdr': { hdparams: '-W0', }
+  '/dev/sds': { hdparams: '-W0', }
 
 profile::base::lvm::volume_group:
   'vg_swap':
@@ -198,18 +206,23 @@ profile::storage::cephosd::osds:
   '/dev/sdb':
     db_device:  false
     wal_device: false
+    disable_writecache: true
   '/dev/sdc':
     db_device:  false
     wal_device: false
+    disable_writecache: true
   '/dev/sdd':
     db_device:  false
     wal_device: false
+    disable_writecache: true
   '/dev/sde':
     db_device:  false
     wal_device: false
+    disable_writecache: true
   '/dev/sdf':
     db_device:  false
     wal_device: false
+    disable_writecache: true
   '/dev/sdg':
     wal_device: false
     db_device:  'vg_cache1/lv_dbg'
