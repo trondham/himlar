@@ -1,0 +1,32 @@
+---
+
+#----------------------------------------------------------
+#
+# Override stuff in common/roles/compute.yaml
+#
+#----------------------------------------------------------
+profile::base::selinux::manage_selinux: false
+
+named_interfaces::config:
+  mgmt:
+    - enp3s0f0
+  trp:
+    - enp3s0f1
+  live:
+    - enp3s0f1.120
+
+profile::base::common::manage_lvm: false
+profile::base::lvm::create_lvm:    false
+
+
+#----------------------------------------------------------
+#
+# Override stuff in osl/roles/compute.yaml
+#
+#----------------------------------------------------------
+
+profile::base::network::manage_network: false
+
+profile::base::physical::configure_bmc_nic:          false
+profile::base::physical::enable_redfish_sensu_check: false
+profile::base::physical::enable_redfish_http_proxy:  false
