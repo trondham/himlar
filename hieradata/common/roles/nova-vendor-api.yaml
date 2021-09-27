@@ -22,3 +22,10 @@ named_interfaces::config:
     - eth0
   trp:
     - eth1
+
+# SELinux - open port for API service
+profile::base::selinux::ports:
+  identity-http:
+    seltype:  'http_port_t'
+    protocol: 'tcp'
+    port:     1337
