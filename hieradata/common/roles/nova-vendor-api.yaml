@@ -1,0 +1,20 @@
+---
+include:
+  default:
+    - profile::webserver::apache
+
+profile::base::selinux::manage_selinux:       true
+
+profile::webserver::apache::manage_firewall:  true
+profile::webserver::apache::firewall_ports:   80
+
+profile::base::common::packages:
+  'gcc': {}
+  'bash-completion': {}
+  'bash-completion-extras': {}
+  'python3-libs': {}
+
+apache::default_mods:   false
+apache::mod::wsgi::package_name: mod_wsgi
+profile::webserver::apache::mods_enable:
+  - wsgi
