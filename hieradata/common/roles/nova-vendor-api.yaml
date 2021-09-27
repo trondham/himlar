@@ -18,3 +18,9 @@ apache::default_mods:   false
 apache::mod::wsgi::package_name: mod_wsgi
 profile::webserver::apache::mods_enable:
   - wsgi
+
+named_interfaces::config:
+  mgmt:
+    - eth0
+  trp:
+    - eth1
