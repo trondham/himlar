@@ -9,7 +9,6 @@ profile::webserver::apache::manage_firewall:  true
 profile::webserver::apache::firewall_ports:   80
 
 profile::base::common::packages:
-  'gcc': {}
   'bash-completion': {}
   'python3-libs': {}
 
