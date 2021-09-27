@@ -6,7 +6,7 @@ include:
 profile::base::selinux::manage_selinux:       true
 
 profile::webserver::apache::manage_firewall:  true
-profile::webserver::apache::firewall_ports:   80
+profile::webserver::apache::firewall_ports:   1337
 
 profile::base::common::packages:
   'bash-completion': {}
