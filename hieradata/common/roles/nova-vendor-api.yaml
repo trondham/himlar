@@ -11,8 +11,8 @@ named_interfaces::config:
     - eth1
 
 # Firewall
-profile::webserver::apache::manage_firewall:  true
-profile::webserver::apache::firewall_ports:   1337
+profile::webserver::apache::manage_firewall: true
+profile::webserver::apache::firewall_ports:  1337
 
 # Packages to install
 profile::base::common::packages:
@@ -26,7 +26,7 @@ profile::webserver::apache::mods_enable:
   - wsgi
 
 # SELinux in enforcing mode
-profile::base::selinux::manage_selinux:       true
+profile::base::selinux::manage_selinux: true
 
 # SELinux - open port for API service
 profile::base::selinux::ports:
