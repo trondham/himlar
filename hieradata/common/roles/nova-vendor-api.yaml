@@ -3,25 +3,30 @@ include:
   default:
     - profile::webserver::apache
 
-profile::base::selinux::manage_selinux:       true
-
-profile::webserver::apache::manage_firewall:  true
-profile::webserver::apache::firewall_ports:   1337
-
-profile::base::common::packages:
-  'bash-completion': {}
-  'python3-libs': {}
-
-apache::default_mods:   false
-apache::mod::wsgi::package_name: mod_wsgi
-profile::webserver::apache::mods_enable:
-  - wsgi
-
+# Interfaces
 named_interfaces::config:
   mgmt:
     - eth0
   trp:
     - eth1
+
+# Firewall
+profile::webserver::apache::manage_firewall:  true
+profile::webserver::apache::firewall_ports:   1337
+
+# Packages to install
+profile::base::common::packages:
+  'bash-completion': {}
+  'python3-libs': {}
+
+# Apache stuff
+apache::default_mods:   false
+apache::mod::wsgi::package_name: mod_wsgi
+profile::webserver::apache::mods_enable:
+  - wsgi
+
+# SELinux in enforcing mode
+profile::base::selinux::manage_selinux:       true
 
 # SELinux - open port for API service
 profile::base::selinux::ports:
