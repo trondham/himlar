@@ -1,7 +1,7 @@
 ---
-include:
-  default:
-    - profile::webserver::apache
+#include:
+#  default:
+#    - profile::webserver::apache
 
 # Interfaces
 named_interfaces::config:
@@ -11,8 +11,8 @@ named_interfaces::config:
     - eth1
 
 # Firewall
-profile::webserver::apache::manage_firewall: true
-profile::webserver::apache::firewall_ports:  1337
+#profile::webserver::apache::manage_firewall: true
+#profile::webserver::apache::firewall_ports:  1337
 
 # Packages to install
 profile::base::common::packages:
