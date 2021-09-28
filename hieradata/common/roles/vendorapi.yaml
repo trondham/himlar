@@ -20,10 +20,10 @@ profile::base::common::packages:
   'python3-libs': {}
 
 # Apache stuff
-apache::default_mods:   false
-apache::mod::wsgi::package_name: mod_wsgi
-profile::webserver::apache::mods_enable:
-  - wsgi
+#apache::default_mods:   false
+#apache::mod::wsgi::package_name: mod_wsgi
+#profile::webserver::apache::mods_enable:
+#  - wsgi
 
 # SELinux in enforcing mode
 profile::base::selinux::manage_selinux: true
