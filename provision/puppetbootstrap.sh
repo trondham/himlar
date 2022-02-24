@@ -5,18 +5,11 @@
 
 el_repos()
 {
-  if [ "$#" -ne 1 ]; then
-    repo="https://download.iaas.uio.no/nrec/test/${repo_dist}"
-  else
-    repo="https://download.iaas.uio.no/uh-iaas/${1}/${repo_dist}"
-  fi
-
-  wget -O /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-Official https://www.centos.org/keys/RPM-GPG-KEY-CentOS-Official
+  repo="https://download.iaas.uio.no/nrec/${repo_env}/${repo_dist}"
 
   cat > /etc/yum.repos.d/epel.repo <<- EOM
 [epel]
-name=Extra Packages for Enterprise Linux ${repo_dist:2} - \$basearch
-failovermethod=priority
+name=Extra Packages for Enterprise Linux \$releasever - \$basearch
 enabled=1
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-${repo_dist:2}
@@ -24,43 +17,65 @@ baseurl=$repo/epel
 EOM
   cat > /etc/yum.repos.d/puppetlabs.repo <<- EOM
 [puppetlabs]
-name=Puppet 5 Yum Repo
-baseurl=$repo/puppetlabs5/
-gpgkey=$repo/puppetlabs5/RPM-GPG-KEY-puppet
+name=Puppet 6 Yum Repo
+baseurl=$repo/puppetlabs6/
+gpgkey=$repo/puppetlabs6/RPM-GPG-KEY-puppet-20250406
 enabled=1
 gpgcheck=1
 EOM
-  cat > /etc/yum.repos.d/CentOS-Base.repo <<- EOM
-[base]
-name=CentOS-\$releasever - Base
-baseurl=$repo/centos-base/
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-Official
+}
 
-[updates]
-name=CentOS-\$releasever - Updates
-baseurl=$repo/centos-updates/
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-Official
+el8_repos()
+{
 
-[extras]
-name=CentOS-\$releasever - Extras
-baseurl=$repo/centos-extras/
+  repo="https://download.iaas.uio.no/nrec/${repo_env}/${repo_dist}"
+
+  # we do not use epel modular
+  rm -f /etc/yum.repos.d/epel-modular.repo
+
+  # Add our epel mirror
+  cat > /etc/yum.repos.d/epel.repo <<- EOM
+[epel]
+name=Extra Packages for Enterprise Linux \$releasever - \$basearch
+enabled=1
 gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-Official
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-${repo_dist:2}
+baseurl=$repo/epel
 EOM
+
+  # Add our puppetlabs mirror
+cat > /etc/yum.repos.d/puppetlabs.repo <<- EOM
+[puppetlabs]
+name=Puppet 6 Yum Repo
+baseurl=$repo/puppetlabs6/
+gpgkey=$repo/puppetlabs6/RPM-GPG-KEY-puppet-20250406
+enabled=1
+gpgcheck=1
+EOM
+
 }
 
 bootstrap_puppet()
 {
-  # packages
-  if command -v yum >/dev/null 2>&1; then
-    echo "bootstrap puppet ..."
-    # RHEL, CentOS, Fedora
-    repo_dist=$(uname -r | sed 's/.*\(el[0-9]\).*x86.*/\1/')
-    # FIXME
-    yum install -y http://download.iaas.uio.no/uh-iaas/repo/${repo_dist}/centos-extras/Packages/epel-release-7-11.noarch.rpm
-    # yum install -y epel-release # to get gpgkey for epel
+
+  repo_dist=$(uname -r | sed 's/.*\(el[0-9]\).*x86.*/\1/')
+
+  # setup dnf/yum
+  if command -v dnf >/dev/null 2>&1; then
+    echo "bootstrap puppet for el8..."
+    dnf install -y epel-release # to get gpgkey for epel
+    el8_repos
+    dnf clean all
+    dnf -y upgrade
+    dnf install -y puppet-agent git vim
+
+    /opt/puppetlabs/puppet/bin/gem install -N r10k
+    # /opt/puppetlabs/puppet/bin/gem install -N puppet_forge
+    ln -sf /opt/puppetlabs/puppet/bin/wrapper.sh /opt/puppetlabs/bin/r10k
+
+  elif command -v yum >/dev/null 2>&1; then
+    echo "bootstrap puppet for el7..."
+    yum install -y epel-release # to get gpgkey for epel
     el_repos test
     yum clean all
     yum -y update
@@ -70,7 +85,7 @@ bootstrap_puppet()
 
     /opt/puppetlabs/puppet/bin/gem install -N r10k -v 3.4.0
     /opt/puppetlabs/puppet/bin/gem install -N puppet_forge
-    ln -s /opt/puppetlabs/puppet/bin/wrapper.sh /opt/puppetlabs/bin/r10k
+    ln -sf /opt/puppetlabs/puppet/bin/wrapper.sh /opt/puppetlabs/bin/r10k
 
   fi
 
@@ -100,5 +115,15 @@ bootstrap_puppet()
 }
 
 REPORT_DIR=/opt/puppetlabs/puppet/cache/state
+
+# test repos are used if we do not provide repo env or is running in vagrant
+# in vagrant this script is called with multiple args
+if [[ $(hostname) == *"vagrant"* ]]; then
+  repo_env='test'
+elif [ $# -e 1 ]; then
+  repo_env=$1
+else
+  repo_env='test'
+fi
 
 test -f $REPORT_DIR/last_run_report.yaml || bootstrap_puppet

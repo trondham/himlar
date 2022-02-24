@@ -7,6 +7,7 @@ include:
     - profile::openstack::openrc
     - profile::openstack::cache
     - profile::logging::rsyslog::client
+    - profile::base::systemd
 
 etcd::proxy: "off"
 etcd::initial_cluster_state: 'new'
@@ -21,6 +22,8 @@ profile::openstack::network::manage_quotas: true
 profile::openstack::network::controller::manage_neutron_policies: true
 
 profile::base::common::packages:
+  # we need newer version of six to avoid breaking requests and openstack cli
+  'python3-six.noarch': { ensure: latest }
   'bash-completion': {}
   'bash-completion-extras': {} # FIXME: remove when el7 is gone
   'jq': {}
@@ -30,6 +33,7 @@ profile::base::common::packages:
   'python3-etcd3gw': {}
   'python-memcached': {}       # FIXME: remove when el7 is gone
   'libibverbs': {}
+  'make': {} # for sensu gem
 
 profile::openstack::openrc::password:     "%{hiera('neutron_api_password')}"
 profile::openstack::openrc::username:     'neutron'
@@ -65,8 +69,43 @@ profile::base::yumrepo::repo_hash:
     ensure: absent
   calico%{hiera('calico_version')}:
     ensure: present
-  CentOS-PowerTools:
+  CentOS-PowerTools: # FIXME: remove when CentOS 8 is gone
+    ensure: present
+  AlmaLinux-PowerTools:
     ensure: present
   epel: # should be absent when using RDO, but whitelist can also work
     ensure:   present
     includepkgs: 'htop bash-completion-extras python2-bcrypt' # FIXME remove non el8 packages when el7 is gone
+
+# logrotate
+# 2022-01-07 (mikaeld): some issue on network nodes, especially in OSL, have the effect that one of the nodes
+# in the cluster is logging a LOT! Until this is fixed we set up a more agressive log rotation
+#
+# One of the downsides is that we do not have control of how far back we have logs:
+# On nodes with extensive logging: as low as 14 hours (hourly rotation due to more than 100 MB/hour)
+# On nodes with a more normal log ratio: as far bask as several weeks (might be more than one full day until reached the 100 MB limit)
+# 
+# We may rotate every hour regardless (drop the 100 MB requirement) and raise the 'rotate' parameter, but then most nodes will have 
+# a large number of very small rotated log files and be more cumbersome to wade through.
+#
+profile::logging::logrotate::manage_logrotate:    true
+
+logrotate::rules:
+  openstack-neutron:
+    path:           '/var/log/neutron/*.log'
+    size:           '100M'
+    rotate:         14
+    missingok:      true
+    rotate_every:   'hourly'
+    compress:       true
+    dateext:        true
+    dateformat:     '-%Y%m%d%H'
+
+# Adjust the limits for open files for neutron-server via systemd
+profile::base::systemd::manage_limits: true
+profile::base::systemd::limits:
+  neutron-server:
+    limits:
+      Service:
+        'LimitNOFILE': 32768
+        'LimitNOFILESoft': 32768

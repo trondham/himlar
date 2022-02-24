@@ -86,8 +86,9 @@ profile::base::common::packages:
   'bash-completion-extras': {}
   'jq': {}
 #  'python-oslo-log': {}
-  'python34': {}
-  'python36-virtualenv': {} # used for ca_setup
+  'python3': {}
+  'python3-virtualenv': {} # used for ca_setup
+  'rsync': {}              # used for repository sync between login nodes
 
 ssh::server::options:
   # Need this for 2FA (saz-ssh-module disables by default)
@@ -98,6 +99,27 @@ ssh::server::options:
   UsePAM: 'yes'
   PasswordAuthentication: 'no'
   PubKeyAuthentication: 'yes'
+  # OpenSSH hardening - removing unwanted chipers. Based on
+  #   https://infosec.mozilla.org/guidelines/openssh
+  # Modern and with NIST curves removed
+  # Revision: 2021-06-22
+  HostkeyAlgorithms: 'ssh-ed25519,ssh-rsa'
+  KexAlgorithms: 'curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256'
+  Ciphers: 'chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes128-ctr'
+  MACs: 'hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com'
+
+profile::base::common::users_ssh_options:
+  'git':
+    'options':
+      'Host bgo':
+        'User':     'git'
+        'Hostname': 'git.iaas.uib.no'
+      'Host bgo2':
+        'User':     'git'
+        'Hostname': 'bgo-login-02.iaas.uib.no'
+      'Host osl':
+        'User':     'git'
+        'Hostname': 'git.iaas.uio.no'
 
 googleauthenticator::pam::mode::modes:
   wheel-only:

@@ -17,6 +17,7 @@ profile::base::common::manage_yumrepo:         true
 profile::base::common::manage_puppet:          true
 profile::base::common::include_virtual:        true
 profile::base::common::include_physical:       true
+profile::base::common::disable_firewalld:      true
 profile::base::firewall::manage_firewall:      true
 profile::base::hostname::manage_hostname:      true
 profile::base::httpproxy::http_proxy:          "http://%{hiera('mgmt__address__proxy')}:8888"
@@ -104,6 +105,29 @@ profile::openstack::openrc::project_name: 'openstack'
 yum_base_mirror:    'https://download.iaas.uio.no/nrec/prod'
 profile::base::yumrepo::purge_unmanaged: true  # purging of repos has moved to profile code with el8
 profile::base::yumrepo::repo_hash:
+  AlmaLinux-Base:
+    descr:          'AlmaLinux-$releasever - Base'
+    baseurl:        "%{hiera('yum_base_mirror')}/%{hiera('repo_dist')}/almalinux-base/"
+    gpgkey:         'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-AlmaLinux'
+    gpgcheck:       1
+    exclude:        'dnsmasq postgres*'
+  AlmaLinux-AppStream:
+    descr:          'AlmaLinux-$releasever - AppStream'
+    baseurl:        "%{hiera('yum_base_mirror')}/%{hiera('repo_dist')}/almalinux-AppStream/"
+    gpgkey:         'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-AlmaLinux'
+    gpgcheck:       1
+    exclude:        'dnsmasq postgres*'
+  AlmaLinux-PowerTools:
+    descr:          'AlmaLinux-$releasever - PowerTools'
+    baseurl:        "%{hiera('yum_base_mirror')}/%{hiera('repo_dist')}/almalinux-powertools/"
+    gpgkey:         'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-AlmaLinux'
+    gpgcheck:       1
+    ensure:         absent
+  AlmaLinux-Extras:
+    descr:          'AlmaLinux-$releasever - Extras'
+    baseurl:        "%{hiera('yum_base_mirror')}/%{hiera('repo_dist')}/almalinux-extras/"
+    gpgkey:         'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-AlmaLinux'
+    gpgcheck:       1
   CentOS-Base:
     descr:          'CentOS-$releasever - Base'
     baseurl:        "%{hiera('yum_base_mirror')}/%{hiera('repo_dist')}/centos-base/"
@@ -120,8 +144,9 @@ profile::base::yumrepo::repo_hash:
     descr:          'CentOS-$releasever - Updates'
     baseurl:        "%{hiera('yum_base_mirror')}/%{hiera('repo_dist')}/centos-AppStream/"
     gpgkey:         'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial'
-    gpgcheck:       1
+    gpgcheck:       0
     exclude:        'dnsmasq postgres*'
+    ensure:         absent
   CentOS-PowerTools:
     descr:          'CentOS-$releasever - PowerTools'
     baseurl:        "%{hiera('yum_base_mirror')}/%{hiera('repo_dist')}/centos-PowerTools/"
@@ -226,6 +251,13 @@ profile::base::yumrepo::repo_hash:
     enabled:        1
     gpgcheck:       1
     gpgkey:         "%{hiera('yum_base_mirror')}/%{hiera('repo_dist')}/calico312/key"
+  calico319:
+    ensure:         absent
+    descr:          'Calico 3.19 Repository'
+    baseurl:        "%{hiera('yum_base_mirror')}/generic/calico319"
+    enabled:        1
+    gpgcheck:       1
+    gpgkey:         "%{hiera('yum_base_mirror')}/generic/calico319/key"
   calico320:
     ensure:         absent
     descr:          'Calico 3.20 Repository'
@@ -247,6 +279,27 @@ profile::base::yumrepo::repo_hash:
     enabled:        1
     gpgcheck:       1
     gpgkey:         "%{hiera('yum_base_mirror')}/%{hiera('repo_dist')}/ceph-%{hiera('ceph_version')}-noarch/release.asc"
+  elrepo:
+    ensure:         absent
+    descr:          'additional drivers'
+    baseurl:        "%{hiera('yum_base_mirror')}/%{hiera('repo_dist')}/elrepo/"
+    enabled:        1
+    gpgcheck:       1
+    gpgkey:         "%{hiera('yum_base_mirror')}/%{hiera('repo_dist')}/RPM-GPG-KEY-elrepo.org"
+  hashicorp:
+    ensure:         absent
+    descr:          "Hashicorp packages"
+    baseurl:        "%{hiera('yum_base_mirror')}/%{hiera('repo_dist')}/hashicorp"
+    enabled:        1
+    gpgcheck:       1
+    gpgkey:         "%{hiera('yum_base_mirror')}/%{hiera('repo_dist')}/hashicorp/gpg"
+  prometheus:
+    ensure:         absent
+    descr:          "Prometheus packages"
+    baseurl:        "%{hiera('yum_base_mirror')}/%{hiera('repo_dist')}/prometheus-rpm_release"
+    enabled:        1
+    gpgcheck:       1
+    gpgkey:         "%{hiera('yum_base_mirror')}/%{hiera('repo_dist')}/prometheus-rpm_release/gpgkey"
   rabbitmq-erlang-cloudsmith:
     ensure:         absent
     descr:          "RabbitMQ erlang latest"

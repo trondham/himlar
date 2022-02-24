@@ -7,6 +7,8 @@ include:
     - profile::openstack::cache
 
 profile::base::common::packages:
+  # we need newer version of six to avoid breaking requests and openstack cli
+  'python3-six.noarch': { ensure: latest }
   'bash-completion': {}
   'bash-completion-extras': {}
   'jq': {}
@@ -31,7 +33,9 @@ profile::base::yumrepo::repo_hash:
     ensure: present
   ceph-%{hiera('ceph_version')}-noarch:
     ensure: present
-  CentOS-PowerTools:
+  CentOS-PowerTools: # FIXME: remove when CentOS 8 is gone
+    ensure: present
+  AlmaLinux-PowerTools:
     ensure: present
   epel: # should be absent when using RDO, but whitelist can also work
     ensure:   present

@@ -26,6 +26,8 @@ profile::openstack::novactrl::firewall_extras:
   source: "%{::network_trp1}/%{::netmask_trp1}"
 
 profile::base::common::packages:
+  # we need newer version of six to avoid breaking requests and openstack cli
+  'python3-six.noarch': { ensure: latest }
   'bash-completion': {}
   'bash-completion-extras': {}
   'jq': {}
@@ -65,7 +67,9 @@ profile::base::yumrepo::repo_hash:
     exclude:  'mariadb*'
   "mariadb-%{hiera('mariadb_version')}":
     ensure:     present
-  CentOS-PowerTools:
+  CentOS-PowerTools: # FIXME: remove when CentOS 8 is gone
+    ensure: present
+  AlmaLinux-PowerTools:
     ensure: present
   epel: # should be absent when using RDO, but whitelist can also work
     ensure:   present

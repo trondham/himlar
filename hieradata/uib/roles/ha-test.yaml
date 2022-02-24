@@ -54,20 +54,30 @@ haproxy::global_options:
 profile::firewall::rules::custom_rules:
   '451 haproxy http for public vip1':
     proto:        'tcp'
-    dport:        [ '80', '443', '389', '636' ]
+    dport:        [ '80', '443']
     destination:  "%{hiera('corosync_cluster_vip1')}"
   '452 haproxy http for public vip2':
     proto:        'tcp'
-    dport:        [ '80', '443', '389', '636' ]
+    dport:        [ '80', '443']
+    destination:  "%{hiera('corosync_cluster_vip2')}"
+  '451 haproxy ldap for public vip1':
+    proto:        'tcp'
+    dport:        ['389', '636' ]
+    source:       '129.177.0.0/16'
+    destination:  "%{hiera('corosync_cluster_vip1')}"
+  '452 haproxy ldap for public vip2':
+    proto:        'tcp'
+    dport:        ['389', '636' ]
+    source:       '129.177.0.0/16'
     destination:  "%{hiera('corosync_cluster_vip2')}"
   '453 haproxy http for internal vip3':
     proto:        'tcp'
-    dport:        [ '80', '443', '389', '636' ]
+    dport:        [ '80', '443', '389', '636', '445', '135' ]
     source:       '129.177.0.0/16'
     destination:  "%{hiera('corosync_cluster_vip3')}"
   '454 haproxy http for internal vip4':
     proto:        'tcp'
-    dport:        [ '80', '443', '389', '636' ]
+    dport:        [ '80', '443', '389', '636', '445', '135' ]
     source:       '129.177.0.0/16'
     destination:  "%{hiera('corosync_cluster_vip4')}"
   '456 haproxy http for public vip5':
@@ -100,7 +110,7 @@ profile::firewall::rules::custom_rules:
     proto:        'tcp'
     dport:        ['9000']
     source:
-      - '129.177.10.0/24'
+      - '129.177.0.128/25'
       - '129.177.6.133/32' # bgo-login
     destination:  '%{::ipaddress_public1}'
   '456 haproxy status mgmt':

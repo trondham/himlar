@@ -1,0 +1,11 @@
+---
+include:
+  default:
+    - profile::monitoring::sflow::server
+
+profile::base::common::packages:
+  'sflow-rt': {}
+  'java-11-openjdk': {}
+
+profile::monitoring::sflow::server::manage_service:  true
+profile::monitoring::sflow::server::manage_firewall: true

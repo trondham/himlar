@@ -30,6 +30,10 @@ chrony::servers:
   - "%{hiera('netcfg_mgmt_netpart')}.101"
   - "%{hiera('netcfg_mgmt_netpart')}.102"
 
+profile::base::yumrepo::repo_hash:
+  elrepo:
+    ensure: present
+
 profile::monitoring::sensu::agent::enable_agent:  true
 
 # Add custom routing table for private network to NAT
@@ -59,7 +63,7 @@ profile::openstack::compute::manage_telemetry: true
 nova::compute::libvirt::libvirt_hw_machine_type: 'x86_64=q35'
 
 # collectd
-profile::monitoring::collectd::enable: true
+profile::monitoring::collectd::enable: false
 profile::monitoring::collectd::plugins:
   - collectd::plugin::aggregation
   - collectd::plugin::cpu

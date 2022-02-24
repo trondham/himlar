@@ -16,7 +16,9 @@ named_interfaces::config:
     - dummy0
 
 profile::base::common::packages:
-  'MySQL-python.x86_64': {}     # FIXME: remove when el7 is gone
+  # we need newer version of six to avoid breaking requests and openstack cli
+  'python3-six.noarch': { ensure: latest }
+  'MySQL-python': {}            # FIXME: remove when el7 is gone
   'python3-mysql': {}
   'bash-completion': {}
   'bash-completion-extras': {}  # FIXME: remove when el7 is gone
@@ -66,7 +68,9 @@ profile::base::cron::crontabs:
 profile::base::yumrepo::repo_hash:
   rdo-release:
     ensure: present
-  CentOS-PowerTools:
+  CentOS-PowerTools: # FIXME: remove when CentOS 8 is gone
+    ensure: present
+  AlmaLinux-PowerTools:
     ensure: present
   epel: # should be absent when using RDO, but whitelist can also work
     ensure:   present

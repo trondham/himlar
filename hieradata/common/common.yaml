@@ -61,8 +61,8 @@ valid_location_environments:
 profile::base::firewall::purge_firewall: true
 
 allow_from_testing_network: # this do not merge!
-  - '129.240.202.12/32'  # trond
-  - '129.240.6.14/32'    # mikael
+  - '129.240.130.12/32'  # trond
+  - '129.240.130.14/32'  # mikael
   - '129.177.10.189/32'  # tor
   - '129.177.10.212/32'  # raymond
   - '158.39.74.6/32'     # raymond mgmt-admin-instance
@@ -93,7 +93,7 @@ allow_from_network:
   - '158.39.200.0/24'    # OSL public #4
   - '158.38.62.0/23'
   - '158.38.178.0/24'
-  - '129.240.202.12/32'  # trond
+  - '129.240.130.12/32'  # trond
   - '129.240.6.14/32'    # mikael
   - '129.177.10.189/32'  # tor
   - '129.177.10.212/32'  # raymond
@@ -270,6 +270,8 @@ profile::network::services::dns_records:
     "%{::location}-leaf-03.%{hiera('domain_mgmt')}":        "%{hiera('netcfg_mgmt_net_c0')}.3"
     "%{::location}-leaf-04.%{hiera('domain_mgmt')}":        "%{hiera('netcfg_mgmt_net_c0')}.4"
     "%{::location}-mgmt-01.%{hiera('domain_mgmt')}":        "%{hiera('netcfg_mgmt_net_c0')}.5"
+    "%{::location}-login-02.%{hiera('domain_mgmt')}":       "%{hiera('netcfg_mgmt_net_c0')}.8"
+    "%{::location}-login-01.%{hiera('domain_mgmt')}":       "%{hiera('netcfg_mgmt_net_c0')}.10"
     "%{::location}-admin-01.%{hiera('domain_mgmt')}":       "%{hiera('netcfg_mgmt_net_c0')}.11"
     "%{::location}-proxy-01.%{hiera('domain_mgmt')}":       "%{hiera('netcfg_mgmt_net_c0')}.12"
     "%{::location}-logger-01.%{hiera('domain_mgmt')}":      "%{hiera('netcfg_mgmt_net_c0')}.13"
@@ -280,8 +282,8 @@ profile::network::services::dns_records:
     "%{::location}-resolver-02.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c0')}.18"
     "%{::location}-status-01.%{hiera('domain_mgmt')}":      "%{hiera('netcfg_mgmt_net_c0')}.21"
     "%{::location}-report-01.%{hiera('domain_mgmt')}":      "%{hiera('netcfg_mgmt_net_c0')}.22"
-    "%{::location}-nat-linux-01.%{hiera('domain_mgmt')}":   "%{hiera('netcfg_mgmt_net_c0')}.26"
-    "%{::location}-nat-linux-02.%{hiera('domain_mgmt')}":   "%{hiera('netcfg_mgmt_net_c0')}.27"
+    "%{::location}-nat-01.%{hiera('domain_mgmt')}":         "%{hiera('netcfg_mgmt_net_c0')}.26"
+    "%{::location}-nat-02.%{hiera('domain_mgmt')}":         "%{hiera('netcfg_mgmt_net_c0')}.27"
     "%{::location}-nat-linux-03.%{hiera('domain_mgmt')}":   "%{hiera('netcfg_mgmt_net_c0')}.28"
     "%{::location}-mq-01.%{hiera('domain_mgmt')}":          "%{hiera('netcfg_mgmt_net_c0')}.31"
     "%{::location}-dns-01.%{hiera('domain_mgmt')}":         "%{hiera('netcfg_mgmt_net_c0')}.34"
@@ -298,6 +300,7 @@ profile::network::services::dns_records:
     "%{::location}-access-01.%{hiera('domain_mgmt')}":      "%{hiera('netcfg_mgmt_net_c0')}.56"
     "%{::location}-dashboard-01.%{hiera('domain_mgmt')}":   "%{hiera('netcfg_mgmt_net_c0')}.51"
     "%{::location}-dashboard-mgmt-01.%{hiera('domain_mgmt')}": "%{hiera('netcfg_mgmt_net_c0')}.54"
+    "%{::location}-sflow-01.%{hiera('domain_mgmt')}":       "%{hiera('netcfg_mgmt_net_c0')}.55"
     "%{::location}-console-01.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c0')}.61"
     "%{::location}-novactrl-01.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c0')}.66"
     "%{::location}-novactrl-02.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c0')}.67"
@@ -315,6 +318,7 @@ profile::network::services::dns_records:
     "%{::location}-identity-03.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c0')}.83"
     "%{::location}-rgw-01.%{hiera('domain_mgmt')}":         "%{hiera('netcfg_mgmt_net_c0')}.84"
     "%{::location}-api-01.%{hiera('domain_mgmt')}":         "%{hiera('netcfg_mgmt_net_c0')}.86"
+    "%{::location}-ts-01.%{hiera('domain_mgmt')}":          "%{hiera('netcfg_mgmt_net_c0')}.88"
     "%{::location}-cephmon-object-01.%{hiera('domain_mgmt')}": "%{hiera('netcfg_mgmt_net_c0')}.89"
     "%{::location}-cephmon-object-02.%{hiera('domain_mgmt')}": "%{hiera('netcfg_mgmt_net_c0')}.90"
     "%{::location}-cephmon-01.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c0')}.91"
@@ -481,6 +485,8 @@ profile::network::services::dns_records:
     "3.%{hiera('reverse_mgmt_c0')}":      "%{::location}-leaf-03.%{hiera('domain_mgmt')}"
     "4.%{hiera('reverse_mgmt_c0')}":      "%{::location}-leaf-04.%{hiera('domain_mgmt')}"
     "5.%{hiera('reverse_mgmt_c0')}":      "%{::location}-mgmt-01.%{hiera('domain_mgmt')}"
+    "8.%{hiera('reverse_mgmt_c0')}":      "%{::location}-login-02.%{hiera('domain_mgmt')}"
+    "10.%{hiera('reverse_mgmt_c0')}":     "%{::location}-login-01.%{hiera('domain_mgmt')}"
     "11.%{hiera('reverse_mgmt_c0')}":     "%{::location}-admin-01.%{hiera('domain_mgmt')}"
     "12.%{hiera('reverse_mgmt_c0')}":     "%{::location}-proxy-01.%{hiera('domain_mgmt')}"
     "13.%{hiera('reverse_mgmt_c0')}":     "%{::location}-logger-01.%{hiera('domain_mgmt')}"
@@ -507,6 +513,7 @@ profile::network::services::dns_records:
     "48.%{hiera('reverse_mgmt_c0')}":     "%{::location}-volume-03.%{hiera('domain_mgmt')}"
     "51.%{hiera('reverse_mgmt_c0')}":     "%{::location}-dashboard-01.%{hiera('domain_mgmt')}"
     "54.%{hiera('reverse_mgmt_c0')}":     "%{::location}-dashboard-mgmt-01.%{hiera('domain_mgmt')}"
+    "55.%{hiera('reverse_mgmt_c0')}":     "%{::location}-sflow-01.%{hiera('domain_mgmt')}"
     "56.%{hiera('reverse_mgmt_c0')}":     "%{::location}-access-01.%{hiera('domain_mgmt')}"
     "61.%{hiera('reverse_mgmt_c0')}":     "%{::location}-console-01.%{hiera('domain_mgmt')}"
     "66.%{hiera('reverse_mgmt_c0')}":     "%{::location}-novactrl-01.%{hiera('domain_mgmt')}"
@@ -524,6 +531,7 @@ profile::network::services::dns_records:
     "83.%{hiera('reverse_mgmt_c0')}":     "%{::location}-identity-03.%{hiera('domain_mgmt')}"
     "84.%{hiera('reverse_mgmt_c0')}":     "%{::location}-rgw-01.%{hiera('domain_mgmt')}"
     "86.%{hiera('reverse_mgmt_c0')}":     "%{::location}-api-01.%{hiera('domain_mgmt')}"
+    "88.%{hiera('reverse_mgmt_c0')}":     "%{::location}-ts-01.%{hiera('domain_mgmt')}"
     "89.%{hiera('reverse_mgmt_c0')}":     "%{::location}-cephmon-object-01.%{hiera('domain_mgmt')}"
     "90.%{hiera('reverse_mgmt_c0')}":     "%{::location}-cephmon-object-02.%{hiera('domain_mgmt')}"
     "91.%{hiera('reverse_mgmt_c0')}":     "%{::location}-cephmon-01.%{hiera('domain_mgmt')}"
