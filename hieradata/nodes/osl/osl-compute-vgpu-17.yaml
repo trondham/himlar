@@ -1,0 +1,8 @@
+# NVIDIA P40 partitioned into 2x vGPUs
+# From "mdevctl types":
+#  nvidia-286
+#    Available instances: 2
+#    Device API: vfio-pci
+#    Name: GRID P40-12C
+#    Description: num_heads=1, frl_config=60, framebuffer=12288M, max_resolution=4096x2160, max_instance=2
+nova::compute::vgpu::vgpu_types_device_addresses_mapping: { 'nvidia-286', }
