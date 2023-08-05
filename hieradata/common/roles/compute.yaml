@@ -38,9 +38,14 @@ profile::base::selinux::exec_restorecon:
 profile::base::selinux::semodules:
   virtlogd-nova:
     avc_file:   'virtlogd_nova.avc'
+  collectd-compute:
+    avc_file:   'collectd_compute.avc'
 
 # Manage default availability zone
 profile::openstack::compute::manage_az:            true
+
+# Manage default custom nova config
+profile::openstack::compute::manage_nova_config:   true
 
 # New interface class needs enabling
 profile::network::interface::create_custom_routes: true
@@ -92,6 +97,7 @@ profile::base::common::packages:
   'jq': {}
   'openstack-selinux': {}
   'centos-release-virt-common': {}
+  'centos-release-nfv-common': {}
   'make': {}
   'OVMF': {} # FIXME: remove when el7 is gone
 
@@ -156,6 +162,7 @@ sudo::configs:
       - [ 'sensu ALL = (root) NOPASSWD: /bin/virsh list', 'sensu ALL = (root) NOPASSWD: /bin/systemctl restart calico-dhcp-agent' ]
 
 #profile::openstack::compute::hypervisor::fix_snapshot_loc: true # FIXME - Should probably be removed for newton release
+profile::openstack::compute::hypervisor::sysctl_fixes: true
 
 profile::openstack::telemetry::polling::polling_interval:  3600 # FIXME
 
@@ -174,6 +181,12 @@ named_interfaces::config:
     - team1
   live:
     - team1.120
+
+# compute hosts should have resolving alternatives in case mgmt is down etc
+profile::base::network::network_auto_opts:
+  mgmt:
+    'dns1':     "%{hiera('netcfg_dns_trp_server1')}"
+    'dns2':     "%{hiera('netcfg_dns_mgmt_server1')}"
 
 sudo::purge: false
 
@@ -216,9 +229,11 @@ profile::base::yumrepo::repo_hash:
   CentOS-AppStream: # needed for rhn network
     ensure:  present
     includepkgs: 'virt-who'
+  CentOs-nfv-Openvswitch:
+    ensure:  present
   epel: # should be absent when using RDO, but whitelist can also work
     ensure:   present
-    includepkgs: 'htop bash-completion-extras bird bird6 collectd collectd-virt lttng-ust userspace-rcu libbabeltrace leveldb liboath py-bcrypt python2-bcrypt python36-prettytable python36-requests python36-pyOpenSSL python36-bcrypt python36-six python36-PyYAML python36-dateutil python36-cryptography python36-urllib3 python36-chardet python36-cffi python36-idna python36-pysocks python36-pycparser python36-ply python36-asn1crypto python3-httplib2 fmt python3-cherrypy python3-zc-lockfile python3-portend python3-cheroot python3-trustme python3-tempora python3-jaraco-functools python3-jaraco'
+    includepkgs: 'htop bash-completion-extras bird bird6 collectd collectd-virt collectd-disk lttng-ust userspace-rcu libbabeltrace leveldb liboath py-bcrypt python2-bcrypt python36-prettytable python36-requests python36-pyOpenSSL python36-bcrypt python36-six python36-PyYAML python36-dateutil python36-cryptography python36-urllib3 python36-chardet python36-cffi python36-idna python36-pysocks python36-pycparser python36-ply python36-asn1crypto python3-httplib2 fmt python3-cherrypy python3-zc-lockfile python3-portend python3-cheroot python3-trustme python3-tempora python3-jaraco-functools python3-jaraco parallel thrift'
 
 # Compute nodes need only admin and cinder keys
 ceph::profile::params::client_keys:
@@ -265,6 +280,13 @@ ceph::profile::params::client_keys:
     group: 'cinder'
     cap_mon: 'profile rbd'
     cap_osd: 'profile rbd pool=dcache_hdd_ec_meta8, profile rbd pool=dcache_hdd_ec_data8'
+  'client.cinder-dcache-hdd-ec82':
+    secret: "%{hiera('ceph_storage_client_cinder_key')}"
+    mode: '0600'
+    user: 'cinder'
+    group: 'cinder'
+    cap_mon: 'profile rbd'
+    cap_osd: 'profile rbd pool=dcache_hdd_ec82_meta, profile rbd pool=dcache_hdd_ec82_data'
 
 profile::storage::cephclient::create_extraconf: true
 profile::storage::ceph_extraconf::config:
@@ -280,6 +302,9 @@ profile::storage::ceph_extraconf::config:
   client_dcache_backend8:
     'config_key'  : "client.cinder-dcache-hdd-ec8/rbd_default_data_pool"
     'config_value': "dcache_hdd_ec_data8"
+  client_dcache_backend_82:
+    'config_key'  : "client.cinder-dcache-hdd-ec82/rbd_default_data_pool"
+    'config_value': "dcache_hdd_ec82_data"
 
 # Use rsync, not ssh for migrate transport to support sparse images
 nova::config::nova_config:
@@ -291,3 +316,4 @@ nova::config::nova_config:
 # Red Hat Subscription Management (RHSM)
 profile::rhsm::subscription::manage: true
 profile::rhsm::virtwho::manage:      true
+

@@ -51,6 +51,9 @@ profile::application::report::report_utils:
       32: 'report30'
       34: 'report30'
       35: 'report30'
+      36: 'report30'
+      37: 'report30'
+      38: 'report30'
   'ubuntu':
     scripts:
       report17: ['ubuntu/shebang', 'common/imports.py', 'ubuntu/imports.py', 'common/common_functions.py', 'ubuntu/check_updates_functions.py', 'common/payload.py', 'ubuntu/updates_payload.py', 'common/request.py' ]
@@ -60,6 +63,7 @@ profile::application::report::report_utils:
       19: 'report17'
       20: 'report17'
       21: 'report17'
+      22: 'report17'
   'debian':
     scripts:
       report9: ['debian/shebang', 'common/imports.py', 'debian/imports.py', 'common/common_functions.py', 'debian/check_updates_functions.py', 'common/payload.py', 'debian/updates_payload.py', 'common/request.py' ]
@@ -73,6 +77,7 @@ profile::application::report::report_utils:
     versions:
       Microsoft_Windows_Server_2016_Standard: 'report2016'
       Microsoft_Windows_Server_2019_Standard: 'report2016'
+      Microsoft_Windows_Server_2022_Standard: 'report2016'
 
 profile::webserver::apache::vhosts:
   report-app:

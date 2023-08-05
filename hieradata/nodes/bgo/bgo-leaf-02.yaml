@@ -5,6 +5,12 @@ network::interfaces_hash:
     'post_up': [ '/etc/network/if-up.d/z90-route-eth0', ]
     'post_down': [ '/etc/network/if-down.d/z90-route-eth0', ]
 
+# Puppet agent fix for puppet 4
+puppet::agent_additional_settings:
+  'disable_warnings':       'deprecations'
+  'stringify_facts':        'false'
+  'certificate_revocation': 'false'
+
 # Add default route for management VRF
 profile::base::network::routes:
   'eth0':
@@ -273,6 +279,7 @@ quagga::quagga::zebra_ip6_routes:
   - '2001:700:2:83ff::12/128 fd00::12'
   - '2001:700:2:83ff::251/128 fd00::16'
   - '2001:700:2:83ff::256/128 fd00::34'
+  - '2001:700:2:83ff::97/128 fd00::97'
   - '2001:948:62:3::/64 fd00::702'
   - '2001:948:62:4::/64 fd00::702'
 quagga::quagga::zebra_ip_routes:
@@ -280,6 +287,7 @@ quagga::quagga::zebra_ip_routes:
   - '158.39.77.248/32 172.18.0.26'
   - '158.39.74.246/32 172.18.0.8'
   - '158.39.74.248/32 172.18.0.27'
+  - '158.39.74.247/32 172.18.0.97'
   - '158.39.77.249/32 172.18.0.41'
   - '158.39.77.250/32 172.18.0.86'
   - '158.39.77.251/32 172.18.0.16'
@@ -328,8 +336,10 @@ quagga::quagga::bgp_neighbors:
   - '172.18.6.2 prefix-list iaas-routes-out out'
   - '2001:700:0:80cd::1 remote-as 224'
   - '2001:700:0:80cd::1 bfd 5 500 500'
+  - '2001:700:0:80cd::1 weight 30000'
   - '2001:948:40:4::68 remote-as 65504'
   - '2001:948:40:4::68 bfd 5 500 500'
+  - '2001:948:40:4::68 weight 40000'
   - 'fd00:18:230::1 remote-as 65503'
   - "fd00::1 remote-as %{hiera('bgp_as')}"
   - 'fd00::1 prefix-list iaas-routes-in in'
@@ -394,7 +404,7 @@ quagga::quagga::bgp_accesslist6:
 quagga::quagga::bgp_ip_prefix_list:
   - 'uninett-routes-out seq 5 permit 109.105.127.128/26'
   - 'uninett-routes-out seq 10 deny any'
-  - 'uninett-routes-in seq 5 permit any' 
+  - 'uninett-routes-in seq 5 permit any'
   - 'uninett-routes-in seq 10 deny any'
   - 'iaas-routes-in seq 5 permit 109.105.127.128/26'
   - 'iaas-routes-in seq 6 permit 109.105.125.0/26'
@@ -404,7 +414,7 @@ quagga::quagga::bgp_ipv6_prefix_list:
   - 'uninett-routes-out seq 5 permit 2001:948:62:3::/64'
   - 'uninett-routes-out seq 6 permit 2001:948:62:4::/64'
   - 'uninett-routes-out seq 10 deny any'
-  - 'uninett-routes-in seq 5 permit any' 
+  - 'uninett-routes-in seq 5 permit any'
   - 'uninett-routes-in seq 10 deny any'
   - 'iaas-routes-in seq 5 permit 2001:948:62:3::/64'
   - 'iaas-routes-in seq 6 permit 2001:948:62:4::/64'

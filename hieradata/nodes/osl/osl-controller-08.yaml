@@ -56,7 +56,14 @@ lvm::volume_groups:
   vg_ext:
     physical_volumes:
       - /dev/sda4
+      - /dev/sdb
     logical_volumes:
       lv_ext:
         fs_type:   xfs
         mountpath: "/var/lib/libvirt/images"
+
+profile::application::windowsimage::enable: true
+profile::application::windowsimage::manage_firewall: true
+profile::base::yumrepo::repo_hash:
+  hashicorp:
+    ensure: present

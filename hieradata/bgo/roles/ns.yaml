@@ -25,22 +25,6 @@ profile::dns::ns::ns_slave_ip_addresses:
   - '158.37.63.251'        # ns1 IPv4 (OSL)
   - '2001:700:2:82ff::251' # ns1 IPv6 (OSL)
 
-# Forward zones, for which the name server is authoritative
-profile::dns::ns::fw_zones:
-  internal:
-    zone: "%{hiera('profile::dns::ns::internal_zone')}"
-    filename: "pz/%{hiera('profile::dns::ns::internal_zone')}"
-  public:
-    zone: "%{hiera('profile::dns::ns::public_zone')}"
-    filename: "pz/%{hiera('profile::dns::ns::public_zone')}"
-  public2:
-    zone: "%{hiera('profile::dns::ns::public_zone2')}"
-    filename: "pz/%{hiera('profile::dns::ns::public_zone2')}"
-#    delegations:
-#      'customer':
-#        - 'ns1.uh-iaas.no'
-#        - 'ns2.uh-iaas.no'
-
 # Reverse zones, for which the name server is authoritative
 profile::dns::ns::ptr_zones:
   mgmt01:
@@ -119,6 +103,10 @@ profile::dns::ns::ptr_zones:
     cidr: "158.39.201.0/24"
     origin: "201.39.158.in-addr.arpa"
     filename: "pz/201.39.158.in-addr.arpa"
+  bgo_public05:
+    cidr: "158.37.64.0/23"
+    origin: "64.37.158.in-addr.arpa"
+    filename: "sz/64.37.158.in-addr.arpa"
   ipv6:
     cidr: "2001:700:2:83ff::/64"
     origin: "f.f.3.8.2.0.0.0.0.0.7.0.1.0.0.2.ip6.arpa"
@@ -145,6 +133,9 @@ profile::dns::ns::fw_slave_zones:
   frontend2:
     zone: "uh-iaas.no"
     filename: "sz/uh-iaas.no"
+  uhdc:
+    zone: "uhdc.no"
+    filename: "sz/uhdc.no"
 
 # Secondary reverse zones, for which this ns is slave
 profile::dns::ns::ptr_slave_zones:
@@ -223,11 +214,11 @@ profile::dns::ns::ptr_slave_zones:
   osl_public03:
     cidr: "158.39.48.0/24"
     origin: "48.39.158.in-addr.arpa"
-    filename: "pz/48.39.158.in-addr.arpa"
+    filename: "sz/48.39.158.in-addr.arpa"
   osl_public04:
     cidr: "158.39.200.0/24"
     origin: "200.39.158.in-addr.arpa"
-    filename: "pz/200.39.158.in-addr.arpa"
+    filename: "sz/200.39.158.in-addr.arpa"
   osl_ipv6:
     cidr: "2001:700:2:82ff::/64"
     origin: "f.f.2.8.2.0.0.0.0.0.7.0.1.0.0.2.ip6.arpa"

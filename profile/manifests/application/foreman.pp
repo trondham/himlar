@@ -25,6 +25,7 @@ class profile::application::foreman(
     'proxy'  => {},
   },
   $push_facts      = false,
+  Hash $dhcp_classes = {},
 ) {
 
   include ::puppet
@@ -63,6 +64,8 @@ class profile::application::foreman(
   $plugins = lookup('profile::application::foreman::plugins', Hash, 'deep', {})
   create_resources('foreman::plugin', $plugins)
 
+  create_resources('dhcp::dhcp_class', $dhcp_classes)
+
   # Push puppet facts to foreman
   $push_facts_ensure = $push_facts? {
     true    => 'present',
@@ -70,7 +73,7 @@ class profile::application::foreman(
   }
   cron { 'push-puppet-facts-to-foreman':
     ensure  => $push_facts_ensure,
-    command => '/etc/puppetlabs/puppet/node.rb --push-facts',
+    command => '/etc/puppetlabs/puppet/node.rb --push-facts > /dev/null 2>&1',
     minute  => '30',
     hour    => '0',
   }

@@ -23,8 +23,15 @@ username=<%= @mq_username %>
 password=<%= @mq_password %>
 vhost=<%= @mq_vhost %>
 
-[db]
-database_uri=<%= @database_uri %>
+[report]
+database_uri=<%= @report_db_uri %>
+
+[global_state]
+database_uri=<%= @clistate_db_uri %>
+
+[db-nova]
+host=<%= @db_host_nova %>
+password=<%= @db_password_nova %>
 
 [statsd]
 server=<%= @statsd_server %>

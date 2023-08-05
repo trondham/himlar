@@ -4,7 +4,11 @@ profile::openstack::resource::host_aggregate:
     availability_zone: "%{::location}-default-1"
     metadata:
       type: 'standard'
-#    hosts: "%{::location}-compute-03.%{hiera('domain_mgmt')}, %{::location}-compute-04.%{hiera('domain_mgmt')}"
+  local1:
+    availability_zone: "%{::location}-default-1"
+    metadata:
+      type: 'local'
+#    hosts: "%{::location}-compute-01.%{hiera('domain_mgmt')}"
   placeholder1:
     availability_zone: "%{::location}-iaas-team-only-1"
 #    hosts: "%{::location}-compute-02.%{hiera('domain_mgmt')}"
@@ -14,3 +18,6 @@ profile::openstack::resource::host_aggregate:
         9edeba0543ac4824a0aa95f947528c02,
         2ce04b3aaf3e45378f4f00072ceb5f20,
         8664497aa1224161bb1ed3bd88a65858
+
+# FIXME:sensu-go
+profile::monitoring::sensu::agent::checks:              {}

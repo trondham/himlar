@@ -1,7 +1,7 @@
 ---
 network::interfaces_hash:
   'eth0':
-    'ipaddress': '172.16.32.1/21'
+    'ipaddress': "%{hiera('netcfg_mgmt_net_c3').1/21"
     'post_up': [ '/etc/network/if-up.d/z90-route-eth0', ]
     'post_down': [ '/etc/network/if-down.d/z90-route-eth0', ]
 
@@ -165,6 +165,7 @@ quagga::quagga::zebra_ip6_routes:
   - '2001:700:2:8201::/64 Null0'
   - '2001:700:2:82ff::12/128 fd32::12'
   - '2001:700:2:82ff::251/128 fd32::16'
+  - '2001:700:2:82ff::97/128 fd32::97'
 quagga::quagga::zebra_ip_routes:
   - '0.0.0.0/0 129.240.25.109'
   - '10.0.0.0/8 Null0'
@@ -177,6 +178,7 @@ quagga::quagga::zebra_ip_routes:
   - '158.37.63.253/32 172.18.32.12'
   - '158.37.63.254/32 172.18.32.51'
   - '158.39.75.0/24 Null0'
+  - '158.39.75.247/32 172.18.32.97'
 
 quagga::quagga::zebra_generic_options:
   'ip':
@@ -262,3 +264,10 @@ quagga::quagga::bgp_route_maps:
     - 'match ip address 10'
   'peer-deny deny 10':
     - 'match ip address 10'
+
+# Puppet agent fix for puppet 4
+puppet::agent_additional_settings:
+  'disable_warnings':       'deprecations'
+  'stringify_facts':        'false'
+  'certificate_revocation': 'false'
+

@@ -3,6 +3,8 @@ include:
   default:
     - profile::dns::ns
     - profile::logging::rsyslog::client
+# Do not enable following line until every environment is set up to log to UiO ELK
+#    - profile::logging::filebeat
 
 named_interfaces::config:
   mgmt:
@@ -31,6 +33,31 @@ profile::dns::ns::ns_public_addr:           "%{hiera('public__ip__ns')}"
 profile::dns::ns::ns_public6_addr:          "%{hiera('public__ipv6__ns')}"
 profile::dns::ns::resolver1_public_addr:    "%{hiera('public__ip__resolver')}"
 profile::dns::ns::resolver1_public6_addr:   "%{hiera('public__ipv6__resolver')}"
+
+# Forward zones. Only zones that are "internal". Requests for records
+# in these zones will be forwarded to the authoritative DNS server
+profile::dns::ns::fw_zones:
+  frontend:
+    zone: "%{hiera('profile::dns::ns::frontend_zone')}"
+# Disable forwarding of uhdc.no to non recursing name servers,
+# as parts of udc.no is externally delegated and  will thus
+# render SERVFAIL replies
+#  uhdc:
+#    zone: 'uhdc.no'
+
+
+# DNS zones where resolvers act as slaves everywhere
+profile::dns::ns::fw_slave_zones:
+  internal:
+    zone: "%{hiera('profile::dns::ns::internal_zone')}"
+    filename: "sz/%{hiera('profile::dns::ns::internal_zone')}"
+    ns_master_ip_addresses:
+      - "%{hiera('profile::dns::ns::ns_mgmt_addr')}"
+  public:
+    zone: "%{hiera('profile::dns::ns::public_zone')}"
+    filename: "sz/%{hiera('profile::dns::ns::public_zone')}"
+    ns_master_ip_addresses:
+      - "%{hiera('profile::dns::ns::ns_mgmt_addr')}"
 
 # DNS server firewall configuration
 profile::dns::ns::manage_firewall: true
@@ -63,3 +90,61 @@ profile::base::network::routing_tables:
 profile::base::network::rules:
   'dummy0':
     iprule: [ "from %{hiera('netcfg_anycast_dns')} lookup anycast_return", ]
+
+# local config due to query log suppression (local6)
+profile::logging::rsyslog::client::legacy_config:
+  log_everything_to_remote_server:
+    key:    '*.*'
+    value:  " @%{hiera('mgmt__address__logger')}:514;RSYSLOG_ForwardFormat"
+  do_not_log_private_auth_msg:
+    key:    '*.info;mail.none;authpriv.none;cron.none;local6.none'
+    value:  '/var/log/messages'
+  auth_priv_log:
+    key:    'authpriv.*'
+    value:  '/var/log/secure'
+  mail_log:
+    key:    'mail.*'
+    value:  '-/var/log/maillog'
+  cron_log:
+    key:    'cron.*'
+    value:  '/var/log/cron'
+  emerg_log:
+    key:    '*.emerg'
+    value:  ':omusrmsg:*'
+  news_log:
+    key:    'uucp,news.crit'
+    value:  '/var/log/spooler'
+  local_log:
+    key:    'local7.*'
+    value:  '/var/log/boot.log'
+
+# filebeat for query logging to UiO ELK
+
+profile::logging::filebeat::manage_filebeat: true
+
+profile::base::yumrepo::repo_hash:
+  elk6:
+    ensure: present
+
+profile::base::common::packages:
+  'filebeat': {}
+
+profile::logging::filebeat::inputs:
+  'querylog':
+    log:  '/var/named/data/querylog'
+    logowner: 'usit-hostmaster'
+    application: 'dns-resolv'
+    log_type: 'dns-resolv'
+    data_processor: 'usit-hostmaster-processor'
+    tags: 'nrec-dns'
+
+
+profile::logging::filebeat::outputs:
+  logstash:
+    'hosts': [ 'log-receiver.uio.no:5044' ]
+    'ssl':
+      'verification_mode':        full
+      'certificate_authorities': ['/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem']
+      'certificate':              "/etc/pki/tls/certs/%{::fqdn}.cert.pem"
+      'key':                      "/etc/pki/tls/private/%{::fqdn}.key.pem"
+

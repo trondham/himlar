@@ -8,6 +8,149 @@ named_interfaces::config:
   trp:
     - bridge.100
 
+profile::network::leaf::acls:
+  '02control_plane_custom.rules':
+    iptables:
+      # Allow DNS requests to ns1.nrec.no
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -d 158.37.63.251 --dport 53 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -d 158.37.63.251 --dport 53 -j ACCEPT"
+      # TEMPORARY: Allow SMTP requests to 158.39.48.164
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -d 158.39.48.164 --dport 25 -j ACCEPT"
+      # Allow SMTP requests to 158.39.75.101 (RT#5169770) Updated to 158.39.75.12 per request (#5547528)
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -d 158.39.75.12 --dport 25 -j ACCEPT"
+      # Allow squid to 158.39.48.38 (CERN ATLAS - atlas-db-squid1.grid.uiocloud.no)
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -d 158.39.48.38 --dport 3128 -j ACCEPT"
+      # Block specific ports from everywhere (telnet, portmapper, SMB, NFS)
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 23 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 23 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 111 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 111 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 139 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 139 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 445 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 445 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 2049 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 2049 -j DROP"
+      # The following is Uninett / Sikt addresses (all Norwegian universities)
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 78.91.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 78.91.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 84.38.14.0/24 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 84.38.14.0/24 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 109.105.125.0/25 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 109.105.125.0/25 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 128.39.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 128.39.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 129.177.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 129.177.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 129.240.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 129.240.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 129.241.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 129.241.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 129.242.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 129.242.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 144.164.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 144.164.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 151.157.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 151.157.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 152.94.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 152.94.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 157.249.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 157.249.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 158.36.0.0/14 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 158.36.0.0/14 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 161.4.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 161.4.0.0/16 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 192.111.33.0/24 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 192.111.33.0/24 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 192.133.32.0/24 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 192.133.32.0/24 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 192.146.238.0/23 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 192.146.238.0/23 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 193.156.0.0/15 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 193.156.0.0/15 -j ACCEPT"
+      # Block specific ports (except from UH networks above)
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 25 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 25 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 53 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 53 -j DROP"
+      #- "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 123 -j DROP"
+      #- "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 123 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 1186 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 1186 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 1433 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 1433 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 1434 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 1434 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 3128 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 3128 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 3306 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 3306 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 3389 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 3389 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 5432 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 5432 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 5900 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 5900 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 6379 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 8080 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 8080 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 8443 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 8443 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 9200 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 27017 -j DROP"
+    ip6tables:
+      # Allow DNS requests to ns1.nrec.no
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -d 2001:700:2:82ff::251 --dport 53 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -d 2001:700:2:82ff::251 --dport 53 -j ACCEPT"
+      # Allow SMTP requests to 2001:700:2:8200::2201 (RT#5169770) Updated to 2001:700:2:8200::2060 per request (#5547528)
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -d 2001:700:2:8200::2060 --dport 25 -j ACCEPT"
+      # Allow squid to 2001:700:2:8200::25f0 (CERN ATLAS - atlas-db-squid1.grid.uiocloud.no)
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -d 2001:700:2:8200::25f0 --dport 3128 -j ACCEPT"
+      # Block specific ports (telnet, portmapper, SMB, NFS)
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 23 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 23 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 111 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 111 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 139 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 139 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 445 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 445 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 2049 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 2049 -j DROP"
+      # The following is Uninett / Sikt addresses (all Norwegian universities)
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp -s 2001:700::/32 -j ACCEPT"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp -s 2001:700::/32 -j ACCEPT"
+      # Block specific ports (except from UH networks above)
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 25 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 25 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 53 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 53 -j DROP"
+      #- "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 123 -j DROP"
+      #- "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 123 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 1186 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 1186 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 1433 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 1433 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 1434 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 1434 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 3128 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 3128 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 3306 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 3306 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 3389 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 3389 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 5432 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 5432 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 5900 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 5900 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 6379 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 8080 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 8080 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 8443 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p udp --dport 8443 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 9200 -j DROP"
+      - "-A $FORWARD_CHAIN -i %{hiera('profile::base::network::uplink_interface')} -p tcp --dport 27017 -j DROP"
+
 profile::monitoring::collectd::enable: true
 
 profile::network::leaf::cumulus_portconfigs:
@@ -41,6 +184,8 @@ profile::network::leaf::cumulus_portconfigs:
     line:  "14=4x25G"
   15:
     line:  "15=4x25G"
+  28:
+    line:  "28=100G" # uplink sikt
   29:
     line:  "29=40G" # torack-01
   30:
@@ -432,6 +577,118 @@ profile::base::network::cumulus_bonds:
     'mstpctl_bpduguard': true
     'vids': [ '100', '110', '120', ]
     'mtu': '9216'
+  'host47':
+    'slaves': [ 'swp12s2', ]
+    'clag_id': '47'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', ]
+    'mtu': '9216'
+  'host48':
+    'slaves': [ 'swp12s3', ]
+    'clag_id': '48'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', ]
+    'mtu': '9216'
+  'host49':
+    'slaves': [ 'swp13s0', ]
+    'clag_id': '49'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', ]
+    'mtu': '9216'
+  'host50':
+    'slaves': [ 'swp13s1', ]
+    'clag_id': '50'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', ]
+    'mtu': '9216'
+  'host51':
+    'slaves': [ 'swp13s2', ]
+    'clag_id': '51'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', ]
+    'mtu': '9216'
+  'host52':
+    'slaves': [ 'swp13s3', ]
+    'clag_id': '52'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', ]
+    'mtu': '9216'
+  'host53':
+    'slaves': [ 'swp14s0', ]
+    'clag_id': '53'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', ]
+    'mtu': '9216'
+  'host54':
+    'slaves': [ 'swp14s1', ]
+    'clag_id': '54'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', ]
+    'mtu': '9216'
+  'host55':
+    'slaves': [ 'swp14s2', ]
+    'clag_id': '55'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', ]
+    'mtu': '9216'
+  'host56':
+    'slaves': [ 'swp14s3', ]
+    'clag_id': '56'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', ]
+    'mtu': '9216'
+  'host57':
+    'slaves': [ 'swp15s0', ]
+    'clag_id': '57'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', ]
+    'mtu': '9216'
+  'host58':
+    'slaves': [ 'swp15s1', ]
+    'clag_id': '58'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', ]
+    'mtu': '9216'
+  'host59':
+    'slaves': [ 'swp15s2', ]
+    'clag_id': '59'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', ]
+    'mtu': '9216'
+  'host60':
+    'slaves': [ 'swp15s3', ]
+    'clag_id': '60'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', ]
+    'mtu': '9216'
 
 profile::base::network::cumulus_bridges:
   'bridge':
@@ -482,6 +739,20 @@ profile::base::network::cumulus_bridges:
       - host44
       - host45
       - host46
+      - host47
+      - host48
+      - host49
+      - host50
+      - host51
+      - host52
+      - host53
+      - host54
+      - host55
+      - host56
+      - host57
+      - host58
+      - host59
+      - host60
       - peerlink
       - downlink
     'alias_name': 'Transport L2 if'
@@ -589,6 +860,40 @@ frrouting::frrouting::zebra_interfaces:
     - 'link-detect'
   'host46':
     - 'link-detect'
+  'host47':
+    - 'link-detect'
+  'host48':
+    - 'link-detect'
+  'host49':
+    - 'link-detect'
+  'host50':
+    - 'link-detect'
+  'host51':
+    - 'link-detect'
+  'host52':
+    - 'link-detect'
+  'host53':
+    - 'link-detect'
+  'host54':
+    - 'link-detect'
+  'host55':
+    - 'link-detect'
+  'host56':
+    - 'link-detect'
+  'host57':
+    - 'link-detect'
+  'host58':
+    - 'link-detect'
+  'host59':
+    - 'link-detect'
+  'host60':
+    - 'link-detect'
+  'swp28':
+    - 'link-detect'
+  'swp29':
+    - 'link-detect'
+  'swp30':
+    - 'link-detect'
 
 frrouting::frrouting::zebra_generic_options:
   'ip':
@@ -627,14 +932,52 @@ frrouting::frrouting::bgp_accesslist:
     - 'deny 172.18.32.0 0.0.0.255'
     - 'permit any'
 
+frrouting::frrouting::bgp_accesslist6:
+  '10':
+    - 'permit 2001:700:2:8200::/56'
+  '20':
+    - 'deny any'
+
 frrouting::frrouting::bgp_ip_prefix_list:
   - 'routes-from-leaf1 seq 5 deny any'
   - 'routes-to-leaf1 seq 5 permit 0.0.0.0/0'
+  - 'uninett-routes-in seq 5 permit any'
+  - 'uninett-routes-in seq 10 deny any'
+  - 'uninett-routes-out seq 5 permit 158.37.63.0/24'
+  - 'uninett-routes-out seq 6 permit 158.39.48.0/24'
+  - 'uninett-routes-out seq 7 permit 158.39.75.0/24'
+  - 'uninett-routes-out seq 8 permit 158.39.200.0/24'
+  - 'uninett-routes-out seq 10 deny any'
+  - 'default-route seq 5 permit 0.0.0.0/0'
+
 frrouting::frrouting::bgp_ipv6_prefix_list:
   - 'routes-from-leaf1 seq 5 deny any'
+  - 'uninett-routes6-in seq 5 permit any'
+  - 'uninett-routes6-in seq 10 deny any'
+  - 'uninett-routes6-out seq 5 permit 2001:700:2:8200::/56'
+  - 'uninett-routes6-out seq 10 deny any'
+  - 'default-route6 seq 5 permit ::/0'
 
 frrouting::frrouting::bgp_route_maps:
   'rr-client-allow permit 10':
     - 'match ip address 10'
   'peer-deny deny 10':
     - 'match ip address 10'
+  'rr-client-allow6 permit 10':
+    - 'match ipv6 address 10'
+  'rr-client-allow6 deny 20':
+    - 'match ipv6 address 20'
+  'failover-default-route permit 10':
+    - 'description default route from spine neighbor is last resort'
+    - 'match ip address prefix-list default-route'
+    - 'set local-preference 0'
+    - 'set weight 0'
+  'failover-default-route permit 15':
+    - 'description apply defaults for any other route'
+  'failover-default-route6 permit 10':
+    - 'description default route from spine neighbor is last resort'
+    - 'match ipv6 address prefix-list default-route6'
+    - 'set local-preference 0'
+    - 'set weight 0'
+  'failover-default-route6 permit 15':
+    - 'description apply defaults for any other route'

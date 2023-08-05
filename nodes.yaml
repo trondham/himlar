@@ -4,13 +4,14 @@
 #  nodeset configurations
 #
 defaults:
-  box:       "norcams/el8"
-  autostart: true
-  primary:   false
-  location:  "vagrant"
-  domain:    "mgmt.vagrant.iaas.intern"
-  cpus:      1
-  memory:    1024
+  box:         "norcams/el8"
+  box_version: ">0"
+  autostart:   true
+  primary:     false
+  location:    "vagrant"
+  domain:      "mgmt.vagrant.iaas.intern"
+  cpus:        1
+  memory:      1024
   networks:
     - "mgmt"
     - "trp"
@@ -55,7 +56,13 @@ nodesets:
     #- role:       "identity"
     #  hostid:      "02"
     #- role:       "console"
-    #- role:       "monitor"
+    #- role:       "sensugo"
+    #  hostid:     "01"
+    #- role:       "sensugo"
+    #  hostid:     "02"
+    #- role:       "sensugo"
+    #  hostid:     "03"
+    #- role:       "tsdb"
     #- role:       "status"
     #- role:       "builder"
     #- role:       "proxy"
@@ -80,9 +87,9 @@ nodesets:
     #  memory:     1024
     #- role:       "nat"
     #  box:        "norcams/freebsd"
-    - role:       "admin"
-      box:        "norcams/base"
-      memory:     2048
+    #- role:       "admin"
+    #  box:        "norcams/base"
+    #  memory:     2048
     #- role:       "ns"
     #  memory:     3096
     #- role:       'cephmon-object'
@@ -98,6 +105,7 @@ nodesets:
     #  box:        "norcams/net"
     #- role:       "mgmt"
     #  box:        "norcams/net"
+    #- role:       'resolver'
   ha:
     - role:       'ha'
       hostid:     '01'
@@ -162,6 +170,26 @@ nodesets:
       hostid:     '02'
     - role:       'object-ceph'
       hostid:     '03'
+  network:
+    - role:       'mgmt'
+      box:        "CumulusCommunity/cumulus-vx"
+      box_version: '4.3.1'
+      networks:
+        - "mgmt"
+        - "mgmt"
+        - "mgmt"
+    - role:       'spine'
+      box:        "CumulusCommunity/cumulus-vx"
+      box_version: '3.7.16'
+      networks:
+        - "trp"
+        - "trp"
+        - "trp"
+
+# To use cumulus networking in vagrant:
+# https://docs.nvidia.com/networking-ethernet-software/cumulus-vx/VirtualBox-and-Vagrant/
+#
+# This is not needed to test puppet code
 
 networks:
   mgmt:
@@ -177,8 +205,3 @@ networks:
     auto_config: false
     forwarding: "route"
 
-#
-# To use cumulus in vagrant:
-#
-# Install gcc-c++
-# Then run: vagrant plugin install vagrant-cumulus

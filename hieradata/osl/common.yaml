@@ -6,8 +6,6 @@ include:
 location_environment:     'prod'
 location_description:     'Production environment in Oslo'
 
-ceph_version: 'octopus' # FIXME
-
 # Disable management of Dell repos and software
 profile::base::dell::manage_repos:      true
 profile::base::dell::manage_openmanage: false
@@ -45,7 +43,7 @@ reverse_public_c2:        '48.39.158.in-addr.arpa'
 
 bgp_as:                   '65500'
 
-netcfg_mgmt_gateway:      '172.16.32.12'
+netcfg_mgmt_gateway:      '172.16.32.97'
 netcfg_mgmt_netpart:      '172.16.32'
 netcfg_mgmt_netmask:      '255.255.248.0'
 netcfg_mgmt_net_c0:       '172.16.32'
@@ -56,8 +54,8 @@ netcfg_mgmt_net_c4:       '172.16.36'
 netcfg_mgmt_net_c5:       '172.16.37'
 netcfg_mgmt_net_c6:       '172.16.38'
 netcfg_mgmt_net_c7:       '172.16.39'
-netcfg_trp_gateway:       '172.18.39.1'
-netcfg_trp_gateway6:      'fd32::3901'
+netcfg_trp_gateway:       '172.18.39.2'
+netcfg_trp_gateway6:      'fd32::702'
 netcfg_trp_netpart:       '172.18.32'
 netcfg_trp_netpart6:      'fd32'
 netcfg_trp_net_c0:        '172.18.32'
@@ -79,7 +77,7 @@ netcfg_live_netpart:      '172.22.32'
 netcfg_live_netmask:      '255.255.248.0'
 #netcfg_dns_server1:       '129.240.2.3'
 netcfg_dns_server1:       '172.16.32.10'
-netcfg_dns_server2:       '172.16.32.17'
+netcfg_dns_server2:       '172.16.32.44'
 netcfg_dns_search:        "%{hiera('domain_mgmt')} %{hiera('domain_trp')}"
 netcfg_priv_gateway:      '172.18.32.26'
 netcfg_priv_network:      '10.2.0.0/20'
@@ -91,11 +89,11 @@ netcfg_ib_vlan:           '3379'
 netcfg_oob_vlan:          '3378'
 netcfg_trp_rr:
   rr1:
-    peer_ipv4: '172.18.32.1'
-    peer_ipv6: 'fd32::1'
+    peer_ipv4: '172.18.38.1'
+    peer_ipv6: 'fd32::6:1'
   rr2:
-    peer_ipv4: '172.18.32.2'
-    peer_ipv6: 'fd32::2'
+    peer_ipv4: '172.18.38.2'
+    peer_ipv6: 'fd32::6:2'
 
 #
 # Public addresses (bgo host frontend)
@@ -111,10 +109,6 @@ public__ipv6__resolver:        '2001:700:2:82ff::252'
 # DNS (merge of common and this)
 #
 
-# main public zones
-profile::dns::ns::frontend_zone:    "nrec.no"
-profile::dns::ns::frontend_zone2:   "uh-iaas.no"
-
 # Public and internal zones
 profile::dns::ns::internal_zone: "osl.uhdc.no"
 profile::dns::ns::public_zone:   "osl.%{hiera('profile::dns::ns::frontend_zone')}"
@@ -124,6 +118,9 @@ profile::network::services::dns_records:
   MX:
     "%{hiera('domain_frontend')}":  [ '10 smtp.uio.no.' ]
     "%{hiera('domain_frontend2')}": [ '10 smtp.uio.no.' ]
+  TXT:
+    "%{hiera('domain_frontend')}":  [ 'v=spf1 mx include:spf.uio.no ip4:158.39.75.247 ip4:158.37.63.253 ip6:2001:700:2:82ff::97 ip6:2001:700:2:82ff::12 -all' ]
+    "%{hiera('domain_frontend2')}": [ 'v=spf1 mx include:spf.uio.no ip4:158.39.75.247 ip4:158.37.63.253 ip6:2001:700:2:82ff::97 ip6:2001:700:2:82ff::12 -all' ]
   CNAME:
     "status.%{hiera('domain_frontend')}":        'pubproxy.ha.uib.no'
     "report.%{hiera('domain_frontend')}":        'pubproxy.ha.uib.no'
@@ -161,20 +158,27 @@ profile::network::services::dns_records:
     "%{::location}-compute-hpc-26.%{hiera('domain_mgmt')}": "%{::location}-compute-26.%{hiera('domain_mgmt')}"
     "%{::location}-compute-hpc-27.%{hiera('domain_mgmt')}": "%{::location}-compute-27.%{hiera('domain_mgmt')}"
     "%{::location}-compute-hpc-28.%{hiera('domain_mgmt')}": "%{::location}-compute-28.%{hiera('domain_mgmt')}"
+    # SHPC
+    "%{::location}-compute-epyc-52.%{hiera('domain_mgmt')}": "%{::location}-compute-52.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-epyc-53.%{hiera('domain_mgmt')}": "%{::location}-compute-53.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-epyc-54.%{hiera('domain_mgmt')}": "%{::location}-compute-54.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-epyc-55.%{hiera('domain_mgmt')}": "%{::location}-compute-55.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-epyc-56.%{hiera('domain_mgmt')}": "%{::location}-compute-56.%{hiera('domain_mgmt')}"
     # GPU
-    "%{::location}-compute-vgpu-17.%{hiera('domain_mgmt')}":  "%{::location}-compute-17.%{hiera('domain_mgmt')}"
-    "%{::location}-compute-vgpu-19.%{hiera('domain_mgmt')}":  "%{::location}-compute-19.%{hiera('domain_mgmt')}"
-    "%{::location}-compute-vgpu-20.%{hiera('domain_mgmt')}":  "%{::location}-compute-20.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-vgpu-17.%{hiera('domain_mgmt')}": "%{::location}-compute-17.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-vgpu-19.%{hiera('domain_mgmt')}": "%{::location}-compute-19.%{hiera('domain_mgmt')}"
+    "%{::location}-compute-vgpu-20.%{hiera('domain_mgmt')}": "%{::location}-compute-20.%{hiera('domain_mgmt')}"
     "%{::location}-compute-vgpu-42.%{hiera('domain_mgmt')}": "%{::location}-compute-42.%{hiera('domain_mgmt')}"
+    # object store with ceph
+    "%{::location}-object-ceph-01.%{hiera('domain_mgmt')}":  "%{::location}-object-01.%{hiera('domain_mgmt')}"
+    "%{::location}-object-ceph-02.%{hiera('domain_mgmt')}":  "%{::location}-object-02.%{hiera('domain_mgmt')}"
+    "%{::location}-object-ceph-03.%{hiera('domain_mgmt')}":  "%{::location}-object-03.%{hiera('domain_mgmt')}"
+    "%{::location}-object-ceph-04.%{hiera('domain_mgmt')}":  "%{::location}-object-04.%{hiera('domain_mgmt')}"
+    "%{::location}-object-ceph-05.%{hiera('domain_mgmt')}":  "%{::location}-object-05.%{hiera('domain_mgmt')}"
     # Dedicated
     "%{::location}-compute-robin-18.%{hiera('domain_mgmt')}": "%{::location}-compute-18.%{hiera('domain_mgmt')}"
     "%{::location}-compute-numascale-51.%{hiera('domain_mgmt')}": "%{::location}-compute-51.%{hiera('domain_mgmt')}"
-    # Arccache storage tempo
-    "%{::location}-storage-arccache-08.%{hiera('domain_mgmt')}":  "%{::location}-storage-08.%{hiera('domain_mgmt')}"
-    "%{::location}-storage-arccache-09.%{hiera('domain_mgmt')}":  "%{::location}-storage-09.%{hiera('domain_mgmt')}"
-    "%{::location}-storage-arccache-10.%{hiera('domain_mgmt')}":  "%{::location}-storage-10.%{hiera('domain_mgmt')}"
-    "%{::location}-storage-arccache-11.%{hiera('domain_mgmt')}":  "%{::location}-storage-11.%{hiera('domain_mgmt')}"
-    "%{::location}-storage-arccache-12.%{hiera('domain_mgmt')}":  "%{::location}-storage-12.%{hiera('domain_mgmt')}"
+    # Huawei ceph nodes
     "%{::location}-storage-v2h-13.%{hiera('domain_mgmt')}":  "%{::location}-storage-13.%{hiera('domain_mgmt')}"
     "%{::location}-storage-v2h-14.%{hiera('domain_mgmt')}":  "%{::location}-storage-14.%{hiera('domain_mgmt')}"
     "%{::location}-storage-v2h-15.%{hiera('domain_mgmt')}":  "%{::location}-storage-15.%{hiera('domain_mgmt')}"
@@ -259,9 +263,15 @@ profile::network::services::dns_records:
     "resolver.%{hiera('domain_public2')}":        '158.37.63.252'
 
     # Management network (entries that differ from common/common.yaml)
-    "%{::location}-login-01.%{hiera('domain_mgmt')}": "%{hiera('netcfg_mgmt_netpart')}.10"
+    "%{::location}-login-01.%{hiera('domain_mgmt')}": "%{hiera('netcfg_mgmt_netpart')}.199"
     "repo.%{hiera('domain_oob')}":                    "%{hiera('netcfg_oob_netpart')}.9"
-
+    # FIXME: override common/common.yaml
+    "%{::location}-mgmt-01.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.1"
+    "%{::location}-mgmt-03.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.3"
+    "%{::location}-mgmt-04.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.4"    
+    "%{::location}-mgmt-05.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.5"
+    "%{::location}-mgmt-06.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.6"
+    "%{::location}-mgmt-07.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.7"
   AAAA:
     # Frontend records (<foo>.nrec.no)
     "ns1.%{hiera('domain_frontend')}":            '2001:700:2:82ff::251'
@@ -279,8 +289,13 @@ profile::network::services::dns_records:
     "resolver.%{hiera('domain_public2')}":             '2001:700:2:82ff::252'
     "%{::location}-dns-01.%{hiera('domain_public2')}": '2001:700:2:82ff::256'
   PTR:
+    # FIXME: override common/common.yaml
+    "4.%{hiera('reverse_mgmt_c2')}":      "%{::location}-mgmt-04.%{hiera('domain_mgmt')}"
+    "5.%{hiera('reverse_mgmt_c2')}":      "%{::location}-mgmt-05.%{hiera('domain_mgmt')}"
+    "6.%{hiera('reverse_mgmt_c2')}":      "%{::location}-mgmt-06.%{hiera('domain_mgmt')}"
+    "7.%{hiera('reverse_mgmt_c2')}":      "%{::location}-mgmt-07.%{hiera('domain_mgmt')}"
     # Management network (entries that differ from common/common.yaml)
-    "10.%{hiera('reverse_mgmt')}":     "%{::location}-login-01.%{hiera('domain_mgmt')}"
+    "10.%{hiera('reverse_mgmt')}":     "%{::location}-login-02.%{hiera('domain_mgmt')}"
     # public IPv4
     '250.63.37.158.in-addr.arpa':   "api-osl.%{hiera('domain_frontend')}"
     '251.63.37.158.in-addr.arpa':   "ns1.%{hiera('domain_frontend')}"
@@ -337,6 +352,11 @@ profile::network::services::dns_options:
       keyfile: "/etc/rndc-admin.key"
       server: "%{hiera('netcfg_mgmt_netpart')}.16"
   PTR:
+    default:
+      ttl: 3600
+      keyfile: "/etc/rndc-admin.key"
+      server: "%{hiera('netcfg_mgmt_netpart')}.16"
+  TXT:
     default:
       ttl: 3600
       keyfile: "/etc/rndc-admin.key"

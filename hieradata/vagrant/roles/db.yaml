@@ -1,17 +1,32 @@
 ---
 include:
-  default:
-    - profile::monitoring::netdata
+  bootstrap:
+    - profile::application::openssl
 
-profile::monitoring::netdata::manage_firewall:  true
+profile::application::openssl::manage_ca_cert:  true
+profile::application::openssl::certs:
+  "%{::hostname}.%{hiera('domain_trp')}":
+    cn:     "%{::hostname}.%{hiera('domain_trp')}"
+    altnames:
+      - "%{::hostname}.%{hiera('domain_trp')}"
+      - "%{::fqdn}"
 
-# Netdata access
-profile::database::mariadb::users:
-  'netdata@localhost':
-    ensure: present
+# FIXME:sensu-go
 
-profile::database::mariadb::grants:
-  'netdata@localhost/*.*':
-    privileges: ['USAGE']
-    table:      '*.*'
-    user:       'netdata@localhost'
+# Plugins not avaiable as assets for el8
+sensu::plugins::plugins:
+  sensu-plugins-mysql:
+    version: 3.2.0
+
+sensu::agent::subscriptions:
+  - 'base'
+  - 'nodes'
+  - 'metrics'
+
+profile::monitoring::sensu::agent::checks:
+  check-mysql-alive:
+    command:                "check-mysql-alive.rb -h localhost -s /var/lib/mysql/mysql.sock"
+    interval:               60
+    subscriptions:          ['entity:%{::hostname}']
+    handlers:               ['default']
+    provider:               'sensu_api'

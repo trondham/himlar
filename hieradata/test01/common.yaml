@@ -3,8 +3,6 @@ include:
   default:
     - profile::monitoring::sensu::agent
 
-ceph_version: 'octopus' # FIXME
-
 location_environment:   'test01'
 location_description:   'Test environment physically in Bergen'
 
@@ -42,7 +40,7 @@ reverse_trp_c7:         '7.30.172.in-addr.arpa'
 
 bgp_as:                 '65535'
 
-netcfg_mgmt_gateway:    '172.28.0.12'
+netcfg_mgmt_gateway:    '172.28.0.97'
 netcfg_mgmt_netpart:    '172.28.0'
 netcfg_mgmt_netmask:    '255.255.248.0'
 netcfg_mgmt_net_c0:     '172.28.0'
@@ -73,7 +71,7 @@ netcfg_live_netpart:    '172.31.0'
 netcfg_live_netmask:    '255.255.248.0'
 #netcfg_dns_server2:     '129.177.12.31'
 netcfg_dns_server1:     '172.28.0.10'
-netcfg_dns_server2:     '172.28.0.17'
+netcfg_dns_server2:     '172.28.0.44'
 netcfg_dns_search:      "%{hiera('domain_mgmt')} %{hiera('domain_trp')}"
 netcfg_priv_gateway:    '172.30.0.26'
 netcfg_priv_network:    '10.0.250.0/24'
@@ -97,6 +95,13 @@ public__ipv6__resolver:         '2001:700:200:917::3f18'
 #
 # DNS (merge of common and this)
 #
+
+# Public and internal zones
+profile::dns::ns::public_zone:   "test.iaas.uib.no"
+# Not relevant for test01, but must be _something_ due to merge from common
+profile::dns::ns::public_zone2:  "bgo.test.iaas.uib.no"
+profile::dns::ns::internal_zone: "test01.uhdc.no"
+
 profile::network::services::dns_records:
   A:
     # public
@@ -111,12 +116,14 @@ profile::network::services::dns_records:
     "placement.api.%{hiera('domain_public')}":              '129.177.31.122'
     "dns.api.%{hiera('domain_public')}":                    '129.177.31.122'
     "status.%{hiera('domain_public')}":                     '129.177.31.122'
+    "report.%{hiera('domain_public')}":                     '129.177.31.122'
     "access.%{hiera('domain_public')}":                     '129.177.31.122' #124
     "console.%{hiera('domain_public')}":                    '129.177.31.122' #125
     "dashboard.%{hiera('domain_public')}":                  '129.177.31.126'
     # mgmt
     "%{::location}-login-01.%{hiera('domain_mgmt')}":       "%{hiera('netcfg_mgmt_netpart')}.10"
     "git.%{hiera('domain_mgmt')}":                          "%{hiera('netcfg_mgmt_net_c0')}.9"
+    "monitor.%{hiera('domain_mgmt')}":                      "%{hiera('netcfg_mgmt_net_c0')}.21"
   AAAA:
     "ns.%{hiera('domain_frontend')}":     '2001:700:200:917::3f17'
     "resolver.%{hiera('domain_public')}": '2001:700:200:917::3f18'
@@ -252,3 +259,16 @@ profile::openstack::resource::subnets:
       - '129.177.6.54'
     network_name: 'imagebuilder'
     tenant_name: 'imagebuilder'
+
+# FIXME:sensu-go
+profile::monitoring::sensu::agent::enable_go_agent:     true
+profile::monitoring::sensu::agent::enable_agent:        false
+# only checks defined in location will be added to sensu-go
+profile::monitoring::sensu::agent::merge_strategy:      'first'
+profile::monitoring::sensu::agent::plugins:             {}
+profile::monitoring::sensu::agent::namespaces:
+  "%{hiera('sensu_namespace')}": {}
+
+profile::base::yumrepo::repo_hash:
+  sensu-community:
+    ensure: present

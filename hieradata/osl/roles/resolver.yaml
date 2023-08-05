@@ -1,4 +1,8 @@
 ---
+include:
+  default:
+    - profile::logging::filebeat
+
 # Temporary: Forward everything to UiO resolvers
 #profile::dns::ns::forward_everything: true
 #profile::dns::ns::forwarders:
@@ -13,6 +17,14 @@
 #    zone: "%{hiera('profile::dns::ns::internal_zone')}"
 #  frontend:
 #    zone: "%{hiera('profile::dns::ns::public_zone')}"
+
+netcfg_trp_rr: #FIXME: RR testing spine
+  rr1:
+    peer_ipv4: '172.18.38.1'
+    peer_ipv6: 'fd32::6:1'
+  rr2:
+    peer_ipv4: '172.18.38.2'
+    peer_ipv6: 'fd32::6:2'
 
 # Reverse zones. Only zones that are "internal". Requests for records
 # in these zones will be forwarded to the authoritative DNS server
@@ -83,6 +95,7 @@ profile::dns::ns::ptr_zones:
 
 profile::dns::ns::allowed_nets:
   - '172.16.0.0/12;         # internal rfc1918'
+  - '158.37.64.0/23;        # bgo IPv4'
   - '158.39.77.0/24;        # bgo IPv4'
   - '158.39.74.0/24;        # bgo IPv4'
   - '158.39.201.0/24;       # bgo IPv4'
@@ -93,3 +106,14 @@ profile::dns::ns::allowed_nets:
   - '10.0.0.0/8;            # rfc1918 for ipv6 only instances'
   - '2001:700:2:8300::/56;  # bgo IPv6'
   - '2001:700:2:8200::/56;  # osl IPv6'
+
+# Use UiO provided RPZ policy
+profile::dns::ns::enable_rpz: true
+
+profile::dns::ns::fw_slave_zones:
+  rpz:
+    zone: 'rpz.uio.no'
+    filename: 'sz/rpz.uio.no'
+    ns_master_ip_addresses:
+      - 129.240.2.83
+

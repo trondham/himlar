@@ -1,7 +1,8 @@
 #!/bin/bash
-set -ux
 
 . <%= @rc_file %>
+
+set -ux
 
 # If the environment variable IMAGEBUILDER_REPORT is true each build script will
 # write a machine-readable report of the last build in JSONL format. There will
@@ -17,8 +18,10 @@ export PATH=/usr/bin:/usr/local/bin:/bin:/usr/local/sbin:/usr/sbin
 /opt/imagebuilder/bin/imagebuilder bootstrap \
 -a <%= @az %> \
 -u <%= @url -%><%= @latest %> \
+<%unless @checksum_file.empty? -%>
 -c <%= @url -%><%= @checksum_file %> \
 -t <%= @checksum %> \
+<% end -%>
 -n '<%= @image_name %>' \
 -r <%= @min_ram %> \
 -d <%= @min_disk %> \
@@ -66,11 +69,17 @@ mv -f ${filename} ${tmp_file}
 qemu-img convert -O qcow2 -c ${tmp_file} ${filename}
 rm -f ${tmp_file}
 
+# Find MD5 checksum and create latest link
+md5filename=${filename%%\.qcow2}.md5
+md5sum ${filename} > ${md5filename}
+ln -srf ${md5filename} /opt/images/public_builds/<%= @name %>-latest.md5
+
 # Create latest symlink
 ln -srf ${filename} /opt/images/public_builds/<%= @name %>-latest.qcow2
 
 # Remove old images, always keeping the two most recent
-find /opt/images/public_builds/ -type f -iname <%= @name %>-20\* | sort -r | tail -n +3 | xargs rm -f
+find /opt/images/public_builds/ -type f -iname <%= @name %>-20\*.qcow2 | sort -r | tail -n +3 | xargs rm -f
+find /opt/images/public_builds/ -type f -iname <%= @name %>-20\*.md5 | sort -r | tail -n +3 | xargs rm -f
 
 if [ $gen_report == "true" ]; then
   # If we make it to here we assume the build has been successful

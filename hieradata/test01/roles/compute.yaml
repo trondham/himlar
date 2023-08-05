@@ -4,8 +4,6 @@ include:
     - profile::base::tuned
     - profile::monitoring::collectd
 
-ceph_version: 'nautilus' # FIXME
-
 named_interfaces::config:
   mgmt:
     - p1p1
@@ -74,13 +72,13 @@ profile::base::tuned::tuned_profile: 'virtual-host'
 nova::compute::libvirt::libvirt_hw_machine_type: 'x86_64=q35'
 
 profile::base::lvm::physical_volume:
-  '/dev/sda3':
+  '/dev/sda5':
     ensure: present
     force:  true
 profile::base::lvm::volume_group:
   'vg_ext':
     physical_volumes:
-      - /dev/sda3
+      - /dev/sda5
 profile::base::lvm::logical_volume:
   'lv_instances':
     volume_group: 'vg_ext'
@@ -107,13 +105,31 @@ profile::base::physical::configure_bmc_nic:                       true
 profile::openstack::compute::hypervisor::enable_dhcp_agent_check: true
 profile::base::physical::enable_redfish_sensu_check:              true
 profile::base::physical::enable_redfish_http_proxy:               true
-profile::monitoring::sensu::agent::checks:
-  'redfish-check':
-    command:      '/usr/local/bin/redfish_check.sh'
-    interval:     1800
-    subscribers:  ['checks']
-profile::monitoring::sensu::agent::checks:
-  'dhcp-agent-check':
-    command:      '/usr/local/bin/calico_dhcp_agent_check.sh'
-    interval:     600
-    subscribers:  ['checks']
+
+# FIXME:sensu-go
+profile::monitoring::sensu::agent::checks: {}
+profile::base::common::packages:
+  'gcc-c++': { ensure: absent }
+  'make': { ensure: absent }
+
+# sensuclassic
+# profile::monitoring::sensu::agent::checks:
+#   'redfish-check':
+#     command:      '/usr/local/bin/redfish_check.sh'
+#     interval:     1800
+#     subscribers:  ['checks']
+#   'dhcp-agent-check':
+#     command:      '/usr/local/bin/calico_dhcp_agent_check.sh'
+#     interval:     600
+#     subscribers:  ['checks']
+sensu::agent::service_env_vars:
+  PATH: '/usr/local/bin:/bin:/usr/bin:/opt/puppetlabs/bin:/opt/sensu-plugins-ruby/embedded/bin'
+  HTTPS_PROXY: "%{hiera('mgmt__address__proxy')}:8888"
+
+nova::config::nova_config:
+  DEFAULT/metadata_workers:
+    value: '4'
+  libvirt/remote_filesystem_transport:
+    value: 'rsync'
+  libvirt/cpu_models:
+    value: 'Haswell-noTSX-IBRS'

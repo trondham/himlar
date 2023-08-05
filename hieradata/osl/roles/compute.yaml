@@ -1,14 +1,12 @@
 ---
-ceph_version: 'nautilus' # FIXME
-
 ntp::servers:
-  - 172.16.32.100
-  - 172.16.32.101
-  - 172.16.32.102
+  - "%{hiera('netcfg_mgmt_netpart')}.126"
+  - "%{hiera('netcfg_mgmt_netpart')}.127"
+  - "%{hiera('netcfg_mgmt_netpart')}.128"
 chrony::servers:
-  - "%{hiera('netcfg_mgmt_netpart')}.100"
-  - "%{hiera('netcfg_mgmt_netpart')}.101"
-  - "%{hiera('netcfg_mgmt_netpart')}.102"
+  - "%{hiera('netcfg_mgmt_netpart')}.126"
+  - "%{hiera('netcfg_mgmt_netpart')}.127"
+  - "%{hiera('netcfg_mgmt_netpart')}.128"
 
 profile::base::network::network_auto_opts:
   mgmt:
@@ -70,7 +68,6 @@ profile::monitoring::sensu::agent::checks:
     command:      '/usr/local/bin/redfish_check.sh'
     interval:     1800
     subscribers:  ['checks']
-profile::monitoring::sensu::agent::checks:
   'dhcp-agent-check':
     command:      '/usr/local/bin/calico_dhcp_agent_check.sh'
     interval:     600

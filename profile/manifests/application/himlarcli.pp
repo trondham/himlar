@@ -29,7 +29,10 @@ class profile::application::himlarcli(
   $mq_username,
   $mq_password,
   $mq_vhost,
-  $database_uri,
+  $report_db_uri,
+  $clistate_db_uri,
+  $db_host_nova,
+  $db_password_nova,
   $compute_api_version,
   $volume_api_version,
   $ldap_server = undef,
@@ -41,12 +44,12 @@ class profile::application::himlarcli(
 
   file { '/etc/himlarcli':
     ensure => directory
-  } ->
-  file { '/etc/himlarcli/config.ini':
+  }
+  -> file { '/etc/himlarcli/config.ini':
     ensure  => file,
     content => template("${module_name}/application/himlarcli/config.ini.erb"),
-  } ->
-  file { '/etc/himlarcli/clouds.yaml':
+  }
+  -> file { '/etc/himlarcli/clouds.yaml':
     ensure  => file,
     content => template("${module_name}/application/himlarcli/clouds.yaml.erb"),
   }

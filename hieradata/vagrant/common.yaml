@@ -2,16 +2,18 @@
 include:
   bootstrap:
     - profile::development::network::dns
+    - profile::application::openssl
   default:
     - profile::development::network::dns
     - profile::monitoring::sensu::agent
     - profile::application::openssl::catrust
+    - profile::application::openssl
 
 # Location setting
 location_environment: vagrant
 location_description: Local full development environment using vagrant
 
-domain_frontend:        'vagrant.iaas.intern'
+domain_frontend:        'iaas.intern'
 domain_public:          'vagrant.iaas.intern'
 domain_trp:             'trp.vagrant.iaas.intern'
 domain_mgmt:            'mgmt.vagrant.iaas.intern'
@@ -84,6 +86,7 @@ public__ipv6__ns:       "%{hiera('netcfg_public_netpart6')}::251"
 public__ip__resolver:   "%{hiera('netcfg_public_netpart')}.252"
 public__ipv6__resolver: "%{hiera('netcfg_public_netpart6')}::252"
 
+
 #
 # Default interfaces
 #
@@ -98,14 +101,6 @@ named_interfaces::config:
     - eth2
   public:
     - eth3
-
-network::interfaces_hash:
-  'eth1':
-    restart_all_nic: false
-  'eth2':
-    restart_all_nic: false
-  'eth3':
-    restart_all_nic: false
 
 allow_from_network:
   - "%{hiera('netcfg_public_netpart')}.0/24"
@@ -152,6 +147,11 @@ profile::network::services::dns_options:
       keyfile: "/etc/rndc-admin.key"
       server: "%{hiera('netcfg_mgmt_netpart')}.16"
 
+profile::dns::ns::ns_master_ip_addresses:
+  - '192.168.0.251'
+  - '192.168.121.198'
+  - 'fc00:700:100:200::251'
+
 #
 # DNS (merge of common and this)
 #
@@ -164,34 +164,34 @@ profile::dns::ns::public_zone2:  "iaas2.intern"
 profile::network::services::dns_records:
   A:
     "access.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
+    "api.%{hiera('domain_frontend')}":                    "%{hiera('netcfg_public_netpart')}.250"
+    "status.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
+    "report.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
+    "ns.%{hiera('domain_frontend')}":                     "%{hiera('netcfg_public_netpart')}.251"
+    "resolver.%{hiera('domain_frontend')}":               "%{hiera('netcfg_public_netpart')}.252"
+    "dashboard.%{hiera('domain_frontend')}":              "%{hiera('netcfg_public_netpart')}.254"
     "console.%{hiera('domain_public')}":                  "%{hiera('netcfg_public_netpart')}.250"
-    "api.%{hiera('domain_public')}":                      "%{hiera('netcfg_public_netpart')}.250"
     "identity.api.%{hiera('domain_public')}":             "%{hiera('netcfg_public_netpart')}.250"
     "image.api.%{hiera('domain_public')}":                "%{hiera('netcfg_public_netpart')}.250"
     "network.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.250"
     "compute.api.%{hiera('domain_public')}":              "%{hiera('netcfg_public_netpart')}.250"
     "placement.api.%{hiera('domain_public')}":            "%{hiera('netcfg_public_netpart')}.250"
     "volume.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
-    "status.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
     "metric.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
     "object.api.%{hiera('domain_public')}":               "%{hiera('netcfg_public_netpart')}.250"
     "dns.api.%{hiera('domain_public')}":                  "%{hiera('netcfg_public_netpart')}.250"
-    "report.%{hiera('domain_frontend')}":                 "%{hiera('netcfg_public_netpart')}.250"
-    "ns.%{hiera('domain_public')}":                       "%{hiera('netcfg_public_netpart')}.251"
-    "resolver.%{hiera('domain_public')}":                 "%{hiera('netcfg_public_netpart')}.252"
-    "dashboard.%{hiera('domain_frontend')}":              "%{hiera('netcfg_public_netpart')}.254"
   AAAA:
-    "ns.%{hiera('domain_public')}":                       "%{hiera('netcfg_public_netpart6')}::251"
-    "resolver.%{hiera('domain_public')}":                 "%{hiera('netcfg_public_netpart6')}::252"
+    "ns.%{hiera('domain_frontend')}":                     "%{hiera('netcfg_public_netpart6')}::251"
+    "resolver.%{hiera('domain_frontend')}":               "%{hiera('netcfg_public_netpart6')}::252"
   PTR:
     # public IPv4
-    "250.%{hiera('reverse_public')}":   "api.%{hiera('domain_public')}"
-    "251.%{hiera('reverse_public')}":   "ns.%{hiera('domain_public')}"
-    "252.%{hiera('reverse_public')}":   "resolver.%{hiera('domain_public')}"
+    "250.%{hiera('reverse_public')}":   "api.%{hiera('domain_frontend')}"
+    "251.%{hiera('reverse_public')}":   "ns.%{hiera('domain_frontend')}"
+    "252.%{hiera('reverse_public')}":   "resolver.%{hiera('domain_frontend')}"
     "254.%{hiera('reverse_public')}":   "dashboard.%{hiera('domain_frontend')}"
     # public IPv6
-    "1.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "ns.%{hiera('domain_public')}"
-    "2.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "resolver.%{hiera('domain_public')}"
+    "1.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "ns.%{hiera('domain_frontend')}"
+    "2.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.%{hiera('reverse_public6')}":  "resolver.%{hiera('domain_frontend')}"
   CNAME: {} # needed for autoconfig of network
 
 #
@@ -243,7 +243,7 @@ horizon_db_password:                                'horizon_pass'
 
 # keystone.yaml
 keystone::db::mysql::password:                      'key_pass'
-keystone::admin_token:                              'admintoken'
+#keystone::admin_token:                              'admintoken'
 
 # master.yaml
 rbd_volumes_rbd_secret_uuid:                        'AQBypF1V2JYiChAA2qYbjM6jbXJBMmpXPkvwBg=='
@@ -282,6 +282,9 @@ sensu_mysql_password:                               'sensu_pass'
 grafana_admin_password:                             'changeme'
 local_rabbit_password:                              'local'
 
+# node: ts
+influxdb_admin_password:                            'influx_pass'
+influxdb_admin_token:                               'HaNpptM_3oRozR_MseRe-GmL1OIszJ5J-5I1flfOq86We198t7hJ-kzKphZtpa7aLE1bU37Jg-DuQJ_Vq7Eypg=='
 # telemetry/metrics
 gnocchi::db::mysql::password:                       'gnocchi_pass'
 ceilometer::db::mysql::password:                    'ceilometer_pass'
@@ -298,6 +301,9 @@ dispersion_api_password:                            'dispersion_pass'
 # The root user password: himlardev
 accounts::root_user::password:                      '$1$vagrant$z3l/WWbF3HllJk0tnqO3i/'
 
+# himlarcli
+clistate_db_password:                               'clistate_pass'
+
 # report
 report_db_password:                                 'report_pass'
 
@@ -310,6 +316,17 @@ profile::openstack::resource::networks:
     name: 'public'
     admin_state_up: true
     shared: true
+    tenant_name: 'openstack'
+    provider_network_type: 'local'
+  imagebuilder:
+    name: 'imagebuilder'
+    admin_state_up: true
+    shared: false
+    tenant_name: 'imagebuilder'
+  private:
+    name: 'private'
+    admin_state_up: true
+    shared: false
     tenant_name: 'openstack'
     provider_network_type: 'local'
 
@@ -326,3 +343,40 @@ profile::openstack::resource::subnets:
       - '129.177.12.31'
     network_name: 'public'
     tenant_name: 'openstack'
+  imagebuilder:
+    name: 'imagebuilder'
+    cidr: "%{hiera('netcfg_public_netpart')}.0/24"
+    ip_version: '4'
+    allocation_pools:
+      - "start=%{hiera('netcfg_public_netpart')}.198,end=%{hiera('netcfg_public_netpart')}.199"
+    gateway_ip: "%{hiera('netcfg_public_netpart')}.1"
+    dns_nameservers:
+      - '1.1.1.1'
+      - '8.8.8.8'
+    network_name: 'imagebuilder'
+    tenant_name: 'imagebuilder'
+  private:
+    name: 'private'
+    cidr: "%{hiera('netcfg_public_netpart')}.0/24"
+    ip_version: '4'
+    allocation_pools:
+      - "start=%{hiera('netcfg_public_netpart')}.180,end=%{hiera('netcfg_public_netpart')}.199"
+    gateway_ip: "%{hiera('netcfg_public_netpart')}.1"
+    dns_nameservers:
+      - "%{hiera('netcfg_anycast_dns')}"
+    network_name: 'private'
+    tenant_name: 'openstack'
+
+# FIXME:sensu-go
+profile::application::openssl::manage_ca_cert:          true
+profile::monitoring::sensu::agent::enable_go_agent:     false
+profile::monitoring::sensu::agent::enable_agent:        false
+# only checks defined in location will be added to sensu-go
+profile::monitoring::sensu::agent::merge_strategy:      'first'
+profile::monitoring::sensu::agent::plugins:             {}
+profile::monitoring::sensu::agent::namespaces:
+  "%{hiera('sensu_namespace')}": {}
+
+profile::base::yumrepo::repo_hash:
+  sensu-community:
+    ensure: present

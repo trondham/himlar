@@ -7,10 +7,23 @@ profile::dns::rndc_key::create_admin_key:    true
 profile::dns::rndc_key::create_mdns_key:     false
 profile::dns::rndc_key::host_is_bind_server: false
 
-profile::application::foreman_proxy::serve_oob_dhcp: true
-
-dhcp::includes:
-  - '/etc/dhcp/oob_network.conf'
+dhcp::pools:
+  "out-of-band network definition":
+    network: "%{hiera('netcfg_oob_netpart')}.0"
+    mask: "%{hiera('netcfg_oob_netmask')}"
+    gateway: "%{hiera('netcfg_oob_gateway')}"
+    options:
+      # iDRAC will search for file in order <servicetag>-config.json, <model>-config.json, config.json
+      # examples: 4U1BGM7-config.json, R740xd-config.json, config.json
+      # Refer to the zero-touch, bare metal server provisioning document from Dell for options.
+      - vendor-class-identifier "iDRAC"
+      - idrac-provision-url "-i %{::ipaddress_oob1} -s http -t 500 -n %{::location}/"
+    parameters:
+      - set vendor-string = option vendor-class-identifier
+      - default-lease-time 43200
+      - max-lease-time 86400
+    nameservers:
+      - "%{hiera('netcfg_oob_netpart')}.10"
 
 profile::webserver::apache::vhosts:
   'repo-oobip':
@@ -20,7 +33,7 @@ profile::webserver::apache::vhosts:
     docroot_owner:  'iaas'
     serveraliases:  [ "repo.%{hiera('domain_oob')}", ]
 
-profile::network::services::dhcp_reservation:
+dhcp::hosts:
 #  osl-leaf-01:
 #    mac: '00:01:e8:d8:3f:d7'
 #    ip:  '172.16.32.1'
@@ -54,6 +67,18 @@ profile::network::services::dhcp_reservation:
   osl-mgmt-opx-03:
     mac: '0c:29:ef:d8:75:20'
     ip: '172.16.34.3'
+  osl-mgmt-04:
+    mac: '1c:72:1d:cf:d0:bf'
+    ip: '172.16.34.4'
+  osl-mgmt-05:
+    mac: 'b8:6a:97:5d:a6:80'
+    ip: '172.16.34.5'
+  osl-mgmt-06:
+    mac: '68:21:5f:6a:d7:80'
+    ip: '172.16.34.6'
+  osl-mgmt-07:
+    mac: '90:3c:b3:00:56:80'
+    ip: '172.16.34.7'
   osl-compute-01-bmc:
     mac: 'b8:2a:72:fc:77:28'
     ip:  '172.17.32.103'
@@ -111,6 +136,9 @@ profile::network::services::dhcp_reservation:
   osl-login-01-bmc:
     mac: '18:03:73:ed:d3:91'
     ip:  '172.17.32.10'
+  osl-login-02-bmc:
+    mac: '18:66:da:71:b1:da'
+    ip:  '172.17.32.8'
   osl-storage-01-bmc:
     mac: '5c:f9:dd:ff:15:94'
     ip:  '172.17.32.106'
@@ -132,21 +160,6 @@ profile::network::services::dhcp_reservation:
   osl-storage-07-bmc:
     mac: 'd0:94:66:8f:37:b7'
     ip:  '172.17.32.125'
-  osl-storage-08-bmc:
-    mac: '18:66:da:bd:57:6d'
-    ip:  '172.17.33.50'
-  osl-storage-09-bmc:
-    mac: '18:66:da:bc:ea:14'
-    ip:  '172.17.33.51'
-  osl-storage-10-bmc:
-    mac: '18:66:da:bd:5b:aa'
-    ip:  '172.17.33.52'
-  osl-storage-11-bmc:
-    mac: '18:66:da:bd:62:4c'
-    ip:  '172.17.33.53'
-  osl-storage-12-bmc:
-    mac: '18:66:da:bd:65:03'
-    ip:  '172.17.33.54'
   osl-compute-11-bmc:
     mac: '4c:d9:8f:17:eb:66'
     ip:  '172.17.33.11'
@@ -264,9 +277,60 @@ profile::network::services::dhcp_reservation:
   osl-compute-50-bmc:
     mac: '1c:20:db:ec:60:8e'
     ip:  '172.17.33.82'
+  osl-compute-52-bmc:
+    mac: 'ec:2a:72:0a:b1:6a'
+    ip:  '172.17.33.84'
+  osl-compute-53-bmc:
+    mac: 'ec:2a:72:18:76:ec'
+    ip:  '172.17.33.85'
+  osl-compute-54-bmc:
+    mac: 'ec:2a:72:0a:b3:da'
+    ip:  '172.17.33.86'
+  osl-compute-55-bmc:
+    mac: 'b0:7b:25:e5:b9:f8'
+    ip:  '172.17.33.87'
+  osl-compute-56-bmc:
+    mac: 'ec:2a:72:01:7d:42'
+    ip:  '172.17.33.88'
+  osl-compute-57-bmc:
+    mac: 'b4:45:06:ef:d5:b7'
+    ip:  '172.17.33.89'
+  osl-compute-58-bmc:
+    mac: 'b4:45:06:ef:c0:0f'
+    ip:  '172.17.33.90'
+  osl-compute-59-bmc:
+    mac: 'b4:45:06:ee:87:c3'
+    ip:  '172.17.33.91'
+  osl-compute-60-bmc:
+    mac: 'b4:45:06:f1:56:81'
+    ip:  '172.17.33.92'
+  osl-compute-61-bmc:
+    mac: 'b4:45:06:ee:87:b7'
+    ip:  '172.17.33.122'
+  osl-compute-62-bmc:
+    mac: 'b4:45:06:f0:31:59'
+    ip:  '172.17.33.123'
+  osl-compute-63-bmc:
+    mac: 'b4:45:06:ee:9a:d7'
+    ip:  '172.17.33.124'
   osl-nfs-01-bmc:
     mac: 'b8:ac:6f:90:d7:7d'
     ip:  '172.17.33.80'
+  osl-object-01-bmc:
+    mac: '18:66:da:bd:57:6d'
+    ip:  '172.17.32.119'
+  osl-object-02-bmc:
+    mac: '18:66:da:bc:ea:14'
+    ip:  '172.17.32.120'
+  osl-object-03-bmc:
+    mac: '18:66:da:bd:5b:aa'
+    ip:  '172.17.32.121'
+  osl-object-04-bmc:
+    mac: '18:66:da:bd:62:4c'
+    ip:  '172.17.32.122'
+  osl-object-05-bmc:
+    mac: '18:66:da:bd:65:03'
+    ip:  '172.17.32.123'
   osl-storage-13-bmc:
     mac: '48:dc:2d:10:92:89'
     ip:  '172.17.33.55'

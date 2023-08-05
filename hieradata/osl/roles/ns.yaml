@@ -27,19 +27,6 @@ profile::dns::ns::ns_slave_ip_addresses:
 
 # Forward zones, for which the name server is authoritative
 profile::dns::ns::fw_zones:
-  internal:
-    zone: "%{hiera('profile::dns::ns::internal_zone')}"
-    filename: "pz/%{hiera('profile::dns::ns::internal_zone')}"
-  public:
-    zone: "%{hiera('profile::dns::ns::public_zone')}"
-    filename: "pz/%{hiera('profile::dns::ns::public_zone')}"
-  public2:
-    zone: "%{hiera('profile::dns::ns::public_zone2')}"
-    filename: "pz/%{hiera('profile::dns::ns::public_zone2')}"
-#    delegations:
-#      'customer':
-#        - 'ns1.uh-iaas.no'
-#        - 'ns2.uh-iaas.no'
   frontend:
     zone: "%{hiera('profile::dns::ns::frontend_zone')}"
     filename: "pz/%{hiera('profile::dns::ns::frontend_zone')}"
@@ -72,6 +59,27 @@ profile::dns::ns::fw_zones:
       'bgo':
         - "%{hiera('profile::dns::ns::ns_master1')}"
         - "%{hiera('profile::dns::ns::ns_master2')}"
+  uhdc:
+    zone: "uhdc.no"
+    filename: "pz/uhdc.no"
+    ns_a_records:
+      'ns1': "%{hiera('public__ip__ns')}"
+      'ns2': '158.39.77.251'
+    ns_aaaa_records:
+      'ns1': "%{hiera('public__ipv6__ns')}"
+      'ns2': '2001:700:2:83ff::251'
+    delegations:
+      'osl':
+        - "%{hiera('profile::dns::ns::ns_master1')}"
+        - "%{hiera('profile::dns::ns::ns_master2')}"
+      'bgo':
+        - "%{hiera('profile::dns::ns::ns_master1')}"
+        - "%{hiera('profile::dns::ns::ns_master2')}"
+      'test01':
+        - 'ns-test01.iaas.uib.no'
+      'test02':
+        - 'ns1.uio.no'
+        - 'ns2.uio.no'
 
 
 # Reverse zones, for which the name server is authoritative
@@ -251,6 +259,10 @@ profile::dns::ns::ptr_slave_zones:
     cidr: "158.39.201.0/24"
     origin: "201.39.158.in-addr.arpa"
     filename: "sz/201.39.158.in-addr.arpa"
+  bgo_public05:
+    cidr: "158.37.64.0/23"
+    origin: "64.37.158.in-addr.arpa"
+    filename: "sz/64.37.158.in-addr.arpa"
   bgo_ipv6:
     cidr: "2001:700:2:83ff::/64"
     origin: "f.f.3.8.2.0.0.0.0.0.7.0.1.0.0.2.ip6.arpa"

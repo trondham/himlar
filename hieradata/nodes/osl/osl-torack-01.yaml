@@ -24,13 +24,13 @@ profile::base::network::cumulus_interfaces:
     'clagd_priority': '4096'
     'clagd_peer_ip': 'linklocal'
     'clagd_sys_mac': '44:38:39:ff:bb:1c'
-  'swp50':
+  'swp50': # numascale
     'pvid': '100'
     'mstpctl_portadminedge': true
     'mstpctl_bpduguard': true
     'vids': [ '100', '110', '120', ]
     'speed': '1000'
-  'swp53':
+  'swp53': # sikt link
     'ipv4': '158.36.4.99/31'
     'ipv6': '2001:700:0:8105::1/127'
     'mtu':  '9178'
@@ -66,6 +66,13 @@ profile::base::network::cumulus_bridges:
       - host32
       - host33
       - host34
+      - host35
+      - host36
+      - host37
+      - host38
+      - host39
+      - host40
+      - host41
       - host42
       - host44
       - swp50
@@ -258,6 +265,48 @@ profile::base::network::cumulus_bonds:
     'pvid': '100'
     'mstpctl_portadminedge': true
     'mstpctl_bpduguard': true
+  'host35':
+    'slaves': [ 'swp35', ]
+    'clag_id': '35'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+  'host36':
+    'slaves': [ 'swp36', ]
+    'clag_id': '36'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+  'host37':
+    'slaves': [ 'swp37', ]
+    'clag_id': '37'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+  'host38':
+    'slaves': [ 'swp38', ]
+    'clag_id': '38'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+  'host39':
+    'slaves': [ 'swp39', ]
+    'clag_id': '39'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+  'host40':
+    'slaves': [ 'swp40', ]
+    'clag_id': '40'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+  'host41':
+    'slaves': [ 'swp41', ]
+    'clag_id': '41'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
   'host42':
     'slaves': [ 'swp42', ]
     'clag_id': '42'
@@ -334,6 +383,20 @@ frrouting::frrouting::zebra_interfaces:
     - 'link-detect'
   'host34':
     - 'link-detect'
+  'host35':
+    - 'link-detect'
+  'host36':
+    - 'link-detect'
+  'host37':
+    - 'link-detect'
+  'host38':
+    - 'link-detect'
+  'host39':
+    - 'link-detect'
+  'host40':
+    - 'link-detect'
+  'host41':
+    - 'link-detect'
   'host42':
     - 'link-detect'
   'host44':
@@ -348,6 +411,7 @@ frrouting::frrouting::zebra_ip6_routes:
   - '2001:700:2:82ff::12/128 fd32::12'
   - '2001:700:2:82ff::251/128 fd32::16'
   - '2001:700:2:82ff::256/128 fd32::34'
+  - '2001:700:2:82ff::97/128 fd32::97'
 frrouting::frrouting::zebra_ip_routes:
   - '10.0.0.0/8 Null0'
   - '158.37.63.0/24 Null0'
@@ -361,7 +425,7 @@ frrouting::frrouting::zebra_ip_routes:
   - '158.37.63.251/32 172.18.32.16'
   - '158.37.63.253/32 172.18.32.12'
   - '158.37.63.254/32 172.18.32.51'
-
+  - '158.39.75.247/32 172.18.32.97'
 frrouting::frrouting::zebra_generic_options:
   'ip':
     'forwarding'
@@ -369,32 +433,37 @@ frrouting::frrouting::zebra_generic_options:
     'forwarding'
 
 frrouting::frrouting::bgp_neighbors:
-  - '158.36.4.98 remote-as 224'
-  - '158.36.4.98 bfd 5 500 500'
-  - '158.36.4.98 soft-reconfiguration inbound'
-  - '158.36.4.98 prefix-list uninett-routes-in in'
-  - '158.36.4.98 prefix-list uninett-routes-out out'
-  - '2001:700:0:8105:: remote-as 224'
-  - '2001:700:0:8105:: bfd 5 500 500'
+  # sikt link
+  # - '158.36.4.98 remote-as 224'
+  # - '158.36.4.98 bfd 5 500 500'
+  # - '158.36.4.98 soft-reconfiguration inbound'
+  # - '158.36.4.98 prefix-list uninett-routes-in in'
+  # - '158.36.4.98 prefix-list uninett-routes-out out'
+  # - '2001:700:0:8105:: remote-as 224'
+  # - '2001:700:0:8105:: bfd 5 500 500'
+  # torack-02
   - "172.18.228.2 remote-as %{hiera('bgp_as')}"
-  - '172.18.228.2 default-originate'
+#  - '172.18.228.2 default-originate'
   - '172.18.228.2 soft-reconfiguration inbound'
-  - '172.18.228.2 route-map failover-default-route in'
+#  - '172.18.228.2 route-map failover-default-route in'
   - "fd32:18:228::2 remote-as %{hiera('bgp_as')}"
   - 'fd32:18:228::2 soft-reconfiguration inbound'
+  # spine-01
   - "172.18.38.1 remote-as %{hiera('bgp_as')}"
   - '172.18.38.1 soft-reconfiguration inbound'
   - "fd32::6:1 remote-as %{hiera('bgp_as')}"
   - 'fd32::6:1 soft-reconfiguration inbound'
+  # spine-02
   - "172.18.38.2 remote-as %{hiera('bgp_as')}"
   - '172.18.38.2 soft-reconfiguration inbound'
   - "fd32::6:2 remote-as %{hiera('bgp_as')}"
   - 'fd32::6:2 soft-reconfiguration inbound'
-frrouting::frrouting::bgp_neighbors6:
-  - '2001:700:0:8105:: activate'
-  - '2001:700:0:8105:: soft-reconfiguration inbound'
-  - '2001:700:0:8105:: prefix-list uninett-routes6-in in'
-  - '2001:700:0:8105:: prefix-list uninett-routes6-out out'
+#frrouting::frrouting::bgp_neighbors6:
+  # sikt link IPv6 extra
+  # - '2001:700:0:8105:: activate'
+  # - '2001:700:0:8105:: soft-reconfiguration inbound'
+  # - '2001:700:0:8105:: prefix-list uninett-routes6-in in'
+  # - '2001:700:0:8105:: prefix-list uninett-routes6-out out'
 
 frrouting::frrouting::bgp_as: "%{hiera('bgp_as')}"
 
@@ -424,10 +493,10 @@ frrouting::frrouting::bgp_neighbor_groups:
       - 'route-map rr-client-allow out'
       - 'bfd'
     'members':
-      - '172.18.32.17'
-      - '172.18.32.18'
       - '172.18.32.26'
       - '172.18.32.27'
+      - '172.18.32.44'
+      - '172.18.32.45'
       - '172.18.32.103'
       - '172.18.32.104'
       - '172.18.32.105'
@@ -468,7 +537,6 @@ frrouting::frrouting::bgp_neighbor_groups:
       - '172.18.33.38'
       - '172.18.33.39'
       - '172.18.33.40'
-      - '172.18.33.42'
       - '172.18.33.43'
       - '172.18.33.44'
       - '172.18.33.45'
@@ -478,22 +546,37 @@ frrouting::frrouting::bgp_neighbor_groups:
       - '172.18.33.49'
       - '172.18.33.82'
       - '172.18.33.83'
+      - '172.18.33.84'
+      - '172.18.33.85'
+      - '172.18.33.86'
+      - '172.18.33.87'
+      - '172.18.33.88'
+      - '172.18.33.89'
+      - '172.18.33.90'
+      - '172.18.33.91'
+      - '172.18.33.92'
+      - '172.18.33.122'
+      - '172.18.33.123'
+      - '172.18.33.124'
     'options6':
       - 'neighbor rr-clients route-reflector-client'
       - 'neighbor rr-clients route-map rr-client-allow6 in'
       - 'neighbor rr-clients route-map rr-client-allow6 out'
       - 'maximum-paths ibgp 3'
+      # spine-01
       - 'neighbor fd32::6:1 activate'
       - 'neighbor fd32::6:1 soft-reconfiguration inbound'
+      # spine-02
       - 'neighbor fd32::6:2 activate'
       - 'neighbor fd32::6:2 soft-reconfiguration inbound'
+      # torack-02
       - 'neighbor fd32:18:228::2 activate'
       - 'neighbor fd32:18:228::2 route-map failover-default-route6 in'
       - 'neighbor fd32:18:228::2 default-originate'
       - 'neighbor fd32:18:228::2 soft-reconfiguration inbound'
     'members6':
-      - 'fd32::17'
-      - 'fd32::18'
+      - 'fd32::44'
+      - 'fd32::45'
       - 'fd32::103'
       - 'fd32::104'
       - 'fd32::105'
@@ -534,7 +617,6 @@ frrouting::frrouting::bgp_neighbor_groups:
       - 'fd32::1:38'
       - 'fd32::1:39'
       - 'fd32::1:40'
-      - 'fd32::1:42'
       - 'fd32::1:43'
       - 'fd32::1:44'
       - 'fd32::1:45'
@@ -544,6 +626,18 @@ frrouting::frrouting::bgp_neighbor_groups:
       - 'fd32::1:49'
       - 'fd32::1:82'
       - 'fd32::1:83'
+      - 'fd32::1:84'
+      - 'fd32::1:85'
+      - 'fd32::1:86'
+      - 'fd32::1:87'
+      - 'fd32::1:88'
+      - 'fd32::1:89'
+      - 'fd32::1:90'
+      - 'fd32::1:91'
+      - 'fd32::1:92'
+      - 'fd32::1:122'
+      - 'fd32::1:123'
+      - 'fd32::1:124'
 
 frrouting::frrouting::bgp_accesslist:
   '10':
@@ -571,21 +665,21 @@ frrouting::frrouting::bgp_accesslist6:
 frrouting::frrouting::bgp_ip_prefix_list:
   - 'routes-from-leaf1 seq 5 deny any'
   - 'routes-to-leaf1 seq 5 permit 0.0.0.0/0'
-  - 'uninett-routes-in seq 5 permit any'
-  - 'uninett-routes-in seq 10 deny any'
-  - 'uninett-routes-out seq 5 permit 158.37.63.0/24'
-  - 'uninett-routes-out seq 6 permit 158.39.48.0/24'
-  - 'uninett-routes-out seq 7 permit 158.39.75.0/24'
-  - 'uninett-routes-out seq 8 permit 158.39.200.0/24'
-  - 'uninett-routes-out seq 10 deny any'
+  # - 'uninett-routes-in seq 5 permit any'
+  # - 'uninett-routes-in seq 10 deny any'
+  # - 'uninett-routes-out seq 5 permit 158.37.63.0/24'
+  # - 'uninett-routes-out seq 6 permit 158.39.48.0/24'
+  # - 'uninett-routes-out seq 7 permit 158.39.75.0/24'
+  # - 'uninett-routes-out seq 8 permit 158.39.200.0/24'
+  # - 'uninett-routes-out seq 10 deny any'
 #  - 'uio-routes-in seq 5 permit 129.240.0.0/16'
 #  - 'uio-routes-in seq 10 deny any'
   - 'default-route seq 5 permit 0.0.0.0/0'
 frrouting::frrouting::bgp_ipv6_prefix_list:
-  - 'uninett-routes6-in seq 5 permit any'
-  - 'uninett-routes6-in seq 10 deny any'
-  - 'uninett-routes6-out seq 5 permit 2001:700:2:8200::/56'
-  - 'uninett-routes6-out seq 10 deny any'
+  # - 'uninett-routes6-in seq 5 permit any'
+  # - 'uninett-routes6-in seq 10 deny any'
+  # - 'uninett-routes6-out seq 5 permit 2001:700:2:8200::/56'
+  # - 'uninett-routes6-out seq 10 deny any'
 #  - 'uio-routes-in6 seq 5 permit 2001:700:200::/48'
 #  - 'uio-routes-in6 seq 10 deny any'
   - 'default-route6 seq 5 permit ::/0'

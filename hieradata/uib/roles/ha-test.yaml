@@ -86,6 +86,7 @@ profile::firewall::rules::custom_rules:
     source:
       - '129.177.0.0/16'
       - '158.39.201.0/24' # nrec osl
+      - '158.37.64.0/23' # nrec bgo
       - '158.39.77.0/24' # nrec bgo
       - '158.39.74.0/24' # nrec bgo
       - '158.39.75.0/24' # nrec osl
@@ -99,6 +100,7 @@ profile::firewall::rules::custom_rules:
     source:
       - '129.177.0.0/16'
       - '158.39.201.0/24' # nrec osl
+      - '158.37.64.0/23' # nrec bgo
       - '158.39.77.0/24' # nrec bgo
       - '158.39.74.0/24' # nrec bgo
       - '158.39.75.0/24' # nrec osl
@@ -125,8 +127,16 @@ profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
   'ssl-https-apps':
     listening_service:  'ssl-https-apps'
     ports:              443
-    server_names:       ['apps-test03.uib.no', 'apps-test04.uib.no']
-    ipaddresses:        ['129.177.150.209', '129.177.150.210']
+    server_names:
+      - 'apps-test03.uib.no'
+      - 'apps-test04.uib.no'
+#      - 'apps-test05.uib.no'
+#      - 'apps-test06.uib.no'
+    ipaddresses:
+      - '129.177.150.209'
+      - '129.177.150.210'
+#      - '129.177.150.203'
+#      - '129.177.150.204'
     options:            'verify none inter 120s check check-ssl ssl'
   'ssl-https-apps-admin':
     listening_service:  'ssl-https-apps-admin'
