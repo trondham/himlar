@@ -48,7 +48,6 @@ nodesets:
     - role:       "compute"
       memory:     4096
       cpus:       2
-      box:        "norcams/base"
   # The following nodes are optional
     #- role:       "access"
     #- role:       "identity"
@@ -137,9 +136,7 @@ nodesets:
     - role:       "storage"
   dns:
     - role:       "db-global"
-      box:        "norcams/base"
     - role:       "db-regional"
-      box:        "norcams/base"
     - role:       "mq"
     - role:       "api"
       box:        "norcams/base"
