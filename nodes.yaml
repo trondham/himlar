@@ -35,9 +35,7 @@ defaults:
 nodesets:
   default:
     - role:       "db-global"
-      box:        "norcams/base"
     - role:       "db-regional"
-      box:        "norcams/base"
     - role:       "api"
       box:        "norcams/base"
     - role:       "mq"
