@@ -81,19 +81,21 @@ netcfg_dns_server2:       '172.16.32.44'
 netcfg_dns_search:        "%{hiera('domain_mgmt')} %{hiera('domain_trp')}"
 netcfg_priv_gateway:      '172.18.32.26'
 netcfg_priv_network:      '10.2.0.0/20'
+netcfg_educloud1_network: '10.4.0.0/20'
 netcfg_pub_natgw:         '158.37.63.248'
 netcfg_pub_natgw2:        '158.39.75.248'
 netcfg_anycast_dns:       '158.37.63.252'
 netcfg_anycast_dns6:      '2001:700:2:82ff::252'
 netcfg_ib_vlan:           '3379'
 netcfg_oob_vlan:          '3378'
+netcfg_elastic_cidr:      '10.6.0.0/20'
 netcfg_trp_rr:
   rr1:
-    peer_ipv4: '172.18.38.1'
-    peer_ipv6: 'fd32::6:1'
+    peer_ipv4: '172.18.32.1'
+    peer_ipv6: 'fd32::1'
   rr2:
-    peer_ipv4: '172.18.38.2'
-    peer_ipv6: 'fd32::6:2'
+    peer_ipv4: '172.18.32.2'
+    peer_ipv6: 'fd32::2'
 
 #
 # Public addresses (bgo host frontend)
@@ -263,15 +265,18 @@ profile::network::services::dns_records:
     "resolver.%{hiera('domain_public2')}":        '158.37.63.252'
 
     # Management network (entries that differ from common/common.yaml)
-    "%{::location}-login-01.%{hiera('domain_mgmt')}": "%{hiera('netcfg_mgmt_netpart')}.199"
+    "%{::location}-login-01.%{hiera('domain_mgmt')}": "%{hiera('netcfg_mgmt_netpart')}.10"
     "repo.%{hiera('domain_oob')}":                    "%{hiera('netcfg_oob_netpart')}.9"
     # FIXME: override common/common.yaml
+    "%{::location}-mgmt-00.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.100"
     "%{::location}-mgmt-01.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.1"
+    "%{::location}-mgmt-02.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.2"
     "%{::location}-mgmt-03.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.3"
-    "%{::location}-mgmt-04.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.4"    
+    "%{::location}-mgmt-04.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.4"
     "%{::location}-mgmt-05.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.5"
     "%{::location}-mgmt-06.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.6"
     "%{::location}-mgmt-07.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.7"
+    "%{::location}-login-01old.%{hiera('domain_mgmt')}": "%{hiera('netcfg_mgmt_net_c0')}.199"
   AAAA:
     # Frontend records (<foo>.nrec.no)
     "ns1.%{hiera('domain_frontend')}":            '2001:700:2:82ff::251'
@@ -289,19 +294,25 @@ profile::network::services::dns_records:
     "resolver.%{hiera('domain_public2')}":             '2001:700:2:82ff::252'
     "%{::location}-dns-01.%{hiera('domain_public2')}": '2001:700:2:82ff::256'
   PTR:
+    "199.%{hiera('reverse_mgmt_c0')}":    "%{::location}-login-01old.%{hiera('domain_mgmt')}"
     # FIXME: override common/common.yaml
+    "1.%{hiera('reverse_mgmt_c2')}":      "%{::location}-mgmt-01.%{hiera('domain_mgmt')}"
+    "2.%{hiera('reverse_mgmt_c2')}":      "%{::location}-mgmt-02.%{hiera('domain_mgmt')}"
+    "3.%{hiera('reverse_mgmt_c2')}":      "%{::location}-mgmt-03.%{hiera('domain_mgmt')}"
     "4.%{hiera('reverse_mgmt_c2')}":      "%{::location}-mgmt-04.%{hiera('domain_mgmt')}"
     "5.%{hiera('reverse_mgmt_c2')}":      "%{::location}-mgmt-05.%{hiera('domain_mgmt')}"
     "6.%{hiera('reverse_mgmt_c2')}":      "%{::location}-mgmt-06.%{hiera('domain_mgmt')}"
     "7.%{hiera('reverse_mgmt_c2')}":      "%{::location}-mgmt-07.%{hiera('domain_mgmt')}"
+    "100.%{hiera('reverse_mgmt_c2')}":    "%{::location}-mgmt-00.%{hiera('domain_mgmt')}"
     # Management network (entries that differ from common/common.yaml)
-    "10.%{hiera('reverse_mgmt')}":     "%{::location}-login-02.%{hiera('domain_mgmt')}"
+    "10.%{hiera('reverse_mgmt')}":     "%{::location}-login-01.%{hiera('domain_mgmt')}"
     # public IPv4
     '250.63.37.158.in-addr.arpa':   "api-osl.%{hiera('domain_frontend')}"
     '251.63.37.158.in-addr.arpa':   "ns1.%{hiera('domain_frontend')}"
     '252.63.37.158.in-addr.arpa':   "resolver.%{hiera('domain_public')}"
     '254.63.37.158.in-addr.arpa':   "dashboard-osl.%{hiera('domain_frontend')}"
     # public IPv6
+    '8.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.2.8.2.0.0.0.0.0.7.0.1.0.0.2.ip6.arpa':  "osl-login-02.iaas.uio.no"
     '1.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.2.8.2.0.0.0.0.0.7.0.1.0.0.2.ip6.arpa':  "ns1.%{hiera('domain_frontend')}"
     '2.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.2.8.2.0.0.0.0.0.7.0.1.0.0.2.ip6.arpa':  "resolver.%{hiera('domain_public')}"
     '6.5.2.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.2.8.2.0.0.0.0.0.7.0.1.0.0.2.ip6.arpa':  "%{::location}-dns-01.%{hiera('domain_public')}"
@@ -380,6 +391,18 @@ profile::openstack::resource::networks:
     admin_state_up: true
     shared: false
     tenant_name: 'imagebuilder'
+    provider_network_type: 'local'
+  educloud1:
+    name: 'educloud1'
+    admin_state_up: true
+    shared: false
+    tenant_name: 'openstack'
+    provider_network_type: 'local'
+  elasticIP:
+    name: 'elasticIP'
+    admin_state_up: true
+    shared: false
+    tenant_name: 'openstack'
     provider_network_type: 'local'
 
 profile::openstack::resource::subnets:
@@ -470,4 +493,48 @@ profile::openstack::resource::subnets:
     dns_nameservers:
       - "%{hiera('netcfg_anycast_dns')}"
     network_name: 'IPv6'
+    tenant_name: 'openstack'
+  educloud1_IPv4:
+    name: 'educloud1_IPv4'
+    cidr: '10.4.0.0/20'
+    ip_version: '4'
+    allocation_pools:
+      - 'start=10.4.0.10,end=10.4.15.254'
+    gateway_ip: '10.4.0.1'
+    dns_nameservers:
+      - "%{hiera('netcfg_anycast_dns')}"
+    network_name: 'educloud1'
+    tenant_name: 'openstack'
+  educloud1_IPv6:
+    name: 'educloud1_IPv6'
+    cidr: '2001:700:2:8204::/64'
+    ip_version: '6'
+    allocation_pools:
+      - 'start=2001:700:2:8204::1000,end=2001:700:2:8204::4fff'
+    gateway_ip: '2001:700:2:8204::1'
+    dns_nameservers:
+      - "%{hiera('netcfg_anycast_dns6')}"
+    network_name: 'educloud1'
+    tenant_name: 'openstack'
+  elastic1_IPv4:
+    name: 'elastic1_IPv4'
+    cidr: "%{hiera('netcfg_elastic_cidr')}"
+    ip_version: '4'
+    allocation_pools:
+      - 'start=10.6.0.10,end=10.6.15.240'
+    gateway_ip: '10.6.0.1'
+    dns_nameservers:
+      - "%{hiera('netcfg_anycast_dns')}"
+    network_name: 'elasticIP'
+    tenant_name: 'openstack'
+  elastic1_IPv6:
+    name: 'elastic1_IPv6'
+    cidr: '2001:700:2:8203::/64'
+    ip_version: '6'
+    allocation_pools:
+      - 'start=2001:700:2:8203::1000,end=2001:700:2:8203::4fff'
+    gateway_ip: '2001:700:2:8203::1'
+    dns_nameservers:
+      - "%{hiera('netcfg_anycast_dns6')}"
+    network_name: 'elasticIP'
     tenant_name: 'openstack'

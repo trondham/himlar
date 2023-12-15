@@ -166,17 +166,19 @@ profile::application::builder::images:
     'username':         'debian'
     'hour':             16
     'minute':           30
-  'fedora_37':
-    'image_name':       'IMAGEBUILDER Fedora 37'
-    'url':              'https://www.mirrorservice.org/sites/dl.fedoraproject.org/pub/fedora/linux/releases/37/Cloud/x86_64/images/'
-    'latest':           'Fedora-Cloud-Base-37-1.7.x86_64.qcow2'
-    'checksum_file':    'Fedora-Cloud-37-1.7-x86_64-CHECKSUM'
-    'checksum':         'sha256'
+  'debian12':
+    'image_name':       'IMAGEBUILDER Debian 12'
+    'url':              'https://cdimage.debian.org/cdimage/cloud/bookworm/latest/'
+    'latest':           'debian-12-generic-amd64.qcow2'
+    'checksum_file':    'SHA512SUMS'
+    'checksum':         'sha512'
     'min_ram':          1024
     'min_disk':         3
-    'username':         'fedora'
-    'hour':             6
-    'minute':           10
+    'flavor':           'm1.small'
+    'efi':              true
+    'username':         'debian'
+    'hour':             16
+    'minute':           45
   'fedora_38':
     'image_name':       'IMAGEBUILDER Fedora 38'
     'url':              'https://www.mirrorservice.org/sites/dl.fedoraproject.org/pub/fedora/linux/releases/38/Cloud/x86_64/images/'

@@ -88,5 +88,24 @@ class profile::monitoring::sensu::agent (
       purge => $purge_check,
     }
 
+    # this is used for cumulus linux (debian)
+    # the override file must be loaded last so we rename it zzoverride.conf
+    if $run_in_vrf {
+
+      file { 'sensu-systemd-override':
+        ensure => file,
+        path   => '/etc/systemd/system/sensu-agent.service.d/zzoverride.conf',
+        owner  => root,
+        group  => root,
+        source => "puppet:///modules/${module_name}/monitoring/sensugo/systemd/override.conf",
+        notify => [Exec['debian_systemctl_daemon_reload'], Service['sensu-agent']]
+      }
+
+      exec { 'debian_systemctl_daemon_reload':
+        command     => '/bin/systemctl daemon-reload',
+        refreshonly => true,
+      }
+    }
+
   }
 }

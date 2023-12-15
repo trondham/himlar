@@ -63,8 +63,7 @@ bootstrap_puppet()
   # setup dnf/yum
   if command -v dnf >/dev/null 2>&1; then
     echo "bootstrap puppet for el8..."
-    dnf clean all
-    dnf install -y epel-release # to get gpgkey for epel
+    dnf install --refresh -y epel-release # to get gpgkey for epel
     el8_repos
     dnf -y upgrade
     dnf install -y puppet-agent git-core vim network-scripts gcc

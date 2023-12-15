@@ -9,6 +9,7 @@ include:
     - profile::bootstrap::himlar
     - profile::network::nat
     - profile::application::postfix
+    - profile::logging::rsyslog::client
 
 # We need to define oob for login, but this should be overridden in location
 # with the correct oob interface where we use oob network
@@ -61,6 +62,10 @@ accounts::accounts:
     ensure: present
   'torldre':
     ensure: present
+  'erlenboh':
+    ensure: present
+  'ivarth':
+    ensure: present
   # system user for db backup
   'norcams':
     ensure: present
@@ -90,6 +95,7 @@ profile::base::common::packages:
   'python3': {}
   'python3-virtualenv': {} # used for ca_setup
   'rsync': {}              # used for repository sync between login nodes
+  'ansible': {}
 
 ssh::server::options:
   # Need this for 2FA (saz-ssh-module disables by default)
@@ -120,10 +126,10 @@ profile::base::common::users_ssh_options:
         'Hostname': 'bgo-login-02.iaas.uib.no'
       'Host osl':
         'User':     'git'
-        'Hostname': 'osl-login-01.iaas.uio.no'
+        'Hostname': 'git.iaas.uio.no'
       'Host osl2':
         'User':     'git'
-        'Hostname': 'git.iaas.uio.no'
+        'Hostname': 'osl-login-02.iaas.uio.no'
 
 googleauthenticator::pam::mode::modes:
   wheel-only:

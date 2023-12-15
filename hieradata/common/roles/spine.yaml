@@ -28,27 +28,11 @@ profile::logging::logrotate::manage_logrotate:    false
 profile::base::cl_limits::manage_cl_limits:       true
 profile::base::cl_limits::as_value:               2097152
 
-# sensu
-profile::monitoring::sensu::agent::enable_agent:    true
-profile::monitoring::sensu::agent::merge_strategy: 'first'
-profile::monitoring::sensu::agent::run_in_vrf:      true
-profile::monitoring::sensu::agent::plugins:
-  sensu-plugins-network-checks:
-    type:         package
-    pkg_version:  '4.1.1'
+profile::base::common::manage_ntp:     false
+profile::base::common::manage_chrony:  true
+chrony::service_name: 'chrony@mgmt'
 
-sensuclassic::checks:
-  'metrics-netif':
-    type:         'metric'
-    command:      'metrics-netif.rb --scheme network.%{::hostname}'
-    interval:     60
-    subscribers:  ['metrics']
-    handlers:     ['graphite_tcp']
-
-sensuclassic::install_repo:            true
-sensuclassic::manage_repo:             true
-
-profile::monitoring::collectd::enable: false
+profile::monitoring::collectd::enable: true
 profile::monitoring::collectd::merge_strategy: 'first'
 profile::monitoring::collectd::plugins:
    - collectd::plugin::interface
@@ -58,6 +42,9 @@ collectd::service_ensure: stopped
 collectd::service_enable: false
 profile::monitoring::collectd::manage_service: true
 profile::monitoring::collectd::service_name:   'collectd@mgmt'
+
+profile::monitoring::sensu::agent::enable_agent: true
+profile::monitoring::sensu::agent::run_in_vrf:   true
 
 # ntp service managed by profile because of mgmt VRF
 ntp::service_enable: false
@@ -81,6 +68,7 @@ profile::network::leaf::acls:
       - "-A $INGRESS_CHAIN -s %{hiera('netcfg_mgmt_netpart')}.0/%{hiera('netcfg_mgmt_netmask')} -p tcp --dport 19999 -j ACCEPT"
       - "-A $INGRESS_CHAIN -p tcp --dport 19999 -j DROP"
       - "-A $INGRESS_CHAIN -s %{hiera('netcfg_trp_netpart')}.0/%{hiera('netcfg_trp_netmask')} -p tcp --dport 179 -j ACCEPT"
+      - "-A $INGRESS_CHAIN -s %{hiera('netcfg_elastic_cidr')} -p tcp --dport 179 -j ACCEPT"
       - "-A $INGRESS_CHAIN -p tcp --dport 179 -j DROP"
       - "-A $INGRESS_CHAIN -s %{hiera('netcfg_mgmt_netpart')}.0/%{hiera('netcfg_mgmt_netmask')} -p tcp --dport 22 -j ACCEPT"
       - "-A $INGRESS_CHAIN -s %{hiera('netcfg_trp_netpart')}.0/%{hiera('netcfg_trp_netmask')} -p tcp --dport 22 -j ACCEPT"
@@ -97,9 +85,14 @@ openstack_extras::repo::debian::debian::package_require: true
 openstack_extras::repo::debian::debian::manage_uca: false
 openstack_extras::repo::debian::debian::manage_whz: false
 openstack_extras::repo::debian::debian::source_hash:
-  'jessie':
+  'buster':
     'location': 'http://ftp.no.debian.org/debian'
     'repos':    'main'
+  'nrec':
+    'location': 'https://download.iaas.uio.no/nrec/aptrepo/'
+    'repos':    'main'
+    'release':  'buster'
+    'allow_unsigned': true
 
 profile::base::common::packages:
   'vim-enhanced': { 'ensure': 'absent', }
