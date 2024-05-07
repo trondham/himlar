@@ -23,14 +23,33 @@ cat <<'END_DEMO' > ~/keystonerc_demo
 export OS_USERNAME=demo
 export OS_TENANT_NAME=demoproject
 export OS_PASSWORD=himlar0pen
-export OS_AUTH_URL=https://dashboard.himlar.local:5000/v3
+export OS_AUTH_URL="https://api.vagrant.iaas.intern:5000/v3"
 export OS_IDENTITY_API_VERSION=3
-export OS_CACERT=/opt/himlar/provision/ca/certs/ca-chain.cert.pem
 export OS_USER_DOMAIN_NAME=${OS_USER_DOMAIN_NAME:-"Default"}
 export OS_PROJECT_DOMAIN_NAME=${OS_PROJECT_DOMAIN_NAME:-"Default"}
-export PS1='\[\e[0;34m\][\u@\h \[\e[0;35m\]\W \[\e[0;33m\](demo)\[\e[0;34m\]]\$\[\e[0m\] '
+export OS_REGION_NAME="vagrant"
 export OS_NO_CACHE=1
+export OS_CACERT=./provision/ca/certs/ca.cert.pem
 alias openstack="/usr/bin/openstack"
 unset http_proxy
 unset https_proxy
 END_DEMO
+
+cat <<'END_ADMIN' > ~/keystonerc_admin
+export OS_AUTH_TYPE="password"
+export OS_AUTH_URL="https://api.vagrant.iaas.intern:5000/v3"
+export OS_COMPUTE_API_VERSION="2.79"
+export OS_IDENTITY_API_VERSION="3"
+export OS_INTERFACE="public"
+export OS_NO_CACHE="1"
+export OS_PASSWORD="admin_pass"
+export OS_PROJECT_DOMAIN_NAME="Default"
+export OS_PROJECT_NAME="openstack"
+export OS_REGION_NAME="vagrant"
+export OS_USERNAME="admin"
+export OS_USER_DOMAIN_NAME="Default"
+export OS_CACERT=./provision/ca/certs/ca.cert.pem
+alias openstack="/usr/bin/openstack"
+unset http_proxy
+unset https_proxy
+END_ADMIN
