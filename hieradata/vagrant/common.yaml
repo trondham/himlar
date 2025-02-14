@@ -227,6 +227,7 @@ gnocchi_api_password:                               'gnocchi_pass'
 ceilometer_api_password:                            'ceilometer_pass'
 access_api_password:                                'access_pass'
 designate_api_password:                             'designate_pass'
+cloudkitty_api_password:                            'cloudkitty_pass'
 radosgw_api_password:                               'radosgw_pass'
 
 # rabbitmq
@@ -278,6 +279,10 @@ nova::db::mysql_placement::password:                'nova_placement_pass'
 # designate.yaml
 designate::db::mysql::password:                     'designate_pass'
 designate::rabbit_password:                         'guest'
+
+# cloudkitty.yaml
+cloudkitty::db::mysql::password:                    'cloudkitty_pass'
+cloudkitty::rabbit_password:                        'guest'
 
 # imagebuilder
 imagebuilder_password:                              'imagebuilder_pass'

@@ -1,0 +1,40 @@
+---
+include:
+  default:
+    - profile::openstack::cloudkitty
+    - profile::openstack::cache
+    - profile::logging::rsyslog::client
+    - profile::openstack::openrc
+
+# Override repo "rdo-release"
+openstack_version: 'xena'
+
+# Username and password for the cloudkitty service
+profile::openstack::openrc::password:     "%{hiera('cloudkitty_api_password')}"
+profile::openstack::openrc::username:     'cloudkitty'
+profile::openstack::openrc::project_name: 'services'
+
+# Set SELinux enforcing
+profile::base::selinux::manage_selinux: true
+
+# Add iptables rules
+profile::openstack::cloudkitty::manage_firewall: true
+
+# Some extra packages we want installed
+profile::base::common::packages:
+  'python3-openstackclient': {}
+  'python3-cloudkittyclient': {}
+  'openstack-utils': {}
+  'openstack-selinux': {}
+  'patch': {}
+
+# Don't purge sudo stuff
+sudo::purge: false
+
+# Enable extra yum repo
+profile::base::yumrepo::repo_hash:
+  rdo-release:
+    ensure: present
+
+# Make sure that memcached doesn't too much memory
+memcached::max_memory: '20%'

@@ -41,8 +41,8 @@ profile::network::interface::manage_dummy:                          true
 profile::highavailability::loadbalancing::haproxy::manage_haproxy:  true
 profile::highavailability::loadbalancing::haproxy::manage_firewall: true
 profile::highavailability::loadbalancing::haproxy::firewall_ports:
-  public:    ['80', '443', '5000', '8041', '8774', '8776', '9292', '9696', '6080', '8080', '8778', '9001']
-  internal:  ['5000', '8041', '8774', '8776', '9292', '9696', '35357', '8080', '8778', '9001']
+  public:    ['80', '443', '5000', '8041', '8774', '8776', '9292', '9696', '6080', '8080', '8778', '8889', '9001']
+  internal:  ['5000', '8041', '8774', '8776', '9292', '9696', '35357', '8080', '8778', '8889', '9001']
   mgmt:      ['9000']
   limited:   []
 
@@ -110,6 +110,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
       - "image.api.%{hiera('domain_public2')}:9292":        'bk_image'
       - "object.api.%{hiera('domain_public2')}:8080":       'bk_object'
       - "dns.api.%{hiera('domain_public2')}:9001":          'bk_dns'
+      - "billing.api.%{hiera('domain_public2')}:8889":      'bk_billing'
       - "status.%{hiera('domain_frontend2')}":              'bk_status'
       - "status-%{::location}.%{hiera('domain_frontend2')}": 'bk_status'
       - "request.%{hiera('domain_frontend2')}":             'bk_request'
@@ -131,6 +132,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_mapfile:
       - "volume.%{hiera('domain_trp')}:8776":           'bk_volume'
       - "image.%{hiera('domain_trp')}:9292":            'bk_image'
       - "dns.%{hiera('domain_trp')}:9001":              'bk_dns'
+      - "billing.%{hiera('domain_trp')}:8889":          'bk_billing'
       - "object.%{hiera('domain_trp')}:8080":           'bk_object'
 
 # HAproxy backends: public, internal and haproxy monitor
@@ -143,6 +145,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_frontends:
       "%{::ipaddress_public1}:8778":  ['ssl', "crt %{hiera('star_api_ssl_pem')}", "crt %{hiera('star_api_ssl_pem2')}"]
       "%{::ipaddress_public1}:8774":  ['ssl', "crt %{hiera('star_api_ssl_pem')}", "crt %{hiera('star_api_ssl_pem2')}"]
       "%{::ipaddress_public1}:8776":  ['ssl', "crt %{hiera('star_api_ssl_pem')}", "crt %{hiera('star_api_ssl_pem2')}"]
+      "%{::ipaddress_public1}:8889":  ['ssl', "crt %{hiera('star_api_ssl_pem')}", "crt %{hiera('star_api_ssl_pem2')}"]
       "%{::ipaddress_public1}:9292":  ['ssl', "crt %{hiera('star_api_ssl_pem')}", "crt %{hiera('star_api_ssl_pem2')}"]
       "%{::ipaddress_public1}:9696":  ['ssl', "crt %{hiera('star_api_ssl_pem')}", "crt %{hiera('star_api_ssl_pem2')}"]
       "%{::ipaddress_public1}:9001":  ['ssl', "crt %{hiera('star_api_ssl_pem')}", "crt %{hiera('star_api_ssl_pem2')}"]
@@ -191,6 +194,7 @@ profile::highavailability::loadbalancing::haproxy::haproxy_frontends:
       "%{::ipaddress_trp1}:8080":  [] # object
       "%{::ipaddress_trp1}:9001":  [] # designate
       "%{::ipaddress_trp1}:8778":  [] # placement
+      "%{::ipaddress_trp1}:8889":  [] # cloudkitty
     options:
       - capture:        'request header Host len 64' #for debug
       - use_backend:    '%[req.hdr(host),lower,map(/etc/haproxy/internal_domains.map)]'
@@ -262,6 +266,12 @@ profile::highavailability::loadbalancing::haproxy::haproxy_backends:
       - option:       'httplog'
       - errorfile:    '503 /etc/haproxy/error.api.http'
       - balance:      'roundrobin'
+  bk_billing:
+    options:
+      - fullconn:     100
+      - option:       'httplog'
+      - errorfile:    '503 /etc/haproxy/error.api.http'
+      - balance:      'roundrobin'
   bk_object:
     options:
       - fullconn:     500
@@ -316,6 +326,8 @@ status__backend__names:    ['%{::location}-status-01']
 status__backend__ips:      ["%{hiera('netcfg_trp_netpart')}.50"]
 dns__backend__names:       ['%{::location}-dns-01']
 dns__backend__ips:         ["%{hiera('netcfg_trp_netpart')}.34"]
+billing__backend__names:   ['%{::location}-billing-01']
+billing__backend__ips:     ["%{hiera('netcfg_trp_netpart')}.32"]
 console__backend__names:   ['%{::location}-console-01']
 console__backend__ips:     ["%{hiera('netcfg_trp_netpart')}.61"]
 access__backend__names:    ['%{::location}-access-01']
@@ -384,6 +396,12 @@ profile::highavailability::loadbalancing::haproxy::haproxy_balancermembers:
     ipaddresses:        "%{alias('dns__backend__ips')}"
     ports:              '9001'
     options:            'check'
+  billing:
+    listening_service:  'bk_billing'
+    server_names:       "%{alias('billing__backend__names')}"
+    ipaddresses:        "%{alias('billing__backend__ips')}"
+    ports:              '8889'
+    options:            'check'
   console:
     listening_service:  'bk_console'
     server_names:       "%{alias('console__backend__names')}"
@@ -449,6 +467,10 @@ profile::base::selinux::ports:
     seltype:  'http_port_t'
     protocol: 'tcp'
     port:     9001
+  billing-http:
+    seltype:  'http_port_t'
+    protocol: 'tcp'
+    port:     8889
 
 # Errorpage for api, not used for status!
 profile::highavailability::loadbalancing::haproxy::haproxy_errorpage:

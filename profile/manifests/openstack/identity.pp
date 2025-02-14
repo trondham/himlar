@@ -9,6 +9,7 @@ class profile::openstack::identity (
   $radosgw_enabled          = false,
   $trove_enabled            = false,
   $designate_enabled        = false,
+  $cloudkitty_enabled        = false,
   $gnocchi_enabled          = false,
   $roles_extra              = [],
   $manage_firewall          = true,
@@ -123,6 +124,10 @@ class profile::openstack::identity (
 
   if $designate_enabled {
     include ::designate::keystone::auth
+  }
+
+  if $cloudkitty_enabled {
+    include ::cloudkitty::keystone::auth
   }
 
   if $gnocchi_enabled {

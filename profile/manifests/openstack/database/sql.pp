@@ -7,6 +7,7 @@ class profile::openstack::database::sql (
   $trove_enabled     = false,
   $cinder_enabled    = false,
   $designate_enabled = false,
+  $cloudkitty_enabled = false,
   $gnocchi_enabled   = false,
   $placement_enabled = false,
   $database          = 'mariadb',
@@ -91,6 +92,13 @@ class profile::openstack::database::sql (
 
   if $designate_enabled {
     class { '::designate::db::mysql':
+             charset => $charset,                # FIXME: remove when puppet-mysql is at => 16.0.0
+             collate => $collate                 # FIXME: remove when puppet-mysql is at => 16.0.0
+    }
+  }
+
+  if $cloudkitty_enabled {
+    class { '::cloudkitty::db::mysql':
              charset => $charset,                # FIXME: remove when puppet-mysql is at => 16.0.0
              collate => $collate                 # FIXME: remove when puppet-mysql is at => 16.0.0
     }

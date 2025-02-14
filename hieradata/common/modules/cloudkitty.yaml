@@ -1,0 +1,74 @@
+---
+# Configuration for Cloudkitty (Billing)
+#
+# Uses puppet-cloudkitty:
+#   https://github.com/openstack/puppet-cloudkitty
+#
+
+#---------------------------------------------------------------------
+# Logging (manifests/logging.pp)
+#   - runs on the billing node
+#---------------------------------------------------------------------
+cloudkitty::logging::use_syslog:  true
+cloudkitty::logging::use_journal: true
+cloudkitty::logging::use_json:    false
+
+#---------------------------------------------------------------------
+# RabbitMQ (manifests/init.pp)
+#   - runs on the billing node
+#---------------------------------------------------------------------
+cloudkitty::default_transport_url:       "%{hiera('service__transport__url')}"
+cloudkitty::notification_transport_url:  "%{hiera('service__transport__url')}"
+
+#---------------------------------------------------------------------
+# Authentication (manifests/keystone/auth.pp)
+#   - runs on the IDENTITY node
+#---------------------------------------------------------------------
+cloudkitty::keystone::auth::region:       "%{::location}"
+cloudkitty::keystone::auth::public_url:   "%{hiera('endpoint__cloudkitty__public')}"
+cloudkitty::keystone::auth::admin_url:    "%{hiera('endpoint__cloudkitty__admin')}"
+cloudkitty::keystone::auth::internal_url: "%{hiera('endpoint__cloudkitty__internal')}"
+cloudkitty::keystone::auth::password:     "%{hiera('cloudkitty_api_password')}"
+
+#---------------------------------------------------------------------
+# Authentication tokens (manifests/keystone/authtoken.pp)
+#   - runs on the billing node
+#---------------------------------------------------------------------
+cloudkitty::keystone::authtoken::password:             "%{hiera('cloudkitty_api_password')}"
+cloudkitty::keystone::authtoken::auth_url:             "%{hiera('endpoint__identity__admin')}/v3"
+cloudkitty::keystone::authtoken::www_authenticate_uri: "%{hiera('endpoint__identity__public')}"
+cloudkitty::keystone::authtoken::memcached_servers:    '127.0.0.1'
+cloudkitty::keystone::authtoken::region_name:          "%{::location}"
+cloudkitty::keystone::authtoken::auth_version:         'v3'
+cloudkitty::keystone::authtoken::user_domain_name:     "%{hiera('keystone__default__domain')}"
+cloudkitty::keystone::authtoken::project_domain_name:  "%{hiera('keystone__default__domain')}"
+cloudkitty::keystone::authtoken::project_name:         "%{hiera('keystone__service__project')}"
+
+#---------------------------------------------------------------------
+# API (manifests/api.pp)
+#   - runs on the billing node
+#---------------------------------------------------------------------
+cloudkitty::api::service_name:      'httpd'
+cloudkitty::api::auth_strategy:     'keystone'
+# needs to be '0.0.0.0' for it to bind to localhost as well
+cloudkitty::api::listen:             "0.0.0.0:8889"
+cloudkitty::api::api_base_uri:       "%{hiera('endpoint__cloudkitty__public')}"
+
+cloudkitty::wsgi::apache::ssl: false
+
+#---------------------------------------------------------------------
+# Database (manifests/db.pp)
+#   - runs on the billing node
+#---------------------------------------------------------------------
+cloudkitty::db::database_connection: "mysql+pymysql://cloudkitty:%{hiera('cloudkitty::db::mysql::password')}@%{hiera('service__address__db_global')}/cloudkitty"
+cloudkitty::db::sync_db: true
+cloudkitty::db::database_max_retries: "-1"
+
+#---------------------------------------------------------------------
+# Database MySQL (manifests/db/mysql.pp)
+#   - runs on the DB node
+#---------------------------------------------------------------------
+cloudkitty::db::mysql::user:   "cloudkitty"
+cloudkitty::db::mysql::dbname: "cloudkitty"
+cloudkitty::db::mysql::allowed_hosts:
+  - "%{hiera('netcfg_trp_netpart')}.%"

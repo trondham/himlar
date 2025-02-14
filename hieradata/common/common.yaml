@@ -302,6 +302,9 @@ endpoint__metric__public:         "https://metric.api.%{hiera('domain_public')}:
 endpoint__object__admin:          "http://object.%{hiera('domain_trp')}:8080"
 endpoint__object__internal:       "http://object.%{hiera('domain_trp')}:8080"
 endpoint__object__public:         "https://object.api.%{hiera('domain_public')}:8080"
+endpoint__cloudkitty__admin:      "http://billing.%{hiera('domain_trp')}:8889/"
+endpoint__cloudkitty__internal:   "http://billing.%{hiera('domain_trp')}:8889/"
+endpoint__cloudkitty__public:     "https://billing.api.%{hiera('domain_public')}:8889/"
 
 #
 # DNS (merge of this and location)
@@ -350,6 +353,7 @@ profile::network::services::dns_records:
     "%{::location}-nat-03.%{hiera('domain_mgmt')}":         "%{hiera('netcfg_mgmt_net_c0')}.28"
     "%{::location}-api-internal-03.%{hiera('domain_mgmt')}": "%{hiera('netcfg_mgmt_net_c0')}.29"
     "%{::location}-mq-01.%{hiera('domain_mgmt')}":          "%{hiera('netcfg_mgmt_net_c0')}.31"
+    "%{::location}-billing-01.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c0')}.32"
     "%{::location}-dns-01.%{hiera('domain_mgmt')}":         "%{hiera('netcfg_mgmt_net_c0')}.34"
     "%{::location}-dns-02.%{hiera('domain_mgmt')}":         "%{hiera('netcfg_mgmt_net_c0')}.35"
     "%{::location}-image-01.%{hiera('domain_mgmt')}":       "%{hiera('netcfg_mgmt_net_c0')}.36"
@@ -606,6 +610,7 @@ profile::network::services::dns_records:
     "identity.%{hiera('domain_trp')}":                      "%{hiera('netcfg_trp_net_c0')}.86"
     "object.%{hiera('domain_trp')}":                        "%{hiera('netcfg_trp_net_c0')}.86"
     "metric.%{hiera('domain_trp')}":                        "%{hiera('netcfg_trp_net_c0')}.86"
+    "billing.%{hiera('domain_trp')}":                       "%{hiera('netcfg_trp_net_c0')}.86"
   PTR:
     # mgmt
     "1.%{hiera('reverse_mgmt_c0')}":      "%{::location}-torack-01.%{hiera('domain_mgmt')}"
@@ -627,6 +632,7 @@ profile::network::services::dns_records:
     "27.%{hiera('reverse_mgmt_c0')}":     "%{::location}-nat-02.%{hiera('domain_mgmt')}"
     "28.%{hiera('reverse_mgmt_c0')}":     "%{::location}-nat-03.%{hiera('domain_mgmt')}"
     "31.%{hiera('reverse_mgmt_c0')}":     "%{::location}-mq-01.%{hiera('domain_mgmt')}"
+    "32.%{hiera('reverse_mgmt_c0')}":     "%{::location}-billing-01.%{hiera('domain_mgmt')}"
     "34.%{hiera('reverse_mgmt_c0')}":     "%{::location}-dns-01.%{hiera('domain_mgmt')}"
     "35.%{hiera('reverse_mgmt_c0')}":     "%{::location}-dns-02.%{hiera('domain_mgmt')}"
     "36.%{hiera('reverse_mgmt_c0')}":     "%{::location}-image-01.%{hiera('domain_mgmt')}"
