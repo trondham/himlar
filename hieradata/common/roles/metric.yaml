@@ -6,9 +6,23 @@ include:
     - profile::logging::rsyslog::client
     - profile::openstack::database::sql
     - profile::logging::logrotate
-
+    - profile::storage::cephclient
 
 memcached::max_memory: '20%'
+
+# Use Ceph storage backend by default
+profile::storage::cephclient::enable: true
+
+# Ceph config for Gnocchi
+ceph::profile::params::client_keys:
+  'client.admin':
+    secret: "%{hiera('ceph_storage_client_admin_key')}"
+    mode: '0600'
+    user: 'ceph'
+    group: 'ceph'
+    cap_mon: 'allow *'
+    cap_osd: 'allow *'
+    cap_mds: 'allow *'
 
 profile::openstack::metric::manage_firewall:               true
 profile::openstack::metric::manage_wsgi:                   true
