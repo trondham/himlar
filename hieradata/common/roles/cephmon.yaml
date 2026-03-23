@@ -147,6 +147,20 @@ profile::base::yumrepo::repo_hash:
   influxdb:
     ensure: present
 
+# logroate ceph logs
+profile::logging::logrotate::rules:
+  ceph:
+    path:           '/var/log/ceph/*.log'
+    rotate:         7
+    rotate_every:   'hour'
+    size:           400M
+    postrotate:     'killall -q -1 ceph-mon ceph-mgr ceph-mds ceph-osd ceph-fuse radosgw rbd-mirror cephfs-mirror || pkill -1 -x "ceph-mon|ceph-mgr|ceph-mds|ceph-osd|ceph-fuse|radosgw|rbd-mirror|cephfs-mirror" || true'
+    sharedscripts:  true
+    missingok:      true
+    compress:       true
+    su:             true
+    su_group:       'ceph'
+
 ## enable Ceph dashboard
 #profile::storage::cephmon::manage_dashboard:                    true
 #profile::storage::cephmon::dashboard_password:                  "%{hiera('ceph_storage_dashboard_password')}"
