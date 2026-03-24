@@ -523,6 +523,38 @@ profile::base::network::cumulus_bonds:
     'mstpctl_bpduguard': true
     'vids': [ '100', '110', '120', '130', ]
     'mtu': '9216'
+  'host93':
+    'slaves': [ 'swp24s0', ]
+    'clag_id': '93'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', '130', ]
+    'mtu': '9216'
+  'host94':
+    'slaves': [ 'swp24s1', ]
+    'clag_id': '94'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', '130', ]
+    'mtu': '9216'
+  'host95':
+    'slaves': [ 'swp24s2', ]
+    'clag_id': '95'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', '130', ]
+    'mtu': '9216'
+  'host96':
+    'slaves': [ 'swp24s2', ]
+    'clag_id': '96'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', '130', ]
+    'mtu': '9216'
   'host97':
     'slaves': [ 'swp25s0', ]
     'clag_id': '97'
@@ -550,6 +582,38 @@ profile::base::network::cumulus_bonds:
   'host100':
     'slaves': [ 'swp25s3', ]
     'clag_id': '100'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', '130', ]
+    'mtu': '9216'
+  'host101':
+    'slaves': [ 'swp26s0', ]
+    'clag_id': '101'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', '130', ]
+    'mtu': '9216'
+  'host102':
+    'slaves': [ 'swp26s1', ]
+    'clag_id': '102'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', '130', ]
+    'mtu': '9216'
+  'host103':
+    'slaves': [ 'swp26s2', ]
+    'clag_id': '103'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', '130', ]
+    'mtu': '9216'
+  'host104':
+    'slaves': [ 'swp26s3', ]
+    'clag_id': '104'
     'pvid': '100'
     'mstpctl_portadminedge': true
     'mstpctl_bpduguard': true
@@ -602,8 +666,12 @@ profile::network::leaf::cumulus_portconfigs:
     line:  "22=4x25G"
   23:
     line:  "23=4x25G"
+  24:
+    line:  "24=4x25G"
   25:
     line:  "25=4x25G"
+  26:
+    line:  "26=4x25G"
   27:
     line:  "27=100G" # link netapp
   28:
@@ -668,10 +736,18 @@ profile::base::network::cumulus_bridges:
       - host90
       - host91
       - host92
+      - host93
+      - host94
+      - host95
+      - host96
       - host97
       - host98
       - host99
       - host100
+      - host101
+      - host102
+      - host103
+      - host104
       - swp27
       - swp28
       - peerlink
@@ -758,6 +834,14 @@ frrouting::frrouting::zebra_interfaces:
     - 'link-detect'
   'host92':
     - 'link-detect'
+  'host93':
+    - 'link-detect'
+  'host94':
+    - 'link-detect'
+  'host95':
+    - 'link-detect'
+  'host96':
+    - 'link-detect'
   'host97':
     - 'link-detect'
   'host98':
@@ -765,6 +849,14 @@ frrouting::frrouting::zebra_interfaces:
   'host99':
     - 'link-detect'
   'host100':
+    - 'link-detect'
+  'host101':
+    - 'link-detect'
+  'host102':
+    - 'link-detect'
+  'host103':
+    - 'link-detect'
+  'host104':
     - 'link-detect'
   'swp29':
     - 'link-detect'
