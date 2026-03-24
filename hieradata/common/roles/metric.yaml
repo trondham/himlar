@@ -8,6 +8,8 @@ include:
     - profile::logging::logrotate
     - profile::storage::cephclient
 
+openstack_version: 'zed'
+
 memcached::max_memory: '20%'
 
 # Use Ceph storage backend by default
