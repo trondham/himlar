@@ -57,6 +57,12 @@ profile::base::yumrepo::repo_hash:
   ceph-%{hiera('ceph_version')}-noarch:
     ensure: present
 
+# Set sysctl for Redis
+profile::base::common::manage_sysctl: true
+profile::base::common::sysctl_values:
+  'vm.overcommit_memory':
+    value: 1
+
 profile::openstack::database::sql::gnocchi_enabled:   true
 profile::base::systemd::manage_limits: true
 profile::base::systemd::limits:
