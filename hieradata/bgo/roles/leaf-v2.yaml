@@ -548,7 +548,7 @@ profile::base::network::cumulus_bonds:
     'vids': [ '100', '110', '120', '130', ]
     'mtu': '9216'
   'host96':
-    'slaves': [ 'swp24s2', ]
+    'slaves': [ 'swp24s3', ]
     'clag_id': '96'
     'pvid': '100'
     'mstpctl_portadminedge': true
