@@ -523,6 +523,38 @@ profile::base::network::cumulus_bonds:
     'mstpctl_bpduguard': true
     'vids': [ '100', '110', '120', '130', ]
     'mtu': '9216'
+  'host93':
+    'slaves': [ 'swp24s0', ]
+    'clag_id': '93'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', '130', ]
+    'mtu': '9216'
+  'host94':
+    'slaves': [ 'swp24s1', ]
+    'clag_id': '94'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', '130', ]
+    'mtu': '9216'
+  'host95':
+    'slaves': [ 'swp24s2', ]
+    'clag_id': '95'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', '130', ]
+    'mtu': '9216'
+  'host96':
+    'slaves': [ 'swp24s2', ]
+    'clag_id': '96'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', '130', ]
+    'mtu': '9216'
   'host97':
     'slaves': [ 'swp25s0', ]
     'clag_id': '97'
@@ -602,8 +634,12 @@ profile::network::leaf::cumulus_portconfigs:
     line:  "22=4x25G"
   23:
     line:  "23=4x25G"
+  24:
+    line:  "24=4x25G"
   25:
     line:  "25=4x25G"
+  26:
+    line:  "26=4x25G"
   27:
     line:  "27=100G" # link netapp
   28:
