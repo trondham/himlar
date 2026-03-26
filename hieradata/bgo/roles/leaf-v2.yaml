@@ -41,9 +41,19 @@ profile::base::cl_limits::as_value:               2097152
 
 # sensu
 # FIXME:sensu-go
+profile::network::leaf::manage_sensu_script:          true
 profile::monitoring::sensu::agent::enable_go_agent:   true
 profile::monitoring::sensu::agent::enable_agent:      false
 profile::monitoring::sensu::agent::run_in_vrf:        true
+profile::monitoring::sensu::agent::namespaces:
+  "%{hiera('sensu_namespace')}": {}
+
+profile::monitoring::sensu::agent::checks:
+  'uplink-check-lhc-%{role}-%{::hostid}':
+    command:        "/usr/local/bin/bgp_uplink_check.sh %{hiera('bgp_lhc_peer')} lhcopn"
+    interval:       300
+    handlers:       ['default']
+    subscriptions:  ['entity:%{::hostname}']
 
 # collectd
 profile::monitoring::telegraf::enable_telegraf: true # endpoint for collectd
@@ -105,7 +115,7 @@ openstack_extras::repo::debian::debian::manage_whz: false
 openstack_extras::repo::debian::debian::manage_deb: false
 openstack_extras::repo::debian::debian::source_hash:
   'buster':
-    'location': 'http://ftp.no.debian.org/debian'
+    'location': 'https://archive.debian.org/debian'
     'repos':    'main'
   'nrec':
     'location': 'https://download.iaas.uio.no/nrec/aptrepo/'
@@ -123,6 +133,10 @@ profile::base::common::packages:
   'augeas-tools': {}
 
 sudo::configs:
+  sensu:
+    content:
+      - '# sensu needs to run vtysh'
+      - 'sensu ALL = NOPASSWD: /usr/bin/vtysh'
   snmp:
     content:
       - '# SNMP needs access to the bcmcmd to serve up some of the MIBs.'
@@ -548,7 +562,7 @@ profile::base::network::cumulus_bonds:
     'vids': [ '100', '110', '120', '130', ]
     'mtu': '9216'
   'host96':
-    'slaves': [ 'swp24s2', ]
+    'slaves': [ 'swp24s3', ]
     'clag_id': '96'
     'pvid': '100'
     'mstpctl_portadminedge': true
@@ -582,38 +596,6 @@ profile::base::network::cumulus_bonds:
   'host100':
     'slaves': [ 'swp25s3', ]
     'clag_id': '100'
-    'pvid': '100'
-    'mstpctl_portadminedge': true
-    'mstpctl_bpduguard': true
-    'vids': [ '100', '110', '120', '130', ]
-    'mtu': '9216'
-  'host101':
-    'slaves': [ 'swp26s0', ]
-    'clag_id': '101'
-    'pvid': '100'
-    'mstpctl_portadminedge': true
-    'mstpctl_bpduguard': true
-    'vids': [ '100', '110', '120', '130', ]
-    'mtu': '9216'
-  'host102':
-    'slaves': [ 'swp26s1', ]
-    'clag_id': '102'
-    'pvid': '100'
-    'mstpctl_portadminedge': true
-    'mstpctl_bpduguard': true
-    'vids': [ '100', '110', '120', '130', ]
-    'mtu': '9216'
-  'host103':
-    'slaves': [ 'swp26s2', ]
-    'clag_id': '103'
-    'pvid': '100'
-    'mstpctl_portadminedge': true
-    'mstpctl_bpduguard': true
-    'vids': [ '100', '110', '120', '130', ]
-    'mtu': '9216'
-  'host104':
-    'slaves': [ 'swp26s3', ]
-    'clag_id': '104'
     'pvid': '100'
     'mstpctl_portadminedge': true
     'mstpctl_bpduguard': true
@@ -670,8 +652,6 @@ profile::network::leaf::cumulus_portconfigs:
     line:  "24=4x25G"
   25:
     line:  "25=4x25G"
-  26:
-    line:  "26=4x25G"
   27:
     line:  "27=100G" # link netapp
   28:
@@ -744,10 +724,6 @@ profile::base::network::cumulus_bridges:
       - host98
       - host99
       - host100
-      - host101
-      - host102
-      - host103
-      - host104
       - swp27
       - swp28
       - peerlink
@@ -849,14 +825,6 @@ frrouting::frrouting::zebra_interfaces:
   'host99':
     - 'link-detect'
   'host100':
-    - 'link-detect'
-  'host101':
-    - 'link-detect'
-  'host102':
-    - 'link-detect'
-  'host103':
-    - 'link-detect'
-  'host104':
     - 'link-detect'
   'swp29':
     - 'link-detect'

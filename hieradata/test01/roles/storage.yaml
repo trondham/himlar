@@ -229,6 +229,13 @@ profile::storage::ceph::pool::pools:
       crush_rule: 'ssd-storage'
       nodelete:   'true'
       min_size:   '2'
+  'metric_ssd_ec_meta':
+    size:    3
+    tag:     'rbd'
+    custom:
+      crush_rule: 'ssd-storage'
+      nodelete:   'true'
+      min_size:   '2'
   'cephfs_internal_meta':
     size:    3
     pg_num:  16
@@ -261,6 +268,15 @@ profile::storage::ceph_ecpool::ec_pools:
     m_code:              "1"
     crush_root:          "storage"
     crush_device_class:  "ssd"
+  'metric_ssd_ec_data':
+    manage:              true
+    allow_ec_overwrites: true
+    k_data:              "4"
+    m_code:              "1"
+    crush_root:          "storage"
+    crush_device_class:  "ssd"
+    plugin:              "isa"
+    technique:           "reed_sol_van"
   'cephfs_internal_data_ec':
     manage:              true
     allow_ec_overwrites: true
