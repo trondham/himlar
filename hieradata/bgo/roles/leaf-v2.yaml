@@ -105,7 +105,7 @@ openstack_extras::repo::debian::debian::manage_whz: false
 openstack_extras::repo::debian::debian::manage_deb: false
 openstack_extras::repo::debian::debian::source_hash:
   'buster':
-    'location': 'http://ftp.no.debian.org/debian'
+    'location': 'https://archive.debian.org/debian'
     'repos':    'main'
   'nrec':
     'location': 'https://download.iaas.uio.no/nrec/aptrepo/'
