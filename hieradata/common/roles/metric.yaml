@@ -17,8 +17,8 @@ profile::storage::cephclient::enable: true
 
 # Ceph config for Gnocchi
 ceph::profile::params::client_keys:
-  'client.admin':
-    secret: "%{hiera('ceph_storage_client_admin_key')}"
+  'client.gnocchi':
+    secret: "%{hiera('ceph_storage_client_metrics_key')}"
     mode: '0600'
     user: 'ceph'
     group: 'ceph'
