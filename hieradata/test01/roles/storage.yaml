@@ -261,11 +261,11 @@ profile::storage::ceph_ecpool::ec_pools:
     m_code:              "1"
     crush_root:          "storage"
     crush_device_class:  "ssd"
-  'metric_ssd_ec':
+  'metrics_ssd_ec':
     manage:              true
     allow_ec_overwrites: true
-    k_data:              "4"
-    m_code:              "1"
+    k_data:              "3"
+    m_code:              "2"
     crush_root:          "storage"
     crush_device_class:  "ssd"
     plugin:              "isa"
