@@ -59,12 +59,12 @@ gnocchi::statsd::user_id:                     'gnocchi'
 gnocchi::statsd::project_id:                  'service'
 
 # Cors
-gnocchi::cors::allowed_origin:      "http://%{hiera('mgmt__address__monitor')}:8080"
+gnocchi::cors::allowed_origin:                "http://%{hiera('mgmt__address__monitor')}:8080"
 
 # Use redis here for multinode setup
-gnocchi::coordination_url: 'file:///var/lib/gnocchi'
+gnocchi::coordination_url:                    'file:///var/lib/gnocchi'
 
 # storage
 gnocchi::storage::ceph::ceph_username:        'gnocchi'
-gnocchi::storage::ceph::ceph_secret:          "%{hiera('ceph_storage_client_metrics_key')}"
-gnocchi::storage::ceph::ceph_pool:            'metrics_ssd_ec_data'
+gnocchi::storage::ceph::ceph_secret:          "%{hiera('ceph_storage_client_admin_key')}"
+gnocchi::storage::ceph::ceph_pool:            'metrics_ssd_ec'
