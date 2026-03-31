@@ -51,6 +51,14 @@ profile::storage::ceph::pool::pools:
       crush_rule: 'ssd-storage'
       nodelete:   'true'
       min_size:   '2'
+  'metrics':
+    size:    3
+    tag:     'gnocchi'
+    pg_num:  1024
+    custom:
+      crush_rule: 'ssd-storage'
+      nodelete:   'true'
+      min_size:   '2'
   'volumes_hdd_ec_meta':
     size:    3
     pg_num:  16
@@ -109,15 +117,6 @@ profile::storage::ceph_ecpool::ec_pools:
     k_data:              "8"
     m_code:              "2"
     crush_root:          "storage"
-  'metrics_ssd_ec':
-    manage:              true
-    allow_ec_overwrites: true
-    k_data:              "8"
-    m_code:              "4"
-    crush_device_class:  "ssd"
-    crush_root:          "storage"
-    plugin:              "isa"
-    technique:           "reed_sol_van"
 
 profile::storage::cephpool_params::pools:
   'volumes_hdd_ec_data':
@@ -126,9 +125,6 @@ profile::storage::cephpool_params::pools:
   'volumes_ssd_ec_data':
     application_enable: 'rbd'
     replicas_min_size:  '9'
-  'metrics_ssd_ec':
-    application_enable: 'gnocchi'
-    replicas_min_size:  '10'
   'cephfs_internal_data_ec':
     replicas_min_size:  '9'
 

@@ -87,7 +87,7 @@ ceph::profile::params::client_keys:
   'client.gnocchi':
     secret: "%{hiera('ceph_storage_client_metrics_key')}"
     cap_mon: 'allow r'
-    cap_osd: 'allow rwx pool=metrics_ssd_ec'
+    cap_osd: 'allow rwx pool=metrics'
 
 #ceph::profile::params::osds:
 #  '/var/osd1':
