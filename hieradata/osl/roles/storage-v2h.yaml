@@ -125,6 +125,15 @@ profile::storage::ceph_ecpool::ec_pools:
     crush_root:          "storage"
     plugin:              "jerasure"
     technique:           "reed_sol_van"
+  'metrics_ssd_ec':
+    manage:              true
+    allow_ec_overwrites: true
+    k_data:              "8"
+    m_code:              "4"
+    crush_device_class:  "ssd"
+    crush_root:          "storage"
+    plugin:              "isa"
+    technique:           "reed_sol_van"
   'cephfs_internal_data_ec':
     manage:              true
     allow_ec_overwrites: true
@@ -139,6 +148,9 @@ profile::storage::cephpool_params::pools:
   'volumes_ssd_ec_data':
     application_enable: 'rbd'
     replicas_min_size:  '9'
+  'metrics_ssd_ec':
+    application_enable: 'gnocchi'
+    replicas_min_size:  '10'
   'cephfs_internal_data_ec':
     replicas_min_size:  '9'
 
