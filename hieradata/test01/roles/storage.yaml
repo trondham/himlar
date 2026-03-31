@@ -282,3 +282,7 @@ profile::storage::cephpool_params::pools:
     application_enable: 'rbd'
   'volumes_ssd_ec_data':
     application_enable: 'rbd'
+  'cephfs_internal_data_ec':
+    application_enable: 'cephfs'
+  'metrics_ssd_ec':
+    application_enable: 'gnocchi'
