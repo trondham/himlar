@@ -166,3 +166,14 @@ profile::application::foreman::dhcp_classes:
     parameters:
       - 'match if (substring(option host-name,0,5) = "sonic")'
       - "option ztp_json_url \"http://%{hiera('mgmt__address__repo')}/provision/sonic_ztp.json\""
+
+profile::bootstrap::repo::provision_files:
+  - provision/sonic.sh
+
+profile::bootstrap::repo::ztp_json:
+  provision/sonic_ztp.json:
+    tasks:
+      provisioning-script:
+        plugin:
+          url: "http://%{hiera('mgmt__address__repo')}/provision/sonic.sh"
+        reboot-on-success: 'false'
