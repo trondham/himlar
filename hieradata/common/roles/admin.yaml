@@ -146,6 +146,10 @@ profile::application::foreman::dhcp_classes:
     parameters:
       - 'match if (substring(option vendor-class-identifier, 0, 33) = "onie_vendor:x86_64-dellemc_s5232f")'
       - "option default-url = \"http://repo.mgmt.%{location}.uhdc.no/images/cumuluslinux/onie-installer-amd64\""
+  onie_celestica_ds1000:
+    parameters:
+      - 'match if (substring(option vendor-class-identifier, 0, 32) = "onie_vendor:x86_64-cel_ds1000-r0")'
+      - "option default-url = \"http://%{hiera('mgmt__address__repo')}/images/sonic/sonic-broadcom-mgmt.bin\""
   cumulus_s4810:
     parameters:
       - 'match if (substring(option host-name,0,7) = "cumulus")'
@@ -158,3 +162,7 @@ profile::application::foreman::dhcp_classes:
     parameters:
       - 'match if (substring(option host-name,0,3) = "OPX")'
       - "option ztd-provision-url \"http://repo.mgmt.%{location}.uhdc.no/provision/switch.sh\""
+  sonic_provision:
+    parameters:
+      - 'match if (substring(option host-name,0,5) = "sonic")'
+      - "option ztp_json_url \"http://%{hiera('mgmt__address__repo')}/provision/sonic_ztp.json\""
