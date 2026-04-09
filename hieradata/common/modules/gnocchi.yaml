@@ -44,6 +44,9 @@ gnocchi::metricd::metric_processing_delay:    120
 gnocchi::metricd::metric_reporting_delay:     180
 gnocchi::metricd::metric_cleanup_delay:       300
 
+# redis for incoming metrics
+gnocchi::storage::incoming::redis::redis_url: 'redis://localhost:6379/'
+
 # statsd
 gnocchi::statsd::manage_service:              false #FIXME
 gnocchi::statsd::enabled:                     false #FIXME
@@ -56,7 +59,12 @@ gnocchi::statsd::user_id:                     'gnocchi'
 gnocchi::statsd::project_id:                  'service'
 
 # Cors
-gnocchi::cors::allowed_origin:      "http://%{hiera('mgmt__address__monitor')}:8080"
+gnocchi::cors::allowed_origin:                "http://%{hiera('mgmt__address__monitor')}:8080"
 
 # Use redis here for multinode setup
-gnocchi::coordination_url: 'file:///var/lib/gnocchi'
+gnocchi::coordination_url:                    'file:///var/lib/gnocchi'
+
+# storage
+gnocchi::storage::ceph::ceph_username:        'gnocchi'
+gnocchi::storage::ceph::ceph_secret:          "%{hiera('ceph_storage_client_metrics_key')}"
+gnocchi::storage::ceph::ceph_pool:            'metrics'
