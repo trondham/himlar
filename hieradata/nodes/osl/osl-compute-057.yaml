@@ -21,10 +21,11 @@ named_interfaces::config:
     - bond0.120
 
 profile::base::lvm::physical_volume:
-  '/dev/sda5':
+  '/dev/sda4':
     ensure: present
     force:  true
+
 profile::base::lvm::volume_group:
   'vg_ext':
     physical_volumes:
-      - /dev/sda5
+      - /dev/sda4
