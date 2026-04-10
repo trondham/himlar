@@ -15,9 +15,9 @@ named_interfaces::config:
   mgmt:
     - em3
   trp:
-    - team1
+    - bond0
   live:
-    - team1.120
+    - bond0.120
 
 profile::base::lvm::physical_volume:
   '/dev/sda4':
