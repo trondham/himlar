@@ -13,7 +13,7 @@ profile::base::network::nm_network_auto_bonding:
 
 named_interfaces::config:
   mgmt:
-    - eno3
+    - em3
   trp:
     - bond0
   live:
