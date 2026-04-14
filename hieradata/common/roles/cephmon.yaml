@@ -153,7 +153,7 @@ profile::logging::logrotate::rules:
     path:           '/var/log/ceph/*.log'
     rotate:         7
     rotate_every:   'hour'
-    size:           400M
+    size:           300M
     postrotate:     'killall -q -1 ceph-mon ceph-mgr ceph-mds ceph-osd ceph-fuse radosgw rbd-mirror cephfs-mirror || pkill -1 -x "ceph-mon|ceph-mgr|ceph-mds|ceph-osd|ceph-fuse|radosgw|rbd-mirror|cephfs-mirror" || true'
     sharedscripts:  true
     missingok:      true
