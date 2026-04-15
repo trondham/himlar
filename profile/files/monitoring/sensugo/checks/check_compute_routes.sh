@@ -19,7 +19,7 @@ else
     echo "Kernel routes=${ipv4_routes}"
     echo "IPv4 rr1 prefix=${rr1_ipv4}"
     echo "IPv4 rr2 prefix=${rr2_ipv4}"
-#    exit 1
+    exit 1
 fi
 
 if [ "${rr1_ipv6}" -eq "${ipv6_routes}" ] || [ ${rr2_ipv6} -eq ${ipv6_routes} ]; then
@@ -29,7 +29,7 @@ else
     echo "Kernel routes=${ipv6_routes}"
     echo "IPv6 rr1 prefix=${rr1_ipv6}"
     echo "IPv6 rr2 prefix=${rr2_ipv6}"
-#    exit 1
+    exit 1
 fi
 
 exit 0
