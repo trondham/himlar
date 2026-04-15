@@ -354,6 +354,11 @@ profile::monitoring::sensu::agent::checks:
     handlers:       ['default']
     runtime_assets:
     - sensu/http-check
+  'check-compute-routes':
+    command:        'sudo /usr/local/bin/check-compute-routes.sh'
+    interval:        60
+    subscriptions:  ['compute']
+    handlers:       ['default']
   'dhcp-agent-check':
     command:        '/usr/local/bin/calico_dhcp_agent_check.sh'
     interval:        600
