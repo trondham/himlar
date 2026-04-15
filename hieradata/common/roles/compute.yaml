@@ -157,7 +157,9 @@ sudo::configs:
     content:    'Defaults:sensu !requiretty'
   sensu:
     priority:   25
-    content:    'sensu ALL = (root) NOPASSWD: /opt/sensu/embedded/bin/check-file-missing.rb -f /var/lib/nova/.ssh/id_rsa'
+    content:
+      - 'sensu ALL = (root) NOPASSWD: /opt/sensu/embedded/bin/check-file-missing.rb -f /var/lib/nova/.ssh/id_rsa'
+      - 'sensu All = (root) NOPASSWD: /sbin/birdc show route export'
   calico:
     priority:   25
     content:
