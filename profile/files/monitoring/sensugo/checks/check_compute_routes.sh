@@ -9,8 +9,8 @@ rr1_ipv4=$(birdc show route export rr1_ipv4 | grep kernel | wc -l)
 rr2_ipv4=$(birdc show route export rr2_ipv4 | grep kernel | wc -l)
 
 # kernel routes added by calico
-ipv6_routes=$(ip -6 r | grep tap | grep -v 'fe80::/64' | wc -l)
-ipv4_routes=$(ip -br r | grep tap | wc -l)
+ipv6_routes=$(ip -6 -d r | grep tap | grep -v 'fe80::/64' | grep 'proto boot' | wc -l)
+ipv4_routes=$(ip -d r | grep tap | grep 'proto boot' | wc -l)
 
 if [ "${rr1_ipv4}" -eq "${ipv4_routes}" ] || [ ${rr2_ipv4} -eq ${ipv4_routes} ]; then
     echo "IPv4 bird prefix match kernel routes"
