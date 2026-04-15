@@ -4,6 +4,7 @@ class profile::openstack::compute(
   $manage_telemetry             = false,
   $manage_nova_config           = false,
   $manage_check_dhcp_lease_file = false,
+  $manage_check_compute_routes  = false,
   $manage_osprofiler            = false,
   $manage_nova_metadata_api     = false,
 ) {
@@ -46,6 +47,14 @@ class profile::openstack::compute(
     }
   }
 
+  if $manage_check_compute_routes {
+    file { '/usr/local/bin/check-compute-routes.sh':
+      ensure => present,
+      mode   => '0755',
+      owner  => 'root',
+      source => "puppet:///modules/${module_name}/monitoring/sensugo/check/check_compute_routes.sh",
+    }
+  }
   if $manage_osprofiler {
     include ::nova::deps
     $osprofiler_config = lookup('profile::logging::osprofiler::osprofiler_config', Hash, 'first', {})
