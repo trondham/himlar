@@ -52,7 +52,7 @@ class profile::openstack::compute(
       ensure => present,
       mode   => '0755',
       owner  => 'root',
-      source => "puppet:///modules/${module_name}/monitoring/sensugo/check/check_compute_routes.sh",
+      source => "puppet:///modules/${module_name}/monitoring/sensugo/checks/check_compute_routes.sh",
     }
   }
   if $manage_osprofiler {
