@@ -159,7 +159,7 @@ sudo::configs:
     priority:   25
     content:
       - 'sensu ALL = (root) NOPASSWD: /opt/sensu/embedded/bin/check-file-missing.rb -f /var/lib/nova/.ssh/id_rsa'
-      - 'sensu All = (root) NOPASSWD: /usr/local/bin/check-compute-routes.sh'
+      - 'sensu ALL = (root) NOPASSWD: /usr/local/bin/check-compute-routes.sh'
   calico:
     priority:   25
     content:
