@@ -22,3 +22,14 @@ profile::base::lvm::logical_volume:
 # make sure disks are configured correctly as the devices we want
 profile::base::physical::load_ahci_last:    true
 profile::base::physical::scsidrv:           'megaraid_sas'
+
+#FIXME:el9 move to common after all computes are el9 with zed
+openstack_version: "zed"
+named_interfaces::config:
+  mgmt:
+  - em3
+  trp:
+  - bond0
+  live:
+  - bond0.120
+
