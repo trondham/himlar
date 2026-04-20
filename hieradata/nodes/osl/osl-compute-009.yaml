@@ -1,6 +1,6 @@
 ---
 profile::base::lvm::physical_volume:
-  '/dev/sda3':
+  '/dev/sda4':
     ensure: present
     force:  true
 profile::base::lvm::volume_group:
@@ -16,3 +16,14 @@ profile::base::lvm::logical_volume:
 # Create and enable more swap
 profile::base::common::extraswap:        true
 profile::base::common::extraswap_sizegb: 10
+
+#FIXME:el9 move to common after all computes are el9 with zed
+openstack_version: "zed"
+named_interfaces::config:
+  mgmt:
+  - em3
+  trp:
+  - bond0
+  live:
+  - bond0.120
+
