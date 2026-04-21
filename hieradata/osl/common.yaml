@@ -262,7 +262,6 @@ profile::network::services::dns_records:
     "%{::location}-login-01.%{hiera('domain_mgmt')}": "%{hiera('netcfg_mgmt_netpart')}.10"
     "test02-login-01.%{hiera('domain_mgmt')}": "%{hiera('netcfg_mgmt_netpart')}.3" # FIXME: Temporary DNS for test02-login-01 setup in osl
     # FIXME: override common/common.yaml
-    "%{::location}-mgmt-00.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.100"
     "%{::location}-mgmt-01.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.1"
     "%{::location}-mgmt-02.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.2"
     "%{::location}-mgmt-03.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.3"
