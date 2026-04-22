@@ -376,7 +376,27 @@ dhcp::hosts:
   bgo-compute-102-bmc:
     mac: '6c:3c:8c:9a:2e:ff'
     ip:  '172.17.1.163'
-  bgo-controller-04-bmc:
+  bgo-compute-103-bmc:
+    mac: '6c:3c:8c:9a:0a:8b'
+    ip:  '172.17.1.164'
+  bgo-compute-104-bmc:
+    mac: ''
+    ip:  '172.17.1.165'
+  bgo-compute-105-bmc:
+    mac: ''
+    ip:  '172.17.1.166'
+  bgo-compute-106-bmc:
+    mac: ''
+    ip:  '172.17.1.167'
+  bgo-compute-107-bmc:
+    mac: ''
+    ip:  '172.17.1.168'
+  bgo-compute-108-bmc:
+    mac: ''
+    ip:  '172.17.1.169'  
+  bgo-controller-04-bmc  bgo-compute-102-bmc:
+    mac: '6c:3c:8c:9a:2e:ff'
+    ip:  '172.17.1.163':
     mac: 'b0:83:fe:e9:01:a5'
     ip:  '172.17.0.114'
   bgo-controller-05-bmc:
