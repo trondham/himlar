@@ -395,8 +395,6 @@ dhcp::hosts:
     mac: ''
     ip:  '172.17.1.169'  
   bgo-controller-04-bmc:
-    mac: '6c:3c:8c:9a:2e:ff'
-    ip:  '172.17.1.163':
     mac: 'b0:83:fe:e9:01:a5'
     ip:  '172.17.0.114'
   bgo-controller-05-bmc:
