@@ -380,7 +380,7 @@ dhcp::hosts:
     mac: '6c:3c:8c:9a:0a:8b'
     ip:  '172.17.1.164'
   bgo-compute-104-bmc:
-    mac: '6c:3c:8c:9a:0a:8b'
+    mac: '6c:3c:8c:9a:27:eb'
     ip:  '172.17.1.165'
   bgo-compute-105-bmc:
     mac: '6c:3c:8c:9a:0a:8b'
