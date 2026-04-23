@@ -203,7 +203,7 @@ profile::network::leaf::cumulus_portconfigs:
   16:
     line:  "16=4x25G"
   17:
-    line:  "17=4x25G"
+    line:  "17=4x25G" # atlas-069-072
   18:
     line:  "18=4x25G"
   19:
@@ -747,6 +747,38 @@ profile::base::network::cumulus_bonds:
     'mstpctl_bpduguard': true
     'vids': [ '100', '110', '120', '130', ]
     'mtu': '9216'
+  'host65':
+    'slaves': [ 'swp17s0', ]
+    'clag_id': '65'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', '130', ]
+    'mtu': '9216'
+  'host66':
+    'slaves': [ 'swp17s1', ]
+    'clag_id': '66'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', '130', ]
+    'mtu': '9216'
+  'host67':
+    'slaves': [ 'swp17s2', ]
+    'clag_id': '67'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', '130', ]
+    'mtu': '9216'
+  'host68':
+    'slaves': [ 'swp17s3', ]
+    'clag_id': '68'
+    'pvid': '100'
+    'mstpctl_portadminedge': true
+    'mstpctl_bpduguard': true
+    'vids': [ '100', '110', '120', '130', ]
+    'mtu': '9216'
 
 profile::base::network::cumulus_bridges:
   'bridge':
@@ -815,6 +847,10 @@ profile::base::network::cumulus_bridges:
       - host62
       - host63
       - host64
+      - host65
+      - host66
+      - host67
+      - host68
       - peerlink
       - downlink
     'alias_name': 'Transport L2 if'
@@ -915,6 +951,10 @@ frrouting::frrouting::bgp_neighbor_groups:
       - '172.18.33.127' # compute-66
       - '172.18.33.128' # compute-l40s-67
       - '172.18.33.129' # compute-l40s-68
+      - '172.18.33.130' # atlas-069
+      - '172.18.33.131' # atlas-070
+      - '172.18.33.132' # atlas-071
+      - '172.18.33.133' # atlas-072
     'options6':
       - 'neighbor rr-clients route-reflector-client'
       - 'neighbor rr-clients soft-reconfiguration inbound'
@@ -991,6 +1031,10 @@ frrouting::frrouting::bgp_neighbor_groups:
       - 'fd32::1:127' # compute-66
       - 'fd32::1:128' # compute-l40s-67
       - 'fd32::1:129' # compute-l40s-68
+      - 'fd32::1:130' # atlas-069
+      - 'fd32::1:131' # atlas-070
+      - 'fd32::1:132' # atlas-071
+      - 'fd32::1:133' # atlas-072
   'object_rgw':
     'options':
       - 'peer-group'
