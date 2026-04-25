@@ -48,6 +48,18 @@ profile::base::common::packages:
 apache::mod::prefork::serverlimit:        1024
 apache::mod::prefork::maxrequestworkers:  1024
 
+# logrotate apache httpd logs by size
+profile::logging::logrotate::rules:
+  httpd:
+    path:           '/var/log/httpd/*log'
+    rotate:         10
+    rotate_every:   'hour'
+    size:           500M
+    postrotate:     '/bin/systemctl reload httpd.service > /dev/null 2>/dev/null || true'
+    sharedscripts:  true
+    missingok:      true
+    delaycompress:  true
+
 # FIXME:sensu-go
 profile::monitoring::sensu::agent::enable_go_agent:   true
 profile::monitoring::sensu::agent::enable_agent:      false
