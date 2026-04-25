@@ -151,6 +151,18 @@ profile::openstack::resource::users::user_roles:
   "access@%{hiera('keystone__service__project')}":
     roles:    'admin_view'
 
+# logrotate apache httpd logs by size
+profile::logging::logrotate::rules:
+  httpd:
+    path:           '/var/log/httpd/*log'
+    rotate:         10
+    rotate_every:   'hour'
+    size:           500M
+    postrotate:     '/bin/systemctl reload httpd.service > /dev/null 2>/dev/null || true'
+    sharedscripts:  true
+    missingok:      true
+    delaycompress:  true
+
 # FIXME:sensu-go
 profile::monitoring::sensu::agent::enable_go_agent:   true
 profile::monitoring::sensu::agent::enable_agent:      false
