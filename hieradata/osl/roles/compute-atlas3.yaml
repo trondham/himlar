@@ -1,17 +1,4 @@
 ---
-profile::base::lvm::physical_volume:
-  '/dev/nvme0n1p4':
-    ensure: present
-    force:  true
-  '/dev/nvme1n1':
-    ensure: present
-    force:  true
-profile::base::lvm::volume_group:
-  'vg_ext':
-    physical_volumes:
-      - /dev/nvme0n1p4
-      - /dev/nvme1n1
-
 #FIXME:el9 move to common after all computes are el9 with zed
 openstack_version: "zed"
 
@@ -31,4 +18,9 @@ named_interfaces::config:
   - bond0
   live:
   - bond0.120
+
+# This compute host uses local storage for instances
+nova::compute::rbd::ephemeral_storage:  false
+nova::compute::libvirt::images_type: 'default'
+
 
