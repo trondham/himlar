@@ -191,45 +191,6 @@ profile::base::network::network_auto_bonding:
     em2:
       'team_port_config': '{ "prio" : 100 }'
 
-profile::application::foreman::dhcp_classes:
-  onie_dell_s3048:
-    parameters:
-      - 'match if (substring(option vendor-class-identifier, 0, 29) = "onie_vendor:x86_64-dell_s3000")'
-      - "option default-url = \"http://repo.mgmt.%{location}.uhdc.no/images/cumuluslinux/onie-installer-amd64\""
-  onie_dell_s4048:
-    parameters:
-      - 'match if (substring(option vendor-class-identifier, 0, 29) = "onie_vendor:x86_64-dell_s4000")'
-      - "option default-url = \"http://repo.mgmt.%{location}.uhdc.no/images/cumuluslinux/onie-installer-amd64\""
-  onie_dell_s4148:
-    parameters:
-      - 'match if (substring(option vendor-class-identifier, 0, 32) = "onie_vendor:x86_64-dellemc_s4100")'
-      - "option default-url = \"http://repo.mgmt.%{location}.uhdc.no/images/cumuluslinux/onie-installer-amd64\""
-  onie_dell_s4810:
-    parameters:
-      - 'match if (substring(option vendor-class-identifier, 0, 19) = "onie_vendor:powerpc")'
-      - "option default-url = \"http://repo.mgmt.%{location}.uhdc.no/images/cumuluslinux/onie-installer-powerpc\""
-  onie_edgecore_as4610:
-    parameters:
-      - 'match if (substring(option vendor-class-identifier, 0, 35) = "onie_vendor:arm-accton_as4610_54-r0")'
-      - "option default-url = \"http://repo.mgmt.%{location}.uhdc.no/images/cumuluslinux/onie-installer-arm\""
-  onie_dell_s5232f:
-    parameters:
-      - 'match if (substring(option vendor-class-identifier, 0, 33) = "onie_vendor:x86_64-dellemc_s5232f")'
-      - "option default-url = \"http://repo.mgmt.%{location}.uhdc.no/images/cumuluslinux/onie-installer-amd64\""
-  cumulus_s4810:
-    parameters:
-      - 'match if (substring(option host-name,0,7) = "cumulus")'
-      - "option cumulus-provision-url \"http://repo.mgmt.%{location}.uhdc.no/provision/switch.sh\""
-  opx_provision_vagrant:
-    parameters:
-      - 'match if (substring(option host-name,0,3) = "opx")'
-      - "option ztd-provision-url \"http://repo.mgmt.%{location}.uhdc.no/provision/switch.sh\""
-  opx_provision:
-    parameters:
-      - 'match if (substring(option host-name,0,3) = "OPX")'
-      - "option ztd-provision-url \"http://repo.mgmt.%{location}.uhdc.no/provision/switch.sh\""
-
-
 #
 # project and domain used for internal use
 #
@@ -537,6 +498,7 @@ profile::network::services::dns_records:
     "%{::location}-compute-58.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.90"
     "%{::location}-compute-59.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.91"
     "%{::location}-compute-60.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.92"
+    "%{::location}-compute-060.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.92"
     "%{::location}-storage-40.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.93"
     "%{::location}-storage-41.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.94"
     "%{::location}-storage-42.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.95"
@@ -590,6 +552,7 @@ profile::network::services::dns_records:
     "%{::location}-compute-82.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.143"
     "%{::location}-compute-83.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.144"
     "%{::location}-compute-84.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.145"
+    "%{::location}-compute-085.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.146"
     "%{::location}-compute-85.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.146"
     "%{::location}-compute-86.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.147"
     "%{::location}-compute-87.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.148"
@@ -598,8 +561,16 @@ profile::network::services::dns_records:
     "%{::location}-compute-90.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.151"
     "%{::location}-compute-91.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.152"
     "%{::location}-compute-92.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.153"
-    "%{::location}-compute-93.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.154"
-    "%{::location}-compute-94.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.155"
+    "%{::location}-compute-093.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.154"
+    "%{::location}-compute-094.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.155"
+    "%{::location}-compute-095.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.156"
+    "%{::location}-compute-096.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.157"
+    "%{::location}-compute-097.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.158"
+    "%{::location}-compute-098.%{hiera('domain_mgmt')}":     "%{hiera('netcfg_mgmt_net_c1')}.159"
+    "%{::location}-compute-099.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c1')}.160"
+    "%{::location}-compute-100.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c1')}.161"
+    "%{::location}-compute-101.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c1')}.162"
+    "%{::location}-compute-102.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c1')}.163"
     "%{::location}-mgmt-opx-01.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.1"
     "%{::location}-mgmt-opx-02.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.2"
     "%{::location}-mgmt-opx-03.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.3"
@@ -859,7 +830,7 @@ profile::network::services::dns_records:
     "143.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-82.%{hiera('domain_mgmt')}"
     "144.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-83.%{hiera('domain_mgmt')}"
     "145.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-84.%{hiera('domain_mgmt')}"
-    "146.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-85.%{hiera('domain_mgmt')}"
+    "146.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-085.%{hiera('domain_mgmt')}"
     "147.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-86.%{hiera('domain_mgmt')}"
     "148.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-87.%{hiera('domain_mgmt')}"
     "149.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-88.%{hiera('domain_mgmt')}"
@@ -869,6 +840,14 @@ profile::network::services::dns_records:
     "153.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-92.%{hiera('domain_mgmt')}"
     "154.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-93.%{hiera('domain_mgmt')}"
     "155.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-94.%{hiera('domain_mgmt')}"
+    "156.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-095.%{hiera('domain_mgmt')}"
+    "157.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-096.%{hiera('domain_mgmt')}"
+    "158.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-097.%{hiera('domain_mgmt')}"
+    "159.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-098.%{hiera('domain_mgmt')}"
+    "160.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-099.%{hiera('domain_mgmt')}"
+    "161.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-100.%{hiera('domain_mgmt')}"
+    "162.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-101.%{hiera('domain_mgmt')}"
+    "163.%{hiera('reverse_mgmt_c1')}":    "%{::location}-compute-102.%{hiera('domain_mgmt')}"
     "1.%{hiera('reverse_mgmt_c2')}":      "%{::location}-mgmt-opx-01.%{hiera('domain_mgmt')}"
     "2.%{hiera('reverse_mgmt_c2')}":      "%{::location}-mgmt-opx-02.%{hiera('domain_mgmt')}"
     "3.%{hiera('reverse_mgmt_c2')}":      "%{::location}-mgmt-opx-03.%{hiera('domain_mgmt')}"

@@ -379,3 +379,15 @@ dhcp::hosts:
   osl-storage-33-bmc:
     mac: '18:fb:7b:9f:e0:ab'
     ip:  '172.17.33.75'
+  osl-compute-069-bmc:
+    mac: '90:5a:08:18:dd:cb'
+    ip:  '172.17.33.130'
+  osl-compute-070-bmc:
+    mac: '90:5a:08:18:dd:bb'
+    ip:  '172.17.33.131'
+  osl-compute-071-bmc:
+    mac: '90:5a:08:18:dd:c5'
+    ip:  '172.17.33.132'
+  osl-compute-072-bmc:
+    mac: '90:5a:08:18:dd:c0'
+    ip:  '172.17.33.133'

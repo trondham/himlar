@@ -188,8 +188,8 @@ profile::storage::ceph::pool::pools:
     ensure: absent
   'metrics':
     size:    3
-    tag:     'metrics'
-    pg_num:  8
+    tag:     'gnocchi'
+    pg_num:  1024
     custom:
       crush_rule: 'ssd-storage'
       nodelete:   'true'
@@ -273,3 +273,5 @@ profile::storage::cephpool_params::pools:
     application_enable: 'rbd'
   'volumes_ssd_ec_data':
     application_enable: 'rbd'
+  'cephfs_internal_data_ec':
+    application_enable: 'cephfs'

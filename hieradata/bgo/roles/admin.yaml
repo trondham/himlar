@@ -319,7 +319,7 @@ dhcp::hosts:
   bgo-compute-84-bmc:
     'mac': 'c4:cb:e1:b1:1b:b4'
     'ip':  '172.17.1.145'
-  bgo-compute-85-bmc:
+  bgo-compute-085-bmc:
     'mac': 'c4:cb:e1:b1:32:7c'
     'ip': '172.17.1.146'
   bgo-compute-86-bmc:
@@ -327,7 +327,7 @@ dhcp::hosts:
     'ip': '172.17.1.147'
   bgo-compute-87-bmc:
     'mac': 'c4:cb:e1:b5:12:1a'
-    'ip': '172.17.1.148'  
+    'ip': '172.17.1.148'
   bgo-compute-88-bmc:
     'mac': 'c4:cb:e1:c2:ed:4a'
     'ip':  '172.17.1.149'
@@ -349,15 +349,30 @@ dhcp::hosts:
   bgo-compute-94-bmc:
     'mac': 'c4:ef:bb:23:29:9a'
     'ip':  '172.17.1.155'
-  bgo-compute-95-bmc:
+  bgo-compute-095-bmc:
     'mac': 'c4:cb:e1:de:3c:70'
     'ip':  '172.17.1.156'
-  bgo-compute-96-bmc:
+  bgo-compute-096-bmc:
     'mac': 'c4:cb:e1:ac:f9:50'
     'ip':  '172.17.1.157'
-  bgo-compute-97-bmc:
+  bgo-compute-097-bmc:
     'mac': 'c4:cb:e1:ac:f9:f8'
     'ip':  '172.17.1.158'
+  bgo-compute-098-bmc:
+    'mac': '6c:3c:8c:9a:10:6b'
+    'ip':  '172.17.1.159'
+  bgo-compute-099-bmc:
+    mac: '6c:3c:8c:9a:54:77'
+    ip:  '172.17.1.160'
+  bgo-compute-100-bmc:
+    mac: '6c:3c:8c:9a:53:f3'
+    ip:  '172.17.1.161'
+  bgo-compute-101-bmc:
+    mac: '6c:3c:8c:9a:54:23'
+    ip:  '172.17.1.162'
+  bgo-compute-102-bmc:
+    mac: '6c:3c:8c:9a:2e:ff'
+    ip:  '172.17.1.163'
   bgo-controller-04-bmc:
     mac: 'b0:83:fe:e9:01:a5'
     ip:  '172.17.0.114'

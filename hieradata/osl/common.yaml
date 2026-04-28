@@ -132,7 +132,6 @@ profile::network::services::dns_records:
   CNAME:
     "status.%{hiera('domain_frontend')}":        'pubproxy.ha.uib.no'
     "report.%{hiera('domain_frontend')}":        'pubproxy.ha.uib.no'
-    "docs.%{hiera('domain_frontend')}":          'sslproxy.ha.uib.no'
     "www.%{hiera('domain_frontend')}":           'sslproxy.ha.uib.no'
     "%{::location}-compute-epyc-11.%{hiera('domain_mgmt')}": "%{::location}-compute-11.%{hiera('domain_mgmt')}"
     "%{::location}-compute-epyc-12.%{hiera('domain_mgmt')}": "%{::location}-compute-12.%{hiera('domain_mgmt')}"
@@ -176,6 +175,8 @@ profile::network::services::dns_records:
     "%{::location}-compute-vgpu-42.%{hiera('domain_mgmt')}": "%{::location}-compute-42.%{hiera('domain_mgmt')}"
     "%{::location}-compute-l40s-67.%{hiera('domain_mgmt')}": "%{::location}-compute-67.%{hiera('domain_mgmt')}"
     "%{::location}-compute-l40s-68.%{hiera('domain_mgmt')}": "%{::location}-compute-68.%{hiera('domain_mgmt')}"
+    # General compute (temporary wrt. el9)
+    "%{::location}-compute-010.%{hiera('domain_mgmt')}":     "%{::location}-compute-10.%{hiera('domain_mgmt')}"
     # object store with ceph
     "%{::location}-object-ceph-01.%{hiera('domain_mgmt')}":  "%{::location}-object-01.%{hiera('domain_mgmt')}"
     "%{::location}-object-ceph-02.%{hiera('domain_mgmt')}":  "%{::location}-object-02.%{hiera('domain_mgmt')}"
@@ -209,6 +210,7 @@ profile::network::services::dns_records:
     "%{::location}-storage-v2d-33.%{hiera('domain_mgmt')}":  "%{::location}-storage-33.%{hiera('domain_mgmt')}"
   A:
     # Frontend records (<foo>.nrec.no)
+    "docs.%{hiera('domain_frontend')}":           '129.177.6.166' # uib-ha
     "access.%{hiera('domain_frontend')}":         '158.39.77.250'
     "access-osl.%{hiera('domain_frontend')}":     '158.37.63.250'
     "access-bgo.%{hiera('domain_frontend')}":     '158.39.77.250'
@@ -265,6 +267,7 @@ profile::network::services::dns_records:
     "repo.%{hiera('domain_oob')}":                       "%{hiera('netcfg_oob_netpart')}.9"
   AAAA:
     # Frontend records (<foo>.nrec.no)
+    "docs.%{hiera('domain_frontend')}":           '2001:700:200:6::166'
     "ns1.%{hiera('domain_frontend')}":            '2001:700:2:82ff::251'
     "ns2.%{hiera('domain_frontend')}":            '2001:700:2:83ff::251'
     "osl-gw1.nrec.no":                            '2001:700:0:8105::1'

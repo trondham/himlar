@@ -42,6 +42,14 @@ class profile::base::physical (
     'IPv4Static.1.DNS1'        => $bmc_dns_server,
     'IPv4.1.DHCPEnable'        => 'Disabled',
   },
+  $bmc_idrac10_attributes = {
+    'IPv4.1.StaticAddress'     => undef,
+    'IPv4.1.StaticGateway'     => lookup('netcfg_oob_gateway', String, 'first', ''),
+    'IPv4.1.StaticNetmask'     => lookup('netcfg_oob_netmask', String, 'first', ''),
+    'IPv4.1.DNSFromDHCP'       => 'Disabled',
+    'IPv4.1.StaticDNS1'        => $bmc_dns_server,
+    'IPv4.1.DHCPEnable'        => 'Disabled',
+  },
   $bmc_generic_attributes = {
     'Address'       => undef,
     'Gateway'       => lookup('netcfg_oob_gateway', String, 'first', ''),
@@ -51,14 +59,25 @@ class profile::base::physical (
 ) {
 
   if ($enable_l40s_pci_check) and ($::runmode == 'default') {
-    file { 'check_l40s_pci.sh':
-      ensure  => file,
-      path    => '/usr/local/bin/check_l40s_pci.sh',
-      content => template("${module_name}/monitoring/sensu/check_l40s_pci.sh.erb"),
-      mode    => '0755',
+      case $facts['manufacturer'] {
+        'Dell Inc.': {
+          file { 'check_l40s_pci.sh':
+          ensure  => file,
+          path    => '/usr/local/bin/check_l40s_pci.sh',
+          content => template("${module_name}/monitoring/sensu/check_l40s_pci.sh.erb"),
+          mode    => '0755',
+          }
+        }
+        'Lenovo': {
+          file { 'check_l40s_pci.sh':
+          ensure  => file,
+          path    => '/usr/local/bin/check_l40s_pci.sh',
+          content => template("${module_name}/monitoring/sensu/check_l40s_pci_lenovo.sh.erb"),
+          mode    => '0755',
+        }
+      }
     }
   }
-
 
   # Configure 82599ES SFP+ interface module options
   if ($::lspci_has['intel82599sfp'] or $::lspci_has['intelx520sfp']) and 'ixgbe' in $::kernel_modules {
@@ -292,17 +311,33 @@ class profile::base::physical (
       }
       case $facts['manufacturer'] {
         'Dell Inc.': {
-          unless $facts['productname'] =~ '(FC|[RTM])[1-9][1-3]\d.*' {
-            $bmc_idrac_attributes.each |$attribute, $value| {
-              if ($attribute == 'IPv4Static.1.Address') and (!$value) {
-                $attr_value = $::bmc_address
+          unless fact('dmi.product.name') =~ '(FC|[RTM])[1-9][1-3]\d.*' {
+            if fact('dmi.product.name') =~ '^PowerEdge ([R])[4-9][7-9]\d.*' {
+              $bmc_idrac10_attributes.each |$attribute, $value| {
+                if ($attribute == 'IPv4.1.StaticAddress') and (!$value) {
+                  $attr_value = $::bmc_address
+                }
+                else {
+                  $attr_value = $value
+                }
+                exec { "Set bmc static configuration - ${attribute}":
+                  command     => "/bin/curl -f -s https://${::bmc_address}/redfish/v1/Managers/iDRAC.Embedded.1/Oem/Dell/DellAttributes/iDRAC.Embedded.1 -k -u ${bmc_username_set}:${bmc_password_set} ${http_proxy_url_set} --connect-timeout 20 -X PATCH -H \"Content-Type: application/json\" -d \'{\"Attributes\" : {\"${attribute}\":\"${attr_value}\"}}\' && /bin/touch /etc/.bmc_configured-${attribute}",
+                  creates     => "/etc/.bmc_configured-${attribute}",
+                }
               }
-              else {
-                $attr_value = $value
-              }
-              exec { "Set bmc static configuration - ${attribute}":
-                command     => "/bin/curl -f -s https://${::bmc_address}/redfish/v1/Managers/iDRAC.Embedded.1/Attributes -k -u ${bmc_username_set}:${bmc_password_set} ${http_proxy_url_set} --connect-timeout 20 -X PATCH -H \"Content-Type: application/json\" -d \'{\"Attributes\" : {\"${attribute}\":\"${attr_value}\"}}\' && /bin/touch /etc/.bmc_configured-${attribute}",
-                creates     => "/etc/.bmc_configured-${attribute}",
+            }
+            else {
+              $bmc_idrac_attributes.each |$attribute, $value| {
+                if ($attribute == 'IPv4Static.1.Address') and (!$value) {
+                  $attr_value = $::bmc_address
+                }
+                else {
+                  $attr_value = $value
+                }
+                exec { "Set bmc static configuration - ${attribute}":
+                  command     => "/bin/curl -f -s https://${::bmc_address}/redfish/v1/Managers/iDRAC.Embedded.1/Attributes -k -u ${bmc_username_set}:${bmc_password_set} ${http_proxy_url_set} --connect-timeout 20 -X PATCH -H \"Content-Type: application/json\" -d \'{\"Attributes\" : {\"${attribute}\":\"${attr_value}\"}}\' && /bin/touch /etc/.bmc_configured-${attribute}",
+                  creates     => "/etc/.bmc_configured-${attribute}",
+                }
               }
             }
           }

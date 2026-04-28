@@ -74,6 +74,14 @@ profile::storage::ceph::pool::pools:
       crush_rule: 'ssd-storage'
       nodelete:   'true'
       min_size:   '2'
+  'metrics':
+    size:    3
+    tag:     'gnocchi'
+    pg_num:  1024
+    custom:
+      crush_rule: 'ssd-storage'
+      nodelete:   'true'
+      min_size:   '2'
   'volumes_hdd_ec_meta':
     size:    3
     tag:     'rbd'
