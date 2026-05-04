@@ -115,6 +115,7 @@ profile::logging::logrotate::rules:
     postrotate:     '/bin/systemctl reload httpd.service > /dev/null 2>/dev/null || true'
     sharedscripts:  true
     missingok:      true
+    compress:       true
     delaycompress:  true
 
 # FIXME:sensu-go
