@@ -154,7 +154,6 @@ profile::network::services::dns_records:
     "%{::location}-compute-082.%{hiera('domain_mgmt')}":        "%{::location}-compute-82.%{hiera('domain_mgmt')}"
     "%{::location}-compute-083.%{hiera('domain_mgmt')}":        "%{::location}-compute-83.%{hiera('domain_mgmt')}"
     "%{::location}-compute-084.%{hiera('domain_mgmt')}":        "%{::location}-compute-84.%{hiera('domain_mgmt')}"
-    "%{::location}-mgmt-sonic-00.%{hiera('domain_mgmt')}":      "%{::location}-mgmt-00.%{hiera('domain_mgmt')}"
     "%{::location}-compute-alice-11.%{hiera('domain_mgmt')}":   "%{::location}-compute-11.%{hiera('domain_mgmt')}"
     "%{::location}-compute-alice-011.%{hiera('domain_mgmt')}":  "%{::location}-compute-11.%{hiera('domain_mgmt')}"
     "%{::location}-compute-alice-12.%{hiera('domain_mgmt')}":   "%{::location}-compute-12.%{hiera('domain_mgmt')}"
@@ -369,6 +368,18 @@ profile::network::services::dns_records:
     "object.api.%{hiera('domain_public')}":       "%{hiera('public__ip__object')}"
 
     "resolver.%{hiera('domain_public')}":         '158.39.77.252'
+
+    # mgmt switchs needs A records to bootstrap
+    "%{::location}-mgmt-sonic-00.%{hiera('domain_mgmt')}":  "%{hiera('netcfg_mgmt_net_c2')}.100"
+    "%{::location}-mgmt-opx-01.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.1"
+    "%{::location}-mgmt-opx-02.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.2"
+    "%{::location}-mgmt-opx-03.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.3"
+    "%{::location}-mgmt-opx-04.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.4"
+    "%{::location}-mgmt-opx-05.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.5"
+    "%{::location}-mgmt-opx-06.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.6"
+    "%{::location}-mgmt-opx-07.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.7"
+    "%{::location}-mgmt-opx-08.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.8"
+    "%{::location}-mgmt-opx-09.%{hiera('domain_mgmt')}":    "%{hiera('netcfg_mgmt_net_c2')}.9"
 
     # Management network (entries that differ from common/common.yaml)
     "%{::location}-login-01.%{hiera('domain_mgmt')}": "%{hiera('netcfg_mgmt_netpart')}.10"
