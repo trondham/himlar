@@ -13,6 +13,9 @@ profile::dns::rndc_key::host_is_bind_server: false
 
 foreman_version: '3.8'
 
+# manage http files for ztp
+profile::bootstrap::repo::manage_repo:      true
+
 # sensu
 sensu::agent::subscriptions:
   - 'base'
