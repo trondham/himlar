@@ -1,20 +1,14 @@
 ---
+#FIXME:el9 move to common after all computes are el9 with zed
+openstack_version: "zed"
+
 named_interfaces::config:
   mgmt:
     - em3
   trp:
-    - team1
+    - bond0
   live:
-    - team1.120
-
-profile::base::network::network_auto_bonding:
-  trp:
-    em1:
-      'team_port_config': '{ "prio" : 100 }'
-      'mtu': '9000'
-    em2:
-      'team_port_config': '{ "prio" : 100 }'
-      'mtu': '9000'
+    - bond0.120
 
 profile::base::lvm::physical_volume:
   '/dev/sda4':
