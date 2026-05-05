@@ -4,16 +4,16 @@ openstack_version: "zed"
 
 profile::base::network::nm_network_auto_bonding:
   trp:
-    ens1f0:
+    p1p1:
       ethernet:
         'mtu': '9000' # the MTU size must be set also on the slave interfaces
-    ens1f1:
+    p1p2:
       ethernet:
         'mtu': '9000'
 
 named_interfaces::config:
   mgmt:
-    - eno3
+    - em3
   trp:
     - bond0
   live:
