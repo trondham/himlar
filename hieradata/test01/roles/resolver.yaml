@@ -1,5 +1,9 @@
 ---
 
+include:
+  default:
+    - profile::logging::fluentbit     # Remove when deployed to production
+
 profile::dns::ns::ptr_zones:
   mgmt01:
     cidr: "172.28.0.0/24"
@@ -71,3 +75,12 @@ profile::dns::ns::allowed_nets:
 profile::dns::ns::fw_zones:
   test:
     zone: "ignore.invalid"
+
+# Remove (and activate in common) when deployed to production
+profile::logging::fluentbit::manage_fluentbit:    true
+profile::logging::fluentbit::manage_dns_data:     true
+profile::logging::fluentbit::manage_parsers_file: true
+profile::base::yumrepo::repo_hash:
+  fluentbit:
+    ensure: present
+

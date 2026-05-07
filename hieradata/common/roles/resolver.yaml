@@ -3,6 +3,7 @@ include:
   default:
     - profile::dns::ns
     - profile::logging::rsyslog::client
+#    - profile::logging::fluentbit
 
 named_interfaces::config:
   mgmt:
@@ -124,3 +125,9 @@ sensu::agent::subscriptions:
   - 'nodes'
   - 'metrics'
 
+#profile::logging::fluentbit::manage_fluentbit:    true
+#profile::logging::fluentbit::manage_dns_data:     true
+#profile::logging::fluentbit::manage_parsers_file: true
+#profile::base::yumrepo::repo_hash:
+#  fluentbit:
+#    ensure: present

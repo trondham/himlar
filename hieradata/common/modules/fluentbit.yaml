@@ -1,0 +1,40 @@
+---
+# Fluentbit
+fluentbit::manage_config_dir:                   false
+fluentbit::manage_package_repo:                 false
+fluentbit::flush:                               10
+fluentbit::log_level:                           "error"
+fluentbit::http_server:                         true
+fluentbit::http_listen:                         "127.0.0.1"
+fluentbit::storage_path:                        "/var/lib/fluent-bit/storage"
+fluentbit::storage_backlog_mem_limit:           100M
+fluentbit::storage_delete_irrecoverable_chunks: true
+fluentbit::scheduler_cap:                       900
+fluentbit::service:
+  "storage.backlog.mem_limit": "100M"
+  "\n@INCLUDE": "pipelines/*.conf\n@INCLUDE fluent-bit.conf.d/*.conf_enable"
+#  "\n@INCLUDE": "fluent-bit.conf.d/*.conf_enable"
+
+fluentbit::multiline_parsers:
+  oracle_xml_multiline:
+    type: 			regex
+    flush_timeout:	1000
+    rules: [
+      { state: "start_state", regex: "/^<msg\\s+time='.+?'.*$/", next_state: "cont" },
+      { state: "cont",        regex: '/^(?!\<msg\s+time=).*$/',  next_state: "cont" }
+    ]
+  postgresql_multiline:
+    type: 			regex
+    flush_timeout:	1000
+    rules: [
+      { state: "start_state", regex: '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.*$/',     next_state: "cont" },
+      { state: "cont",        regex: '/^(?!\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}).*$/', next_state: "cont" }
+    ]
+  freeradius_accounting_multiline:
+    type: 			regex
+    flush_timeout:	1000
+    rules: [
+      { state: "start_state", regex: '/^[A-Za-z]{3}\s*[A-Za-z]{3}\s*(\d{1}|\d{2})\s*\d{2}:\d{2}:\d{2}\s*\d{4}.*$/', next_state: "cont" },
+      { state: "cont",        regex: '/^\t.*$/',                                                                    next_state: "cont" }
+    ]
+

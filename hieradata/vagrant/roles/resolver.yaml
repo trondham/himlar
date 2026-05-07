@@ -1,4 +1,9 @@
 ---
+include:
+  default:
+    - profile::application::openssl
+    - profile::logging::fluentbit     # Remove when deployed to production
+
 profile::dns::ns::enable_bird:           false
 profile::dns::ns::manage_bird_firewall:  false
 profile::dns::ns::enable_bird6:          false
@@ -26,3 +31,29 @@ profile::dns::ns::ptr_zones:
 profile::dns::ns::fw_zones:
   test:
     zone: "ignore.invalid"
+
+profile::application::openssl::manage_ca_cert: true
+
+frontend_star_ssl_pem:    "star.%{hiera('domain_frontend')}.pem"
+frontend_star_ssl_pem2:   "star.%{hiera('domain_frontend2')}.pem"
+
+profile::application::openssl::certs:
+  "star.%{hiera('domain_frontend')}":
+    cn:     "*.%{hiera('domain_frontend')}"
+    altnames:
+      - "*.api.%{hiera('domain_public')}"
+    concat: true
+  "resolver.%{hiera('domain_public')}":
+    cn:     "resolver.%{hiera('domain_public')}"
+    concat: true
+  "vagrant-resolver-01.%{hiera('domain_public')}":
+    cn:     "vagrant-resolver-01.%{hiera('domain_public')}"
+    concat: true
+
+# Remove (and activate in common) when deployed to production
+profile::logging::fluentbit::manage_fluentbit:    true
+profile::logging::fluentbit::manage_dns_data:     true
+profile::logging::fluentbit::manage_parsers_file: true
+profile::base::yumrepo::repo_hash:
+  fluentbit:
+    ensure: present
