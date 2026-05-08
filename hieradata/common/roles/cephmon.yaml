@@ -67,6 +67,7 @@ profile::base::common::packages:
   'bash-completion': {}
   'jq': {}
   'python-collectd-ceph-storage': {}
+  moreutils: {}
 
 accounts::users:
   'cinder':
@@ -143,8 +144,10 @@ profile::base::yumrepo::repo_hash:
   "%{operatingsystem}-AppStream":
     exclude: 'postgres'
   epel:
-    ensure:   present
+    ensure: present
   influxdb:
+    ensure: present
+  AlmaLinux-PowerTools:
     ensure: present
 
 # logroate ceph logs
