@@ -4,6 +4,7 @@ class profile::openstack::compute::hypervisor (
   $manage_telemetry = true,
   $manage_firewall = true,
   $enable_dhcp_agent_check = false,
+  $remove_default_libvirt_network = false,
   $sysctl_fixes = false,
   $net_ipv4_route_max_size = '2147483647',
   $net_ipv6_route_max_size = '2147483647',
@@ -66,6 +67,24 @@ class profile::openstack::compute::hypervisor (
     }
     sysctl::value { "net.ipv6.route.gc_thresh":
       value => $net_ipv6_route_gc_thresh,
+    }
+  }
+
+  if $remove_default_libvirt_network {
+    exec { 'virsh-net-destroy-default':
+      command => 'virsh net-destroy default',
+      path    => '/bin:/usr/bin',
+      onlyif  => "virsh -q net-list --all | grep -Eq '^\s*default\\s+active'",
+    }
+    exec { 'virsh-net-undefine-default':
+      command => 'virsh net-undefine default',
+      path    => '/bin:/usr/bin',
+      onlyif  => "virsh -q net-list --all | grep -Eq '^\s*default\\s+inactive'",
+      require => Exec['virsh-net-destroy-default'],
+    }
+    file { [ '/etc/libvirt/qemu/networks/default.xml', '/etc/libvirt/qemu/networks/autostart/default.xml' ]:
+      ensure  => absent,
+      require => Exec['virsh-net-undefine-default'],
     }
   }
 
