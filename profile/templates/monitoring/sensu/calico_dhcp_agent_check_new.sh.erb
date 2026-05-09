@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# check if the compute host has running instances and dnsmasq is not running
+if [ -f "/usr/lib/systemd/system/calico-dhcp-agent.service" ] && [ -f "/bin/virsh" ]; then
+  if [[ $(/bin/sudo /bin/virsh list | grep instance) ]]; then
+    if [[ $(pgrep dnsmasq) ]]; then
+      # running instances and dnsmasq
+      # todo: check number of dnsmasq processes match ns interfcae
+      exit 0
+    else
+      # running instances but no dnsmasq
+      echo "dnsmasq is not running - manual intervention is most likely required. First try to restart etcd"
+      exit 2
+    fi
+  fi
+else # report ok if dhcp agent and libvirt is not installed
+  exit 0
+fi
