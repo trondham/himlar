@@ -70,10 +70,18 @@ class profile::openstack::compute::hypervisor (
   }
 
   if $enable_dhcp_agent_check {
+
+    # the new template only checks for missing dnsmasq
+    if Integer($facts['os']['release']['major']) == 8 {
+      $dhcp_agent_check_template = 'calico_dhcp_agent_check.sh.erb'
+    } else {
+      $dhcp_agent_check_template = 'calico_dhcp_agent_check_new.sh.erb'
+    }
+
     file { 'calico_dhcp_agent_check.sh':
       ensure  => file,
       path    => '/usr/local/bin/calico_dhcp_agent_check.sh',
-      content => template("${module_name}/monitoring/sensu/calico_dhcp_agent_check.sh.erb"),
+      content => template("${module_name}/monitoring/sensu/${dhcp_agent_check_template}"),
       mode    => '0755',
     }
   }
