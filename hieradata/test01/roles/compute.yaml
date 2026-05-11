@@ -11,11 +11,7 @@ named_interfaces::config:
   live:
     - team1.120
 
-# EL9 config
-network::routing::table::tables:
-  'private':
-    'table_id':  '240'
-
+# EL9 routing for this region
 profile::base::network::nm_auto_routes:
   trp:
     ipv4:
