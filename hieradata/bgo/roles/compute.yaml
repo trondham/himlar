@@ -161,7 +161,6 @@ profile::base::network::rules:
 profile::network::interface::manage_neutron_blackhole: true
 
 profile::base::physical::configure_bmc_nic:                       true
-profile::openstack::compute::hypervisor::enable_dhcp_agent_check: true
 profile::base::physical::enable_redfish_scripts:                  true
 profile::base::physical::enable_redfish_http_proxy:               true
 
