@@ -53,7 +53,6 @@ profile::openstack::compute::manage_telemetry: true
 
 nova::compute::libvirt::hw_machine_type: 'x86_64=q35'
 
-profile::openstack::compute::hypervisor::enable_dhcp_agent_check: true
 profile::monitoring::sensu::agent::checks:
   'dhcp-agent-check':
     command:      '/usr/local/bin/calico_dhcp_agent_check.sh'

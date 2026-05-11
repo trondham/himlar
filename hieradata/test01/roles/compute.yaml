@@ -85,8 +85,6 @@ chrony::servers:
   - "%{hiera('netcfg_mgmt_netpart')}.101"
   - "%{hiera('netcfg_mgmt_netpart')}.102"
 
-profile::openstack::compute::hypervisor::remove_default_libvirt_network: true # FIXME: move to common after testing
-
 # FIXME: remove when telemetry/ceilometer is up in all environments and move to common
 profile::openstack::compute::manage_telemetry: true
 
@@ -97,7 +95,6 @@ nova::compute::libvirt::hw_machine_type:  'x86_64=q35'
 nova::compute::libvirt::cpu_models:      ['Haswell-noTSX-IBRS']
 
 profile::base::physical::configure_bmc_nic:                       true
-profile::openstack::compute::hypervisor::enable_dhcp_agent_check: true
 profile::base::physical::enable_redfish_scripts:                  true
 profile::base::physical::enable_redfish_http_proxy:               true
 

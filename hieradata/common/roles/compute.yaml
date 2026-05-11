@@ -70,6 +70,9 @@ profile::network::yum_proxy::yum_proxy:   "http://%{hiera('mgmt__address__proxy'
 profile::openstack::compute::manage_check_dhcp_lease_file: true
 profile::openstack::compute::manage_check_compute_routes: true
 
+profile::openstack::compute::hypervisor::enable_dhcp_agent_check: true
+profile::openstack::compute::hypervisor::remove_default_libvirt_network: true
+
 # enable rng daemon for better entropy
 profile::application::rngd::enable:       true
 
