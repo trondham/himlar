@@ -12,6 +12,9 @@ if [ -f "/usr/lib/systemd/system/calico-dhcp-agent.service" ] && [ -f "/bin/virs
       echo "dnsmasq is not running - manual intervention is most likely required. First try to restart etcd"
       exit 2
     fi
+  else
+    # no running instances
+    exit 0
   fi
 else # report ok if dhcp agent and libvirt is not installed
   exit 0
