@@ -85,6 +85,8 @@ chrony::servers:
   - "%{hiera('netcfg_mgmt_netpart')}.101"
   - "%{hiera('netcfg_mgmt_netpart')}.102"
 
+profile::openstack::compute::hypervisor::remove_default_libvirt_network: true # FIXME: move to common after testing
+
 # FIXME: remove when telemetry/ceilometer is up in all environments and move to common
 profile::openstack::compute::manage_telemetry: true
 
