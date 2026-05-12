@@ -2,6 +2,14 @@
 #FIXME:el9 move to common after all computes are el9 with zed
 openstack_version: "zed"
 
+named_interfaces::config:
+  mgmt:
+  - p2817p1
+  trp:
+  - bond0
+  live:
+  - bond0.120
+
 profile::base::network::nm_network_auto_bonding:
   trp:
     eth0:
@@ -11,16 +19,41 @@ profile::base::network::nm_network_auto_bonding:
       ethernet:
         'mtu': '9000'
 
-named_interfaces::config:
-  mgmt:
-  - p2817p1
-  trp:
-  - bond0
-  live:
-  - bond0.120
+# Turn off nested virtualization
+profile::virtualization::nested::manage: false
+
+profile::base::common::packages:
+  'numactl': {}
+
+# Enable hugepages to prevent OOM-killer when using NUMA. 
+profile::base::physical::enable_hugepages: true
+# Number and size of hugepages, based on 768GB - 32 GB (4GB free pr node)
+profile::base::physical::hugepagesz:       '2M'
+profile::base::physical::hugepages:        '376832'
+
+
+# Nova overrides
+nova::compute::libvirt::cpu_models: ['EPYC']
+nova::cpu_allocation_ratio:         '1'
+nova::disk_allocation_ratio:        '1'
+nova::ram_allocation_ratio:         '1'
+
+# Create and enable more swap
+profile::base::common::extraswap:        true
+profile::base::common::extraswap_sizegb: 10
 
 # This compute host uses local storage for instances
 nova::compute::rbd::ephemeral_storage:  false
 nova::compute::libvirt::images_type: 'default'
 
+# Configuration items not explicitly supported by the Puppet module
+nova::config::nova_config:
+  DEFAULT/metadata_workers:
+    value: '2'
 
+# Sensu
+sensu::agent::annotations:
+  'disk_warning': '90'
+  'disk_critical': '95'
+  'cpu_warning': '99'
+  'cpu_critical': '100'
