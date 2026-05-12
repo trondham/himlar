@@ -141,6 +141,8 @@ profile::network::services::dns_records:
     "%{::location}-login-01.%{hiera('domain_mgmt')}":       "%{hiera('netcfg_mgmt_netpart')}.10"
     "git.%{hiera('domain_mgmt')}":                          "%{hiera('netcfg_mgmt_net_c0')}.9"
     "monitor.%{hiera('domain_mgmt')}":                      "%{hiera('netcfg_mgmt_net_c0')}.21"
+    # mgmt switchs needs A records to bootstrap
+    "%{::location}-mgmt-sonic-01.%{hiera('domain_mgmt')}":  "%{hiera('netcfg_mgmt_net_c2')}.1"
     # oob nodes
     "repo.%{hiera('domain_oob')}":                          "%{hiera('netcfg_oob_netpart')}.11"
     # Temp. for old login-01

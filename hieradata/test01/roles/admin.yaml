@@ -7,6 +7,9 @@ dhcp::hosts:
   test01-spine-02:
     mac: '68:4f:64:f1:b5:23'
     ip:  '172.28.6.2'
+  test01-mgmt-sonic-01:
+    mac: 'b4:db:91:f9:f7:1b'
+    ip:  '172.28.2.1'
   test01-pdu-01:
     mac: '28:29:86:11:96:50'
     ip:  '172.29.0.99'
