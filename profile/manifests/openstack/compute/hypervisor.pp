@@ -3,6 +3,7 @@ class profile::openstack::compute::hypervisor (
   $manage_libvirt_rbd = false,
   $manage_telemetry = true,
   $manage_firewall = true,
+  $modular_libvirt = false,
   $enable_dhcp_agent_check = false,
   $remove_default_libvirt_network = false,
   $sysctl_fixes = false,
@@ -24,6 +25,10 @@ class profile::openstack::compute::hypervisor (
     fail("Invalid hypervisor_type selected: ${hypervisor_type}")
   }
 
+  if $modular_libvirt {
+    include ::nova::compute::libvirt::services
+  }
+  
   if $hypervisor_type in ['libvirt'] {
     include ::nova::migration::libvirt
   }
