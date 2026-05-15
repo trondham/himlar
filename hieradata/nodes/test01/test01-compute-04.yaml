@@ -22,3 +22,6 @@ named_interfaces::config:
     - bond0
   live:
     - bond0.120
+
+# Trond libvirt test
+nova::compute::libvirt::modular_libvirt: true
