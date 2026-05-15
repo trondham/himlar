@@ -27,6 +27,7 @@ class profile::openstack::compute::hypervisor (
 
   if $modular_libvirt {
     include ::nova::compute::libvirt::services
+    include ::nova::compute::libvirt::virtproxyd
   }
   
   if $hypervisor_type in ['libvirt'] {
