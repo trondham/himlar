@@ -10,7 +10,7 @@ include:
     - profile::webserver::apache::status
 #    - profile::openstack::compute::placement # FIXME: remove after upgrade
 
-openstack_version: 'zed'
+openstack_version: '2023.1'
 
 profile::network::interface::create_custom_routes: true
 profile::base::network::nm_auto_routes:

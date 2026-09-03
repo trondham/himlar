@@ -48,7 +48,7 @@ nodesets:
       puppet_env: "zed"
       box:        "norcams/el9"
     - role:       "novactrl"
-      puppet_env: "zed"
+      puppet_env: "2023.1"
       box:        "norcams/el9"
     - role:       "image"
       puppet_env: "zed"
@@ -65,7 +65,7 @@ nodesets:
     - role:       "compute"
       memory:     4096
       cpus:       2
-      puppet_env: "zed"
+      puppet_env: "2023.1"
       box:        "norcams/el9"
   # The following nodes are optional
     #- role:       "access"
@@ -183,7 +183,7 @@ nodesets:
       puppet_env: "zed"
       box:        "norcams/el9"
     - role:       "novactrl"
-      puppet_env: "zed"
+      puppet_env: "2023.1"
       box:        "norcams/el9"
     - role:       "image"
       puppet_env: "zed"
@@ -200,7 +200,8 @@ nodesets:
     - role:       "compute"
       memory:     4096
       cpus:       2
-      puppet_env: "yoga"
+      puppet_env: "2023.1"
+      box:        "norcams/el9"
     - role:       "ns"
       puppet_env: "production_el9"
       box:        "norcams/el9"
