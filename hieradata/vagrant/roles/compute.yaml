@@ -85,3 +85,11 @@ calico::compute::manage_metadata_service: false
 
 # Set up nova metadata api with wsgi
 profile::openstack::compute::manage_nova_metadata_api: true
+
+#---------------------------------------------------------------------
+# Configure to use modular libvirt
+# (The old monolithic libvirt is deprecated)
+#---------------------------------------------------------------------
+profile::openstack::compute::hypervisor::modular_libvirt: true
+nova::compute::libvirt::services::modular_libvirt:        true
+nova::migration::libvirt::modular_libvirt:                true
