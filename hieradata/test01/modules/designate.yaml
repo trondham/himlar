@@ -16,4 +16,4 @@ designate::backend::bind9::bind9_hosts:
 designate::backend::bind9::mdns_hosts:
   - '2001:700:200:917::3f34'
 designate::backend::bind9::ns_records:
-  - [ '1', "ns.test.iaas.uib.no." ]
+  1: "ns.test.iaas.uib.no."
