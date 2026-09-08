@@ -216,7 +216,7 @@ nodesets:
       puppet_env: "zed_bind"
       box:        "norcams/el9"
     - role:       "dns"
-      puppet_env: "zed"
+      puppet_env: "antelope"
       box:        "norcams/el9"
     - role:       "telemetry"
       puppet_env: "zed"
