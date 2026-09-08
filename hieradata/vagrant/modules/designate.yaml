@@ -10,4 +10,4 @@ designate::backend::bind9::bind9_hosts:
 designate::backend::bind9::mdns_hosts:
   - '172.31.8.34'
 designate::backend::bind9::ns_records:
-  - { '1', "ns1.%{hiera('domain_frontend')}." }
+  - [ '1', "ns1.%{hiera('domain_frontend')}." ]
