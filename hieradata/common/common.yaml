@@ -41,8 +41,8 @@ openstack_version:    'yoga'
 # Ref. https://docs.openstack.org/nova/latest/reference/api-microversion-history.html
 #openstack_compute_api_version: '2.79'  # train
 #openstack_compute_api_version: '2.88'  # wallaby
-openstack_compute_api_version: '2.90'  # xena/yoga
-#openstack_compute_api_version: '2.93'  # zed
+#openstack_compute_api_version: '2.90'  # xena/yoga
+openstack_compute_api_version: '2.93'  # zed
 #openstack_compute_api_version: '2.95'  # 2023.1 antelope
 #openstack_compute_api_version: '2.96'  # 2024.1 caracal
 #openstack_compute_api_version: '2.100' # 2025.1 epoxy
