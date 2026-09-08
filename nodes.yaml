@@ -60,7 +60,7 @@ nodesets:
       puppet_env: "zed"
       box:        "norcams/el9"
     - role:       "dashboard"
-      puppet_env: "zed"
+      puppet_env: "antelope"
       box:        "norcams/el9"
     - role:       "compute"
       memory:     4096
@@ -197,7 +197,7 @@ nodesets:
       puppet_env: "zed"
       box:        "norcams/el9"
     - role:       "dashboard"
-      puppet_env: "zed"
+      puppet_env: "antelope"
       box:        "norcams/el9"
     - role:       "compute"
       memory:     4096
