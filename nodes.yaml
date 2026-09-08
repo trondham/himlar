@@ -48,7 +48,7 @@ nodesets:
       puppet_env: "zed"
       box:        "norcams/el9"
     - role:       "novactrl"
-      puppet_env: "2023.1"
+      puppet_env: "antelope"
       box:        "norcams/el9"
     - role:       "image"
       puppet_env: "zed"
@@ -65,7 +65,7 @@ nodesets:
     - role:       "compute"
       memory:     4096
       cpus:       2
-      puppet_env: "2023.1"
+      puppet_env: "antelope"
       box:        "norcams/el9"
   # The following nodes are optional
     #- role:       "access"
@@ -174,16 +174,18 @@ nodesets:
     - role:       "storage"
   dns:
     - role:       "db-global"
-      puppet_env: "yoga"
+      puppet_env: "zed"
+      box:        "norcams/el9"
     - role:       "db-regional"
-      puppet_env: "yoga"
+      puppet_env: "zed"
+      box:        "norcams/el9"
     - role:       "api"
     - role:       "mq"
     - role:       "identity"
       puppet_env: "zed"
       box:        "norcams/el9"
     - role:       "novactrl"
-      puppet_env: "2023.1"
+      puppet_env: "antelope"
       box:        "norcams/el9"
     - role:       "image"
       puppet_env: "zed"
@@ -200,7 +202,7 @@ nodesets:
     - role:       "compute"
       memory:     4096
       cpus:       2
-      puppet_env: "2023.1"
+      puppet_env: "antelope"
       box:        "norcams/el9"
     - role:       "ns"
       puppet_env: "production_el9"
