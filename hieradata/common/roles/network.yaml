@@ -10,7 +10,7 @@ include:
     - profile::base::systemd
     - profile::monitoring::telegraf
 
-
+# Used when upgrading Openstack
 openstack_version: 'antelope'
 
 profile::network::interface::create_custom_routes: true
