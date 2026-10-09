@@ -7,6 +7,7 @@ include:
     - profile::openstack::openrc
     - profile::dns::rndc_key
 
+# Used when upgrading Openstack
 openstack_version: 'antelope'
 
 # This creates /etc/openstack/puppet/admin-clouds.yaml
