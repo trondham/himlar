@@ -39,8 +39,8 @@ profile::base::lvm::logical_volume:
     fs_type:      "xfs"
     mountpath:    "/var/lib/nova/instances"
 
-#FIXME:el9 move to common after all computes are el9 with zed
-openstack_version: "zed"
+# Used when upgrading Openstack
+#openstack_version: "FIXME"
 named_interfaces::config:
   mgmt:
   - em1
@@ -83,5 +83,5 @@ profile::base::cron::crontabs:
   restart_bird:
     hour:     '8'
     minute:   '55'
-    weekday:  '5'
+    weekday:  '4'
     command:  "sleep $(awk 'BEGIN{srand(); print int(rand()*15)+1}');/bin/systemctl restart bird.service >/dev/null"

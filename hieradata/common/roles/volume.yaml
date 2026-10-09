@@ -11,6 +11,7 @@ include:
     - profile::webserver::apache::status
     - profile::storage::cephclient
 
+# Used when upgrading Openstack
 openstack_version: 'antelope'
 
 # This creates /etc/openstack/puppet/admin-clouds.yaml
