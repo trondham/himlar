@@ -10,6 +10,7 @@ include:
     - profile::webserver::apache::status
 #    - profile::openstack::compute::placement # FIXME: remove after upgrade
 
+# Used when upgrading Openstack
 openstack_version: 'antelope'
 
 profile::network::interface::create_custom_routes: true

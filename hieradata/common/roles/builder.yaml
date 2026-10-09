@@ -57,6 +57,12 @@ profile::application::builder::flavor:        'img.zerodisk'
 profile::application::builder::template_dir:  '/etc/imagebuilder'
 profile::application::builder::download_dir:  '/opt/images/public_builds'
 profile::application::builder::rc_file:       '/home/imagebuilder/openrc'
+
+# Run every image in sequence from /opt/imagebuilder/build-images.sh rather
+# than a cron job per image. Off everywhere until a node opts in, so the old
+# and the new scheme can run side by side on different builders
+profile::application::builder::build_script:  false
+
 profile::application::builder::images:
   'almalinux8':
     'image_name':       'IMAGEBUILDER AlmaLinux 8'
@@ -66,7 +72,6 @@ profile::application::builder::images:
     'checksum':         'sha256'
     'min_ram':          768
     'min_disk':         8
-    'flavor':           'm1.small'
     'efi':              true
     'username':         'almalinux'
     'hour':             13
@@ -79,7 +84,6 @@ profile::application::builder::images:
     'checksum':         'sha256'
     'min_ram':          1024
     'min_disk':         8
-    'flavor':           'm1.small'
     'efi':              true
     'username':         'almalinux'
     'hour':             3
@@ -92,7 +96,6 @@ profile::application::builder::images:
     'checksum':         'sha256'
     'min_ram':          1024
     'min_disk':         8
-    'flavor':           'm1.small'
     'efi':              true
     'username':         'almalinux'
     'hour':             4
@@ -105,7 +108,6 @@ profile::application::builder::images:
     'checksum':         'sha256'
     'min_ram':          1024
     'min_disk':         8
-    'flavor':           'm1.small'
     'efi':              true
     'username':         'almalinux'
     'environment':      [ 'IMAGEBUILDER_REPORT=true', 'IB_TEMPLATE_DIR=/etc/imagebuilder/nv_vgpu' ]
@@ -119,7 +121,6 @@ profile::application::builder::images:
     'checksum':         'sha256'
     'min_ram':          1024
     'min_disk':         8
-    'flavor':           'm1.small'
     'efi':              true
     'username':         'almalinux'
     'environment':      [ 'IMAGEBUILDER_REPORT=true', 'IB_TEMPLATE_DIR=/etc/imagebuilder/nv_vgpu' ]
@@ -133,7 +134,6 @@ profile::application::builder::images:
     'checksum':         'sha256'
     'min_ram':          768
     'min_disk':         8
-    'flavor':           'm1.small'
     'username':         'almalinux'
     'environment':      [ 'IMAGEBUILDER_REPORT=true', 'IB_TEMPLATE_DIR=/etc/imagebuilder/uib_puppet' ]
     'hour':             5
@@ -141,8 +141,8 @@ profile::application::builder::images:
   'centosstream9':
     'image_name':       'IMAGEBUILDER CentOS Stream 9'
     'url':              'https://cloud.centos.org/centos/9-stream/x86_64/images/'
-    'latest':           'CentOS-Stream-GenericCloud-x86_64-9-latest.x86_64.qcow2'
-    'checksum_file':    'CentOS-Stream-GenericCloud-x86_64-9-latest.x86_64.qcow2.SHA256SUM'
+    'latest':           'CentOS-Stream-GenericCloud-9-latest.x86_64.qcow2'
+    'checksum_file':    'CentOS-Stream-GenericCloud-9-latest.x86_64.qcow2.SHA256SUM'
     'checksum':         'sha256'
     'min_ram':          768
     'min_disk':         8
@@ -152,12 +152,11 @@ profile::application::builder::images:
   'centosstream10':
     'image_name':       'IMAGEBUILDER CentOS Stream 10'
     'url':              'https://cloud.centos.org/centos/10-stream/x86_64/images/'
-    'latest':           'CentOS-Stream-GenericCloud-x86_64-10-latest.x86_64.qcow2'
-    'checksum_file':    'CentOS-Stream-GenericCloud-x86_64-10-latest.x86_64.qcow2.SHA256SUM'
+    'latest':           'CentOS-Stream-GenericCloud-10-latest.x86_64.qcow2'
+    'checksum_file':    'CentOS-Stream-GenericCloud-10-latest.x86_64.qcow2.SHA256SUM'
     'checksum':         'sha256'
     'min_ram':          768
     'min_disk':         8
-    'flavor':           'm1.small'
     'efi':              true
     'username':         'cloud-user'
     'hour':             6
@@ -170,7 +169,6 @@ profile::application::builder::images:
     'checksum':         'sha512'
     'min_ram':          1024
     'min_disk':         3
-    'flavor':           'm1.small'
     'efi':              true
     'username':         'debian'
     'hour':             16
@@ -183,7 +181,6 @@ profile::application::builder::images:
     'checksum':         'sha512'
     'min_ram':          1024
     'min_disk':         3
-    'flavor':           'm1.small'
     'efi':              true
     'username':         'debian'
     'hour':             17

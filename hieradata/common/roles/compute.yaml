@@ -22,6 +22,7 @@ include:
     - profile::network::yum_proxy
     - profile::base::httpproxy
 
+# Used when upgrading Openstack
 openstack_version: 'antelope'
 
 # Set SELinux mode to enforcing
