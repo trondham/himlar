@@ -5,6 +5,7 @@ include:
     - profile::openstack::cache
     - profile::openstack::telemetry
 
+# Used when upgrading Openstack
 openstack_version: 'antelope'
 
 # Memcache
