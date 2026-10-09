@@ -1,4 +1,5 @@
 ---
+# Used when upgrading Openstack
 openstack_version: 'antelope'
 
 horizon::allowed_hosts:                 '*'

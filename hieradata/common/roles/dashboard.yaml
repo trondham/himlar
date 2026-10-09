@@ -7,6 +7,7 @@ include:
     - profile::openstack::cache
     - profile::base::systemd
 
+# Used when upgrading Openstack
 openstack_version: 'antelope'
 
 named_interfaces::config:
